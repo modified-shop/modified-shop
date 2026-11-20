@@ -282,7 +282,7 @@
       global $xtPrice, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
-      require_once(DIR_FS_INC . 'encode_model_number.inc.php');
+      require_once(DIR_FS_INC . 'encode_order_model_number.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_products_image.inc.php');
@@ -333,19 +333,14 @@
         $attributes_data = '';
         $attributes_model = '';
         $attributes_array = array();
-        $attrib_models = array();
-        $attrib_models_catalog = array();
         $attributes_query = xtc_db_query($attributes_query);
         $subindex = 0;
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
           $attrib_model = $attributes_data_values['attributes_model'];
-          // the numbers of the order, a number added to the catalog later was not part of the stored value
-          $attrib_models[] = $attrib_model;
           if ($attrib_model == '') {
             $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
           }
-          $attrib_models_catalog[] = $attrib_model;
           $attributes_array[$subindex] = array(
             'option' => $attributes_data_values['products_options'],
             'value' => $attributes_data_values['products_options_values'],
@@ -378,8 +373,7 @@
         }
 
         // additional data
-        // an order from before the numbers were stored has only those of the catalog
-        $order_data[$index]['PRODUCTS_MODEL'] = encode_model_number($order_data_values['products_model'], ((implode('', $attrib_models) != '') ? $attrib_models : $attrib_models_catalog), ENT_NOQUOTES);
+        $order_data[$index]['PRODUCTS_MODEL'] = encode_order_model_number($order_data_values['products_model'], $order_data_values['orders_products_id'], ENT_NOQUOTES);
         $order_data[$index]['PRODUCTS_IMAGE'] = xtc_get_products_image($order_data_values['products_id']);
         $order_data[$index]['PRODUCTS_ATTRIBUTES'] = $attributes_data;
         $order_data[$index]['PRODUCTS_ATTRIBUTES_ARRAY'] = $attributes_array;

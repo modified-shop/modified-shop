@@ -922,6 +922,88 @@
     $messageStack->add_session(WARNING_ORDERS_DOWNLOAD_LEFTOVER, 'warning');
   }
 
+  // a position without an own number holds the joined numbers of its attributes, see cart() of the order class:
+  // returns these numbers by attribute and their delimiter, or false when the position has another number
+  function orders_product_joined_model($orders_products_id, $languages_id) {
+    require_once(DIR_FS_INC.'get_joined_model_parts.inc.php');
+    require_once(DIR_FS_INC.'xtc_get_attributes_model.inc.php');
+
+    $model_query = xtc_db_query("SELECT op.products_model,
+                                        p.products_id,
+                                        p.products_model AS catalog_model
+                                   FROM ".TABLE_ORDERS_PRODUCTS." op
+                              LEFT JOIN ".TABLE_PRODUCTS." p
+                                        ON p.products_id = op.products_id
+                                  WHERE op.orders_products_id = '".(int)$orders_products_id."'");
+    if (xtc_db_num_rows($model_query) < 1) {
+      return false;
+    }
+    $model = xtc_db_fetch_array($model_query);
+    $model['products_model'] = (string)$model['products_model'];
+    $model['catalog_model'] = (string)$model['catalog_model'];
+
+    $attributes = array();
+    $stored = false;
+    $attributes_query = xtc_db_query("SELECT opa.orders_products_attributes_id,
+                                             opa.attributes_model,
+                                             opa.products_options,
+                                             opa.products_options_values,
+                                             op.products_id
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                        JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                             ON op.orders_products_id = opa.orders_products_id
+                                       WHERE opa.orders_products_id = '".(int)$orders_products_id."'
+                                    ORDER BY opa.orders_products_attributes_id");
+    while ($attribute = xtc_db_fetch_array($attributes_query)) {
+      $attributes[] = $attribute;
+      if ($attribute['attributes_model'] != '') {
+        $stored = true;
+      }
+    }
+    // only an order from before the numbers were stored has those of the catalog
+    $numbers = array();
+    foreach ($attributes as $attribute) {
+      if ($stored === false) {
+        $attribute['attributes_model'] = xtc_get_attributes_model($attribute['products_id'], $attribute['products_options_values'], $attribute['products_options'], $languages_id);
+      }
+      $numbers[(int)$attribute['orders_products_attributes_id']] = (string)$attribute['attributes_model'];
+    }
+
+    // the own number of the product is no joined one, whatever it looks like
+    if ($model['catalog_model'] != '' && $model['catalog_model'] === $model['products_model']) {
+      return false;
+    }
+    $joined = get_joined_model_parts($model['products_model'], $numbers);
+    if ($joined !== false) {
+      return array('delimiter' => $joined['delimiter'], 'numbers' => $numbers);
+    }
+    // no number or a single attribute number, when the product has no own number
+    if (isset($model['products_id'])
+        && $model['catalog_model'] == ''
+        && ($model['products_model'] == '' || in_array($model['products_model'], $numbers, true))
+        )
+    {
+      return array('delimiter' => (defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />'), 'numbers' => $numbers);
+    }
+
+    return false;
+  }
+
+
+  function orders_product_joined_model_update($orders_products_id, $joined_model) {
+    $numbers = array();
+    foreach ($joined_model['numbers'] as $number) {
+      if ((string)$number != '') {
+        $numbers[] = (string)$number;
+      }
+    }
+    // the column cuts a longer value, as for a new order
+    xtc_db_query("UPDATE ".TABLE_ORDERS_PRODUCTS."
+                     SET products_model = LEFT('".xtc_db_input(implode($joined_model['delimiter'], $numbers))."', 64)
+                   WHERE orders_products_id = '".(int)$orders_products_id."'");
+  }
+
+
   function orders_product_option_edit($oID, $data_array) {
     global $order, $xtPrice, $lang;
   
@@ -1007,7 +1089,14 @@
       'attributes_model' => xtc_db_prepare_input($products_attributes['attributes_model']),
       'attributes_ean' => xtc_db_prepare_input($products_attributes['attributes_ean']),
     );
+    $joined_model = orders_product_joined_model($data_array['opID'], $lang['languages_id'] ?? '');
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
+
+    // joined attribute numbers get the one of the new attribute
+    if ($joined_model !== false) {
+      $joined_model['numbers'][] = (string)$sql_data_array['attributes_model'];
+      orders_product_joined_model_update($data_array['opID'], $joined_model);
+    }
 
     $products_query = xtc_db_query("SELECT op.products_id, 
                                            op.products_quantity
@@ -1092,7 +1181,22 @@
                        AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
     }
                
+    $joined_model = false;
+    $position_query = xtc_db_query("SELECT orders_products_id
+                                      FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                     WHERE orders_products_attributes_id = '".(int)$data_array['opAID']."'");
+    if (xtc_db_num_rows($position_query) > 0) {
+      $position = xtc_db_fetch_array($position_query);
+      $joined_model = orders_product_joined_model($position['orders_products_id'], $lang['languages_id'] ?? '');
+    }
+
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_attributes_id = '".(int)($data_array['opAID'])."'");
+
+    // joined attribute numbers lose the one of the deleted attribute
+    if ($joined_model !== false) {
+      unset($joined_model['numbers'][(int)$data_array['opAID']]);
+      orders_product_joined_model_update($position['orders_products_id'], $joined_model);
+    }
 
     orders_product_downloads_cleanup($data_array['opID']);
 

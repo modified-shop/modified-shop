@@ -24,7 +24,7 @@ require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
-require_once (DIR_FS_INC.'encode_model_number.inc.php');
+require_once (DIR_FS_INC.'encode_order_model_number.inc.php');
 
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
@@ -169,16 +169,12 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
                                 ORDER BY ow.date_added, op.products_name");
   while ($withdraw_products = xtc_db_fetch_array($withdraw_query)) {
     $attributes_array = array();
-    $attrib_models = array();
     $attributes_query = xtc_db_query("SELECT products_options,
-                                             products_options_values,
-                                             attributes_model
+                                             products_options_values
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                        WHERE orders_id = '".(int)$_GET['order_id']."'
-                                         AND orders_products_id = '".(int)$withdraw_products['orders_products_id']."'
-                                    ORDER BY orders_products_attributes_id");
+                                         AND orders_products_id = '".(int)$withdraw_products['orders_products_id']."'");
     while ($attributes = xtc_db_fetch_array($attributes_query)) {
-      $attrib_models[] = $attributes['attributes_model'];
       $attributes_array[] = array(
         'OPTIONS_NAME' => $attributes['products_options'],
         'VALUES_NAME' => $attributes['products_options_values'],
@@ -187,7 +183,7 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
 
     $withdraw_products_array[] = array(
       'PRODUCTS_NAME' => $withdraw_products['products_name'],
-      'PRODUCTS_MODEL' => encode_model_number($withdraw_products['products_model'], $attrib_models),
+      'PRODUCTS_MODEL' => encode_order_model_number($withdraw_products['products_model'], $withdraw_products['orders_products_id']),
       'PRODUCTS_QUANTITY' => $withdraw_products['products_quantity'],
       'PRODUCTS_ATTRIBUTES' => $attributes_array,
       'DATE_ADDED' => xtc_date_short($withdraw_products['date_added']),

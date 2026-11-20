@@ -20,13 +20,23 @@
     $product_sticker = preg_replace('/data-gtin="([\w\-\_]+)"/', 'data-sku="%s"', $product_sticker);
     $product_sticker = preg_replace('/data-mpn="([\w\-\_]+)"/', 'data-sku="%s"', $product_sticker);
     
-    // the model number goes into an attribute of the sticker
-    require_once(DIR_FS_INC.'encode_model_number.inc.php');
-    if (substr_count($product_sticker, '%s') == 1) {
-      $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, encode_model_number($product->data['products_model'])));
-    } elseif (substr_count($product_sticker, '%s') == 2) {
-      // two placeholders are the script form of the sticker: the number is written for a script string, which is safe in an attribute too
-      $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, strtr((string)$product->data['products_model'], array('\\' => '\\\\', "'" => '\\x27', '"' => '\\x22', '<' => '\\x3C', '>' => '\\x3E', '&' => '\\x26', "\r" => ' ', "\n" => ' '))));
+    $placeholders = substr_count($product_sticker, '%s');
+    if ($placeholders == 1 || $placeholders == 2) {
+      // the model number is written for the place of its placeholder: a script, or markup
+      require_once(DIR_FS_INC.'encode_model_number.inc.php');
+      $products_model = (string)$product->data['products_model'];
+      $before = substr($product_sticker, 0, strrpos($product_sticker, '%s'));
+      $script = strripos($before, '<script');
+      if ($script !== false && strpos($before, '>', $script) !== false && stripos($before, '</script', $script) === false) {
+        $products_model = strtr($products_model, array('\\' => '\\\\', "'" => '\\u0027', '"' => '\\u0022', '`' => '\\u0060', '$' => '\\u0024', '<' => '\\u003C', '>' => '\\u003E', '&' => '\\u0026', "\r" => '\\r', "\n" => '\\n'));
+      } else {
+        $products_model = encode_model_number($products_model);
+      }
+      if ($placeholders == 1) {
+        $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, $products_model));
+      } else {
+        $info_smarty->assign('MODULE_products_reviews', sprintf($product_sticker, MODULE_TS_TRUSTEDSHOPS_ID, $products_model));
+      }
     } else {
       $info_smarty->assign('MODULE_products_reviews', $product_sticker);
     }

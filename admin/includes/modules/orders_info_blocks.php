@@ -12,7 +12,7 @@
   
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  require_once(DIR_FS_INC.'encode_model_number.inc.php');
+  require_once(DIR_FS_INC.'encode_order_model_number.inc.php');
   ?>
   
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
@@ -228,24 +228,15 @@
         }
         echo '            </td>'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top">';
-        // the attribute numbers of the order show whether the number is a joined one;
-        // an order from before the numbers were stored has only those of the catalog
-        $attrib_models = array();
-        $attrib_models_catalog = array();
-        for ($j = 0; $j < $attr_count; $j ++) {
-          $model = $order->products[$i]['attributes'][$j]['attributes_model'];
-          $attrib_models[] = $model;
-          if ($model == '') {
-            $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
-          }
-          $attrib_models_catalog[] = $model;
-        }
-        echo ($order->products[$i]['model'] != '') ? encode_model_number($order->products[$i]['model'], ((implode('', $attrib_models) != '') ? $attrib_models : $attrib_models_catalog)) : '<br />';
+        echo ($order->products[$i]['model'] != '') ? encode_order_model_number($order->products[$i]['model'], $order->products[$i]['opid']) : '<br />';
         // attribute models
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         if ($attr_count > 0) {
           for ($j = 0; $j < $attr_count; $j ++) {
-            $model = $attrib_models_catalog[$j];
+            $model = $order->products[$i]['attributes'][$j]['attributes_model'];
+            if ($model == '') {
+              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
+            }
             echo (($model != '') ? $attr_model_delimiter . encode_model_number($model) : '<br />');
           }
         }
@@ -356,20 +347,17 @@
             echo '<tr class="dataTableRow">'.PHP_EOL;
             echo '  <td class="dataTableContent" valign="top" align="right">'.$orders_withdraw_products['products_quantity'].'&nbsp;x&nbsp;</td>'.PHP_EOL;
             echo '  <td class="dataTableContent" valign="top">'.$orders_withdraw_products['products_name'];
-            $attrib_models = array();
             $attributes_query = xtc_db_query("SELECT *
                                                 FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                                WHERE orders_id = '".(int)$oID."'
-                                                 AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'
-                                            ORDER BY orders_products_attributes_id");
+                                                 AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'");
             if (xtc_db_num_rows($attributes_query) > 0) {
               while ($attribtues = xtc_db_fetch_array($attributes_query)) {
-                $attrib_models[] = $attribtues['attributes_model'];
                 echo '<br /><nobr><i>&nbsp; - '.$attribtues['products_options'].': '.$attribtues['products_options_values'].'</i></nobr> ';
               }
             }
             echo '  </td>'.PHP_EOL;
-            echo '  <td class="dataTableContent" valign="top">'.encode_model_number($orders_withdraw_products['products_model'], $attrib_models).'</td>'.PHP_EOL;
+            echo '  <td class="dataTableContent" valign="top">'.encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id']).'</td>'.PHP_EOL;
             echo '  <td class="dataTableContent" valign="top">'.xtc_datetime_short($orders_withdraw_products['date_added']).'</td>'.PHP_EOL;
             echo '</tr>'.PHP_EOL;
           }

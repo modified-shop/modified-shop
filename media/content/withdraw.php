@@ -32,7 +32,7 @@
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_add.inc.php');
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_reset.inc.php');
     require_once (DIR_FS_INC.'xtc_withdraw_allowed.inc.php');
-    require_once (DIR_FS_INC.'encode_model_number.inc.php');
+    require_once (DIR_FS_INC.'encode_order_model_number.inc.php');
   
     // include needed classes
     require_once(DIR_WS_CLASSES.'modified_captcha.php');
@@ -578,15 +578,12 @@
               $order_xtPrice = new xtcPrice($orders_withdraw_products['currency'], $orders_withdraw_products['customers_status']);
       
               $attributes_array = array();
-              $attrib_models = array();
               $attributes_query = xtc_db_query("SELECT *
                                                   FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                                  WHERE orders_id = '".(int)$orders_withdraw_products['orders_id']."'
-                                                   AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'
-                                              ORDER BY orders_products_attributes_id");
+                                                   AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'");
               if (xtc_db_num_rows($attributes_query) > 0) {
                 while ($attribtues = xtc_db_fetch_array($attributes_query)) {
-                  $attrib_models[] = $attribtues['attributes_model'];
                   $attributes_array[] = array(
                     'OPTIONS_NAME' => $attribtues['products_options'],
                     'VALUES_NAME' => $attribtues['products_options_values'],
@@ -596,7 +593,7 @@
         
               $orders_withdraw_products_array[] = array(
                 'PRODUCTS_NAME' => $orders_withdraw_products['products_name'],
-                'PRODUCTS_MODEL' => encode_model_number($orders_withdraw_products['products_model'], $attrib_models, ENT_NOQUOTES),
+                'PRODUCTS_MODEL' => encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id'], ENT_NOQUOTES),
                 'PRODUCTS_PRICE' => $order_xtPrice->xtcFormat($orders_withdraw_products['products_price'], true),
                 'PRODUCTS_QUANTITY' => $orders_withdraw_products['products_quantity'],
                 'PRODUCTS_ATTRIBUTES' => $attributes_array,
@@ -706,15 +703,12 @@
           $order_xtPrice = new xtcPrice($orders_withdraw_products['currency'], $orders_withdraw_products['customers_status']);
   
           $attributes_array = array();
-          $attrib_models = array();
           $attributes_query = xtc_db_query("SELECT *
                                               FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                              WHERE orders_id = '".(int)$orders_withdraw_products['orders_id']."'
-                                               AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'
-                                          ORDER BY orders_products_attributes_id");
+                                               AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'");
           if (xtc_db_num_rows($attributes_query) > 0) {
             while ($attribtues = xtc_db_fetch_array($attributes_query)) {
-              $attrib_models[] = $attribtues['attributes_model'];
               $attributes_array[] = array(
                 'OPTIONS_NAME' => $attribtues['products_options'],
                 'VALUES_NAME' => $attribtues['products_options_values'],
@@ -724,7 +718,7 @@
     
           $orders_withdraw_products_array[] = array(
             'PRODUCTS_NAME' => $orders_withdraw_products['products_name'],
-            'PRODUCTS_MODEL' => encode_model_number($orders_withdraw_products['products_model'], $attrib_models),
+            'PRODUCTS_MODEL' => encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id']),
             'PRODUCTS_PRICE' => $order_xtPrice->xtcFormat($orders_withdraw_products['products_price'], true),
             'PRODUCTS_QUANTITY' => $orders_withdraw_products['withdraw_quantity'],
             'PRODUCTS_ATTRIBUTES' => $attributes_array,
@@ -754,15 +748,12 @@
   
           if ((int)$orders_withdraw_products['withdraw_quantity'] < (int)$orders_withdraw_products['products_quantity']) {        
             $attributes_array = array();
-            $attrib_models = array();
             $attributes_query = xtc_db_query("SELECT *
                                                 FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                                WHERE orders_id = '".(int)$orders_id."'
-                                                 AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'
-                                            ORDER BY orders_products_attributes_id");
+                                                 AND orders_products_id = '".$orders_withdraw_products['orders_products_id']."'");
             if (xtc_db_num_rows($attributes_query) > 0) {
               while ($attribtues = xtc_db_fetch_array($attributes_query)) {
-                $attrib_models[] = $attribtues['attributes_model'];
                 $attributes_array[] = array(
                   'OPTIONS_NAME' => $attribtues['products_options'],
                   'VALUES_NAME' => $attribtues['products_options_values'],
@@ -772,7 +763,7 @@
     
             $orders_withdraw_products_array[] = array(
               'PRODUCTS_NAME' => $orders_withdraw_products['products_name'],
-              'PRODUCTS_MODEL' => encode_model_number($orders_withdraw_products['products_model'], $attrib_models),
+              'PRODUCTS_MODEL' => encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id']),
               'PRODUCTS_PRICE' => $order_xtPrice->xtcFormat($orders_withdraw_products['products_price'], true),
               'PRODUCTS_QUANTITY' => ((int)$orders_withdraw_products['products_quantity'] - (int)$orders_withdraw_products['withdraw_quantity']),
               'WITHDRAW_QUANTITY' => (int)$orders_withdraw_products['withdraw_quantity'],
