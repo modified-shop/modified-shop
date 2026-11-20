@@ -129,7 +129,8 @@ class shipcloud {
 
 
   // a callback is taken once for each tracking event shipcloud reports for the shipment:
-  // true to take it, false when it is not confirmed or already taken, null when shipcloud gave no answer
+  // true to take it, false when it is not confirmed or already taken, null when shipcloud or the database gave no answer.
+  // With true the event stays locked for this request until count_event() or release_event()
   public function claim_event($tracking_id, $sc_id, $type) {
     $events = $this->get_tracking_events($sc_id);
     if ($events === null) {
@@ -150,7 +151,7 @@ class shipcloud {
       return false;
     }
 
-    // a statement that failed is no answer, shipcloud delivers the event again; nothing is counted after it.
+    // a statement that failed is no answer, shipcloud delivers the event again.
     // The table is created only while it is missing, a later call needs no right to create tables
     $table_query = xtc_db_query("SHOW TABLES LIKE '".xtc_db_input(TABLE_SHIPCLOUD_EVENTS)."'");
     if ($table_query === false) {
@@ -172,27 +173,65 @@ class shipcloud {
       return null;
     }
 
-    // one statement: of several deliveries at the same time only as many pass as shipcloud has events
-    if (xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
-                         SET event_count = event_count + 1
-                       WHERE tracking_id = '".(int)$tracking_id."'
-                         AND event_type = '".xtc_db_input($type)."'
-                         AND event_count < '".(int)$count."'") === false)
-    {
+    // deliveries of the same event wait for each other. The event is counted after its history entry, and the
+    // lock ends with its connection: a request that breaks off leaves nothing behind that would keep the next delivery out
+    $locked = false;
+    if (is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'shipcloud_lock_link', false))) {
+      // named locks are server wide, the name carries the database
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODsc_'.md5(DB_DATABASE.'|'.(int)$tracking_id.'|'.$type))."', 10) AS event_lock", 'shipcloud_lock_link');
+      $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
+      $locked = (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
+    }
+    if ($locked !== true) {
+      $this->release_event();
       return null;
     }
 
-    return (xtc_db_affected_rows() > 0);
+    // the row has to take a write before anything is written for the event:
+    // with a count that cannot be stored every repeat would be taken again
+    if (xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                         SET date_added = NOW()
+                       WHERE tracking_id = '".(int)$tracking_id."'
+                         AND event_type = '".xtc_db_input($type)."'") === false)
+    {
+      $this->release_event();
+      return null;
+    }
+
+    $count_query = xtc_db_query("SELECT event_count
+                                   FROM ".TABLE_SHIPCLOUD_EVENTS."
+                                  WHERE tracking_id = '".(int)$tracking_id."'
+                                    AND event_type = '".xtc_db_input($type)."'");
+    $counted = (($count_query !== false) ? xtc_db_fetch_array($count_query) : false);
+    if (!is_array($counted)) {
+      $this->release_event();
+      return null;
+    }
+    // of several deliveries only as many pass as shipcloud has events
+    if ((int)$counted['event_count'] >= (int)$count) {
+      $this->release_event();
+      return false;
+    }
+
+    return true;
   }
 
 
-  // gives a taken event back when the order could not be updated with it
-  public function release_event($tracking_id, $type) {
-    xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
-                     SET event_count = event_count - 1
-                   WHERE tracking_id = '".(int)$tracking_id."'
-                     AND event_type = '".xtc_db_input(strtoupper($type))."'
-                     AND event_count > 0");
+  // counts a taken event once its history entry is written and ends its lock
+  public function count_event($tracking_id, $type) {
+    $result = xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                               SET event_count = event_count + 1
+                             WHERE tracking_id = '".(int)$tracking_id."'
+                               AND event_type = '".xtc_db_input(strtoupper($type))."'");
+    $this->release_event();
+
+    return ($result !== false);
+  }
+
+
+  // ends the lock of a taken event, nothing is counted: shipcloud delivers it again
+  public function release_event() {
+    xtc_db_close('shipcloud_lock_link');
   }
 
 

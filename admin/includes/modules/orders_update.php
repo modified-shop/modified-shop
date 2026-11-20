@@ -14,8 +14,9 @@
   
   if ($order->info['orders_status_id'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
+      // a comment alone leaves the status column alone, a change made in the meantime stays
       xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET orders_status = ".$status.",
+                       SET ".(($order->info['orders_status_id'] != $status) ? "orders_status = ".$status."," : '')."
                            last_modified = now()
                      WHERE orders_id = '".$oID."'");
     }
@@ -128,7 +129,7 @@
       'comments' => $comments,
       'comments_sent' => ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0)
     );
-    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
-    $order_updated = true;
+    // only a stored entry counts as an update
+    $order_updated = (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array) !== false);
   }
 ?>

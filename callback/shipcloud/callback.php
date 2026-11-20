@@ -115,32 +115,23 @@ if (is_array($request)
     // only the parcel this callback belongs to
     $_POST['tracking_id'] = array($orders['tracking_id']);
     
-    // the event counts as taken only with its history entry, otherwise shipcloud delivers it again
-    $history_query = xtc_db_query("SELECT MAX(orders_status_history_id) AS history_id
-                                     FROM ".TABLE_ORDERS_STATUS_HISTORY."
-                                    WHERE orders_id = '".(int)$oID."'");
-    $history = (($history_query !== false) ? xtc_db_fetch_array($history_query) : false);
+    // the event is counted with its history entry: without the entry nothing is counted and shipcloud delivers it again
     $history_stored = false;
-    if (is_array($history)) {
-      try {
-        define('_VALID_XTC', true);
-        include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
-
-        $history_query = xtc_db_query("SELECT COUNT(*) AS total
-                                         FROM ".TABLE_ORDERS_STATUS_HISTORY."
-                                        WHERE orders_id = '".(int)$oID."'
-                                          AND orders_status_history_id > '".(int)$history['history_id']."'
-                                          AND comments = '".xtc_db_input($comments)."'");
-        $history = (($history_query !== false) ? xtc_db_fetch_array($history_query) : false);
-        $history_stored = (is_array($history) && $history['total'] > 0);
-      } catch (Throwable $ex) {
-        $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => $ex->getMessage()));
-      }
+    try {
+      define('_VALID_XTC', true);
+      include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
+      $history_stored = ($order_updated === true);
+    } catch (Throwable $ex) {
+      $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => $ex->getMessage()));
     }
     if ($history_stored !== true) {
-      $shipcloud->release_event($orders['tracking_id'], $type);
+      $shipcloud->release_event();
       header('HTTP/1.1 503 Service Unavailable');
       exit();
+    }
+    // the entry is written, an error status would only have it written a second time
+    if ($shipcloud->count_event($orders['tracking_id'], $type) !== true) {
+      $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => 'history entry written but not counted: '.$type.' for shipment '.$orders['sc_id']));
     }
   }
 }
