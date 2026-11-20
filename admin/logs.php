@@ -58,7 +58,7 @@
             header('Content-type: application/x-octet-stream');
             header('Content-disposition: attachment; filename=' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $_GET['file']));
             echo $buffer;
-            exit;              
+            exit;
           }
         }
         $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
