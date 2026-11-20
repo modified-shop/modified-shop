@@ -113,7 +113,8 @@ $campaign_array = array(
   'endD' => $eDay,
   'endM' => $eMon,
   'endY' => $eYear,
-  'status' => ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0),
+  // the menus of the form show these checked values as well
+  'status' => ((isset($_GET['status']) && is_string($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0),
   'campaign' => ((isset($_GET['campaign']) && is_string($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
 );
 $campaign = new campaigns($campaign_array);
@@ -191,7 +192,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="menuBoxHeading">
                           <?php 
                             echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>';
-                            echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0)); 
+                            echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), $campaign_array['status']); 
                           ?> 
                         </td>
                       </tr>
@@ -207,7 +208,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="menuBoxHeading">
                           <?php 
                             echo '<p class="pdg2 mrg0"><b>'.REPORT_CAMPAIGN_FILTER.'</b></p>';
-                            echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0)); 
+                            echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), $campaign_array['campaign']); 
                           ?> 
                         </td>
                       </tr>

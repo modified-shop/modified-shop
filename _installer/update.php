@@ -596,21 +596,22 @@
         $smarty->assign('JAVASCRIPTDBCHECK', $javascriptdbcheck);
 
         $smarty->assign('UPDATE_ACTION', 'db_convert');
-        if ((isset($_POST['action']) && $_POST['action'] == 'convertnow') 
-            || (isset($_GET['action']) && $_GET['action'] == 'convertdb')
+        // both values go into configure.php and into the statements: only those the form offers,
+        // with anything else nothing is written or started and the form is shown again
+        $convert_now = (isset($_POST['action']) && $_POST['action'] == 'convertnow');
+        $convert_values = ($convert_now === true
+                           && isset($_POST['db_charset'])
+                           && in_array($_POST['db_charset'], array('latin1', 'utf8', 'utf8mb4'), true)
+                           && isset($_POST['db_engine'])
+                           && in_array($_POST['db_engine'], array('MyISAM', 'InnoDB'), true)
+                           );
+        if ($convert_values === true
+            || ($convert_now === false && isset($_GET['action']) && $_GET['action'] == 'convertdb')
             )
         {
           define('_VALID_XTC', true);
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
-          // both values go into configure.php and into the statements: only those the form offers, otherwise nothing is written
-          if (isset($_POST['action'])
-              && $_POST['action'] == 'convertnow'
-              && isset($_POST['db_charset'])
-              && in_array($_POST['db_charset'], array('latin1', 'utf8', 'utf8mb4'), true)
-              && isset($_POST['db_engine'])
-              && in_array($_POST['db_engine'], array('MyISAM', 'InnoDB'), true)
-              )
-          {
+          if ($convert_values === true) {
             $action = 'convertnow';
 
             $new_db_charset = $_POST['db_charset'];
