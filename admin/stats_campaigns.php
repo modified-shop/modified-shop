@@ -113,8 +113,8 @@ $campaign_array = array(
   'endD' => $eDay,
   'endM' => $eMon,
   'endY' => $eYear,
-  // the menus of the form show these checked values as well, the status as the number the report filters by
-  'status' => ((isset($_GET['status']) && is_string($_GET['status']) && ctype_digit($_GET['status'])) ? (int)$_GET['status'] : 0),
+  // the menus of the form show these checked values as well, the status as the number of a status that exists
+  'status' => ((isset($_GET['status']) && is_string($_GET['status']) && ctype_digit($_GET['status']) && isset($orders_status_array[(int)$_GET['status']])) ? (int)$_GET['status'] : 0),
   'campaign' => ((isset($_GET['campaign']) && is_string($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
 );
 $campaign = new campaigns($campaign_array);

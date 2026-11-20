@@ -506,7 +506,12 @@
         $convert['db_collation'] = 'utf8mb4_german2_ci';
       }
       $convert['db_engine'] = ((isset($_POST['db_engine']) && in_array($_POST['db_engine'], array('MyISAM', 'InnoDB'), true)) ? $_POST['db_engine'] : '');
-      if ($convert['db_charset'] == '' || $convert['db_engine'] == '') {
+      // utf8mb4 goes with InnoDB only, like in the form of the updater
+      if ($convert['db_charset'] == ''
+          || $convert['db_engine'] == ''
+          || ($convert['db_charset'] == 'utf8mb4' && $convert['db_engine'] != 'InnoDB')
+          )
+      {
         $convert['num_tables'] = 0;
         $convert['tables'] = array();
       }
