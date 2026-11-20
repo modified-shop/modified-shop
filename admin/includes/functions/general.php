@@ -2778,7 +2778,10 @@
     if ($handle = opendir($dir)) {
       while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != "..") {
-          if (is_dir($dir.$file)) {
+          if (is_link($dir.$file)) {
+            // a link is removed itself, the folder it leads to is not entered
+            unlink($dir.$file);
+          } elseif (is_dir($dir.$file)) {
             clear_dir($dir.$file, true);
             rmdir($dir.$file);
           } else {
