@@ -27,6 +27,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// the redirect after the return from a payment provider carries the session id for a browser without the cookie
+define('SESSION_FORCE_COOKIE_USE', 'False');
+
 include ('includes/application_top.php');
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'update')) {
