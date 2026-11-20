@@ -18,6 +18,14 @@
 
   require('includes/application_top.php');
 
+  // an own admin translation may not have the texts yet
+  defined('ERROR_LANGUAGE_CODE') or define('ERROR_LANGUAGE_CODE', 'Error: The code may only contain letters, dash and underscore and be at most %s characters long.');
+  defined('ERROR_LANGUAGE_CODE_EXISTS') or define('ERROR_LANGUAGE_CODE_EXISTS', 'Error: Another language already uses this code.');
+  defined('ERROR_LANGUAGE_DIRECTORY') or define('ERROR_LANGUAGE_DIRECTORY', 'Error: The directory needs a plain name of at most %s characters and must hold the language file of the same name, e.g. lang/english/english.php.');
+  defined('ERROR_LANGUAGE_ADMIN_FILES') or define('ERROR_LANGUAGE_ADMIN_FILES', 'Error: As default language the language directory needs the admin language files, e.g. lang/english/admin/english.php and lang/english/admin/buttons.php.');
+  defined('ERROR_LANGUAGE_IMAGE') or define('ERROR_LANGUAGE_IMAGE', 'Error: The image must not contain quotes, angle brackets, backslashes, #, ? or .. and may be at most %s characters long.');
+  defined('ERROR_LANGUAGE_NOT_SAVED') or define('ERROR_LANGUAGE_NOT_SAVED', 'Error: The language was not saved.');
+
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_LANGUAGES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -25,17 +33,152 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
+  // the language file the shop loads, or the admin language file with the buttons;
+  // only the files count here, so a stored directory with an unusual name is not refused for its name
+  function language_files_exist($directory, $admin = false) {
+    if (!is_string($directory) || $directory == '') {
+      return false;
+    }
+    if ($admin) {
+      return (is_file(DIR_FS_LANGUAGES . $directory . '/admin/' . $directory . '.php')
+              && is_file(DIR_FS_LANGUAGES . $directory . '/admin/buttons.php')
+              );
+    }
+
+    return is_file(DIR_FS_LANGUAGES . $directory . '/' . $directory . '.php');
+  }
+
+  // a new or changed value is checked, an unchanged one stays as it is, so an existing language can
+  // always be edited; nothing is rewritten or cut by the database, a wrong value stops the save with a message
+  if ($action == 'insert' || $action == 'save') {
+    require_once(DIR_FS_INC.'xtc_input_validation.inc.php');
+    require_once(DIR_FS_INC.'get_column_length.inc.php');
+    $check_lID = (($action == 'save' && isset($_GET['lID'])) ? (int)$_GET['lID'] : 0);
+    $check_code = ((isset($_POST['code']) && is_string($_POST['code'])) ? xtc_db_prepare_input($_POST['code']) : '');
+    $check_directory = ((isset($_POST['directory']) && is_string($_POST['directory'])) ? xtc_db_prepare_input($_POST['directory']) : '');
+    $check_image = ((isset($_POST['image']) && is_string($_POST['image'])) ? xtc_db_prepare_input($_POST['image']) : '');
+    $check_stored = false;
+    if ($action == 'save') {
+      $check_query = xtc_db_query("SELECT code, directory, image, status_admin
+                                     FROM " . TABLE_LANGUAGES . "
+                                    WHERE languages_id = '" . $check_lID . "'");
+      $check_stored = xtc_db_fetch_array($check_query);
+    }
+    $check_errors = array();
+
+    // the code follows the rule of the language switch
+    if (!is_array($check_stored) || $check_code !== $check_stored['code']) {
+      $code_length = get_column_length(TABLE_LANGUAGES, 'code');
+      if ($check_code == '' || xtc_input_validation($check_code, 'lang') !== $check_code || ($code_length > 0 && strlen($check_code) > $code_length)) {
+        $check_errors[] = sprintf(ERROR_LANGUAGE_CODE, $code_length);
+      } else {
+        $check_query = xtc_db_query("SELECT languages_id
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE code = '" . xtc_db_input($check_code) . "'
+                                        AND languages_id != '" . $check_lID . "'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check_errors[] = ERROR_LANGUAGE_CODE_EXISTS;
+        }
+      }
+    }
+
+    // the shop loads the language file of the directory with require_once
+    $check_directory_changed = (!is_array($check_stored) || $check_directory !== $check_stored['directory']);
+    if ($check_directory_changed) {
+      $directory_length = get_column_length(TABLE_LANGUAGES, 'directory');
+      if (!preg_match('/^[A-Za-z0-9_.-]+$/', $check_directory)
+          || strpos($check_directory, '..') !== false
+          || ($directory_length > 0 && strlen($check_directory) > $directory_length)
+          || !language_files_exist($check_directory)
+          )
+      {
+        $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, $directory_length);
+      }
+    }
+
+    // the shop starts in the default language as well; a changed directory is checked above,
+    // an unchanged one could still be without its language file
+    if (!$check_directory_changed
+        && isset($_POST['default'])
+        && $_POST['default'] == 'on'
+        && $check_code != DEFAULT_LANGUAGE
+        && !language_files_exist($check_directory)
+        )
+    {
+      $check_errors[] = sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory'));
+    }
+
+    // the admin starts in the default language, so it needs the admin language file and the buttons;
+    // the admin status only says that texts of this language are edited in the admin
+    $check_admin_files = language_files_exist($check_directory, true);
+    if (!$check_admin_files
+        && ((isset($_POST['default']) && $_POST['default'] == 'on' && $check_code != DEFAULT_LANGUAGE)
+            || (is_array($check_stored)
+                && $check_directory_changed
+                && $check_stored['code'] == DEFAULT_LANGUAGE
+                )
+            )
+        )
+    {
+      $check_errors[] = ERROR_LANGUAGE_ADMIN_FILES;
+    }
+
+    // the image is printed as typed in every flag, so a new value has to work as a relative path as it is
+    if ($check_image != '' && (!is_array($check_stored) || $check_image !== $check_stored['image'])) {
+      $image_length = get_column_length(TABLE_LANGUAGES, 'image');
+      if (preg_match('/["<>#?\\\\\x00-\x1F\x7F]/', $check_image)
+          || preg_match('#(^|/)\.\.(/|$)#', $check_image)
+          || ($image_length > 0 && mb_strlen($check_image, get_language_charset()) > $image_length)
+          )
+      {
+        $check_errors[] = sprintf(ERROR_LANGUAGE_IMAGE, $image_length);
+      }
+    }
+
+    if (count($check_errors) > 0) {
+      foreach ($check_errors as $check_error) {
+        $messageStack->add_session($check_error, 'error');
+      }
+      xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . (($action == 'save') ? '&lID=' . $check_lID . '&action=edit' : '&action=new')));
+    }
+  }
+
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'setlflag':
         $lID = (int)$_GET['lID'];
         $status = (int)$_GET['flag'];
+        if ($status == 1) {
+          // the shop loads the language file of an active language with require_once
+          $lng_query = xtc_db_query("SELECT directory
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE languages_id = '" . $lID . "'");
+          $lng = xtc_db_fetch_array($lng_query);
+          if (!is_array($lng) || !language_files_exist($lng['directory'])) {
+            require_once(DIR_FS_INC.'get_column_length.inc.php');
+            $messageStack->add_session(sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory')), 'error');
+            xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
+          }
+        }
         xtc_db_query("update " . TABLE_LANGUAGES . " set status = '" . xtc_db_input($status) . "' WHERE languages_id = '" . xtc_db_input($lID) . "'");
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
         break;
        case 'setladminflag':
         $lID = (int)$_GET['lID'];
         $status_admin = (int)$_GET['adminflag'];
+        if ($status_admin == 1) {
+          $lng_query = xtc_db_query("SELECT directory
+                                       FROM " . TABLE_LANGUAGES . "
+                                      WHERE languages_id = '" . $lID . "'");
+          $lng = xtc_db_fetch_array($lng_query);
+          // an admin can choose every language with this status in the shop, so the shop needs its file;
+          // the admin translation is not needed, the status also opens the texts of the language for editing
+          if (!is_array($lng) || !language_files_exist($lng['directory'])) {
+            require_once(DIR_FS_INC.'get_column_length.inc.php');
+            $messageStack->add_session(sprintf(ERROR_LANGUAGE_DIRECTORY, get_column_length(TABLE_LANGUAGES, 'directory')), 'error');
+            xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
+          }
+        }
         xtc_db_query("update " . TABLE_LANGUAGES . " set status_admin = '" . xtc_db_input($status_admin) . "' WHERE languages_id = '" . xtc_db_input($lID) . "'");
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID));
         break;
@@ -43,14 +186,19 @@
         // a language may only use ENCODE_LANGUAGE_CHARSETS, never store anything else
         $charset_value = get_language_charset(isset($_POST['language_charset']) ? xtc_db_prepare_input($_POST['language_charset']) : '');
         $sql_data_array = array(
-            'name' => xtc_db_prepare_input($_POST['name']), 
-            'code' => xtc_db_prepare_input($_POST['code']),  
-            'image' => xtc_db_prepare_input($_POST['image']),  
-            'directory' => xtc_db_prepare_input($_POST['directory']),  
+            // the name goes into attributes, code, image and directory are checked above
+            'name' => str_replace('"', '', strip_tags(xtc_db_prepare_input($_POST['name']))),
+            'code' => $check_code,
+            'image' => $check_image,
+            'directory' => $check_directory,
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => $charset_value,
           );
-        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
+        if (!xtc_db_perform(TABLE_LANGUAGES, $sql_data_array)) {
+          // a failed insert must not change anything else, e.g. the default language
+          $messageStack->add_session(ERROR_LANGUAGE_NOT_SAVED, 'error');
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&action=new'));
+        }
         $lID = xtc_db_insert_id();
 
         // create additional customers status
@@ -92,16 +240,21 @@
         }
 
         $sql_data_array = array(
-          'name' => xtc_db_prepare_input($_POST['name']), 
-          'code' => xtc_db_prepare_input($_POST['code']),  
-          'image' => xtc_db_prepare_input($_POST['image']),  
-          'directory' => xtc_db_prepare_input($_POST['directory']),  
+          // the name goes into attributes, code, image and directory are checked above
+          'name' => str_replace('"', '', strip_tags(xtc_db_prepare_input($_POST['name']))),
+          'code' => $check_code,
+          'image' => $check_image,
+          'directory' => $check_directory,
           //'status' => xtc_db_prepare_input($_POST['status']),  
           'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
           'language_charset' => $charset_value,
           //'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
         ); 
-        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'');        
+        if (!xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'')) {
+          // a failed update must not change anything else, e.g. the default language
+          $messageStack->add_session(ERROR_LANGUAGE_NOT_SAVED, 'error');
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page . '&lID=' . $lID . '&action=edit'));
+        }
         
         if (isset($_POST['default']) && $_POST['default'] == 'on') {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
