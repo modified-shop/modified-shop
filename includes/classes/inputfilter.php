@@ -214,8 +214,10 @@ class Inputfilter {
                       }
 
                       //active content
+                      // the attribute manager posts the numbers of an option value as <options_values_id>_model and _ean
+                      $content_key = preg_replace('/^[0-9]+_(model|ean)$/', 'products_$1', (string)$key);
                       if ((!defined('ADMIN_ALLOW_SCRIPT_CONTENT') || !in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true))
-                          && in_array($key, $this->content_keys)
+                          && in_array($content_key, $this->content_keys)
                           )
                       {
                         $this->params[$key] = $this->removeActiveContent($value);
