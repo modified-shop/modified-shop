@@ -474,7 +474,7 @@
             <?php  echo $xtPrice->xtcFormatCurrency($cInfo->amount).xtc_draw_hidden_field('amount', $cInfo->amount);
               /*
               if ($processed == true) {
-                echo encode_htmlspecialchars($cInfo->amount).xtc_draw_hidden_field('amount', $cInfo->amount);
+                echo $cInfo->amount.xtc_draw_hidden_field('amount', $cInfo->amount);
               } else {
                 echo xtc_draw_input_field('amount', $cInfo->amount);
               }
