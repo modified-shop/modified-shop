@@ -54,10 +54,11 @@
     // true when the last answer was a JSON list
     public $response_list = false;
     
-    function __construct($timeout = 20) {
+    function __construct($timeout = 20, $redirects = true) {
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_zettle_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'zettle', 'debug');
 
-      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => min(5, (int)$timeout), 'timeout' => (int)$timeout));
+      // the time limit holds for one transfer, every redirect that is followed would start it again
+      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => min(5, (int)$timeout), 'timeout' => (int)$timeout, 'allow_redirects' => ($redirects === true)));
 
       $this->client_id = self::CLIENT_ID;
       $this->api_key = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '';
@@ -327,25 +328,29 @@
       }
 
       $shop_keys = array();
-      // the answer also carries headers, status and reason
-      foreach ($subscriptions as $subscription) {
+      foreach ($subscriptions as $key => $subscription) {
+        // the answer also carries headers, status and reason
+        if (!is_int($key)) {
+          continue;
+        }
+        // an entry that is no subscription: the list is not usable as a whole
         if (!is_array($subscription)
-            || !isset($subscription['signingKey'])
-            || !is_string($subscription['signingKey'])
-            || $subscription['signingKey'] == ''
-            || strpos($subscription['signingKey'], ',') !== false
             || !isset($subscription['destination'])
-            || $subscription['destination'] != $scheme['destination']
-            || !isset($subscription['eventNames'])
-            || !is_array($subscription['eventNames'])
-            || count($subscription['eventNames']) < 1
+            || !is_string($subscription['destination'])
             )
         {
+          return false;
+        }
+        if ($subscription['destination'] != $scheme['destination']) {
           continue;
+        }
+        // a subscription of this shop has to be complete
+        if (!isset($subscription['eventNames']) || !is_array($subscription['eventNames'])) {
+          return false;
         }
         // the name of an event is not signed: a subscription that also delivers other events could have one of
         // them sent under a name the webhook handles. A list without names stands for all events
-        $shop_events = true;
+        $shop_events = (count($subscription['eventNames']) > 0);
         foreach ($subscription['eventNames'] as $event_name) {
           if (!is_string($event_name) || !in_array($event_name, $scheme['eventNames'], true)) {
             $shop_events = false;
@@ -354,6 +359,15 @@
         }
         // every subscription that delivers to this shop signs with a key of its own
         if ($shop_events === true) {
+          // a subscription of this shop without a key that can be stored: not usable either
+          if (!isset($subscription['signingKey'])
+              || !is_string($subscription['signingKey'])
+              || $subscription['signingKey'] == ''
+              || strpos($subscription['signingKey'], ',') !== false
+              )
+          {
+            return false;
+          }
           $shop_keys[$subscription['signingKey']] = $subscription['signingKey'];
         }
       }
@@ -363,13 +377,21 @@
       $check_query = xtc_db_query("SELECT configuration_key
                                      FROM ".TABLE_CONFIGURATION."
                                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+      // keys that are not stored are not read: the stored ones stay and the next attempt follows after 15 minutes
+      if ($check_query === false) {
+        return false;
+      }
+      $stored = true;
       if (xtc_db_num_rows($check_query) > 0) {
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                         SET configuration_value = '".xtc_db_input($signing_key)."',
-                             sort_order = '-1'
-                       WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+        $stored = xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                                  SET configuration_value = '".xtc_db_input($signing_key)."',
+                                      sort_order = '-1'
+                                WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
       } elseif ($signing_key != '') {
-        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '-1', NOW())");
+        $stored = xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '-1', NOW())");
+      }
+      if ($stored === false) {
+        return false;
       }
 
       // the time the keys were read: a valid event has them read again after a day
@@ -745,6 +767,10 @@
           $response = json_decode($response_text, true);
           // an answer that is no JSON must not read as an empty list
           $this->response_list = (is_array($response) && substr(ltrim($response_text), 0, 1) == '[');
+          // a text or a number as answer has no fields, status and headers are added to an empty answer
+          if (!is_array($response)) {
+            $response = array();
+          }
           $response['headers'] = $headers;
           $response['status'] = $status;
           $response['reason'] = $reason;
