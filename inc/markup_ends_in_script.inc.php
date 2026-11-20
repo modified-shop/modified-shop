@@ -21,16 +21,17 @@
     // svg and math hold elements of their own, $foreign are the open ones
     $foreign = array();
     $foreign_root = '';
-    $foreign_start = 0;
     $foreign_scripts = 0;
-    // start tags that end svg and math, and their elements whose content is HTML again
-    $html_tags = array('b', 'big', 'blockquote', 'body', 'br', 'center', 'code', 'dd', 'div', 'dl', 'dt', 'em', 'embed', 'font',
+    // start tags that end svg and math (font with one of these attributes), and their elements whose content is HTML again
+    $html_tags = array('b', 'big', 'blockquote', 'body', 'br', 'center', 'code', 'dd', 'div', 'dl', 'dt', 'em', 'embed',
                        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'hr', 'i', 'img', 'li', 'listing', 'menu', 'meta', 'nobr', 'ol',
                        'p', 'pre', 'ruby', 's', 'small', 'span', 'strong', 'strike', 'sub', 'sup', 'table', 'tt', 'u', 'ul', 'var');
+    $html_font = array('color', 'face', 'size');
     $html_content = array('svg' => array('foreignobject', 'desc', 'title'),
                           'math' => array('mi', 'mo', 'mn', 'ms', 'mtext', 'annotation-xml'));
-    // inside a select element browsers differ in what they take as a tag
-    $select_start = false;
+    // inside a select element browsers differ in what they take as a tag, a template in it keeps it open
+    $select_open = false;
+    $select_template = false;
     $select_tags = array('style', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'svg', 'math');
     // where the reading is not sure, every script tag behind $start counts
     $any_script = function ($start) use ($markup) {
@@ -38,14 +39,15 @@
               && strpos($markup, '>', $match[0][1] + 7) !== false);
     };
 
-    // the place behind a tag whose attributes begin at $pos and whether it closes itself:
+    // the place behind a tag whose attributes begin at $pos, whether it closes itself and the names of its attributes:
     // a quote counts only where a value begins
     $tag_end = function ($pos) use ($markup, $length, $space) {
       $self_closing = false;
+      $names = array();
       while ($pos < $length) {
         $char = $markup[$pos];
         if ($char === '>') {
-          return array($pos + 1, $self_closing);
+          return array($pos + 1, $self_closing, $names);
         }
         if ($char === '/') {
           $self_closing = true;
@@ -57,7 +59,9 @@
           $pos++;
           continue;
         }
-        $pos += 1 + strcspn($markup, $space.'/>=', $pos + 1);
+        $name_length = 1 + strcspn($markup, $space.'/>=', $pos + 1);
+        $names[] = strtolower(substr($markup, $pos, $name_length));
+        $pos += $name_length;
         $pos += strspn($markup, $space, $pos);
         if ($pos < $length && $markup[$pos] === '=') {
           $pos++;
@@ -141,41 +145,62 @@
 
       if (count($foreign) > 0) {
         $open = count($foreign) - 1;
-        if ($closing === false) {
-          $known = (!in_array($name, $html_tags) && !in_array($foreign[$open], $html_content[$foreign_root]));
-          if ($known === true && $self_closing === false) {
+        $html = in_array($foreign[$open], $html_content[$foreign_root]);
+        $leaves = (($closing === true) ? ($name == 'p' || $name == 'br')
+                                       : (in_array($name, $html_tags) || ($name == 'font' && count(array_intersect($tag[2], $html_font)) > 0)));
+        if ($leaves === true) {
+          // such a tag ends svg and math with all that is open in them, inside content of HTML it changes nothing
+          if ($html === true && $closing === false) {
+            return ($foreign_scripts > 0 || $any_script($tag_start));
+          }
+          if ($html === true) {
+            continue;
+          }
+          $foreign = array();
+          $foreign_scripts = 0;
+        } elseif ($closing === false) {
+          // mglyph and malignmark stay MathML inside its elements for text
+          if ($html === true && ($foreign_root != 'math' || $foreign[$open] == 'annotation-xml' || ($name != 'mglyph' && $name != 'malignmark'))) {
+            return ($foreign_scripts > 0 || $any_script($tag_start));
+          }
+          if ($self_closing === false) {
             $foreign[] = $name;
             $foreign_scripts += (($name == 'script') ? 1 : 0);
           }
+          continue;
         } else {
           while ($open >= 0 && $foreign[$open] != $name) {
             $open--;
           }
-          $known = ($open >= 0);
-          while ($known === true && count($foreign) > $open) {
+          if ($open < 0) {
+            // the rules of HTML decide whether this end tag closes something around the svg
+            return ($foreign_scripts > 0 || $any_script($tag_start));
+          }
+          while (count($foreign) > $open) {
             $foreign_scripts -= ((array_pop($foreign) == 'script') ? 1 : 0);
           }
+          continue;
         }
-        if ($known === false) {
-          // from here the rules of HTML decide what is open
-          return $any_script($foreign_start);
-        }
-        continue;
       }
       if ($closing === true) {
+        if ($name == 'select' && $select_template === false) {
+          $select_open = false;
+        }
         continue;
       }
-      if ($name == 'select' && $select_start === false) {
-        $select_start = $tag_start;
+      if ($name == 'select') {
+        $select_open = true;
       }
-      if ($select_start !== false && in_array($name, $select_tags)) {
-        return $any_script($select_start);
+      if ($select_open === true && $name == 'template') {
+        $select_template = true;
+      }
+      if ($select_open === true && in_array($name, $select_tags)) {
+        return $any_script($tag_start);
       }
       if ($name == 'svg' || $name == 'math') {
         if ($self_closing === false) {
           $foreign = array($name);
           $foreign_root = $name;
-          $foreign_start = $tag_start;
         }
         continue;
       }
