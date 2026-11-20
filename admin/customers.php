@@ -291,12 +291,16 @@
           $_POST['multi_customers_confirm'] = array($customers_id);
         }
         
-        // a missing status would read as 0, the admin status
+        // a missing status would read as 0, the admin status; only a group that exists is stored
         if (isset($_POST['multi_customers_confirm'])
             && is_array($_POST['multi_customers_confirm'])
             && isset($_POST['customers_status'])
             && is_scalar($_POST['customers_status'])
             && ctype_digit((string)$_POST['customers_status'])
+            && xtc_db_num_rows(xtc_db_query("SELECT customers_status_id
+                                              FROM ".TABLE_CUSTOMERS_STATUS."
+                                             WHERE customers_status_id = '".(int)$_POST['customers_status']."'
+                                             LIMIT 1")) > 0
             )
         {
           $locked = false;

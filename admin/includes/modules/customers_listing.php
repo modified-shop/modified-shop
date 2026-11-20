@@ -526,13 +526,15 @@
                       $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                       // an account with admin status only for admins with the right for the admin rights
                       $account_locked = customers_account_locked($cInfo->customers_id);
+                      // deleting and the status follow the stricter rule, also for the own account
+                      $account_remove_locked = customers_account_locked($cInfo->customers_id, true);
                       if (($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) && $account_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=edit').'">'.BUTTON_EDIT.'</a>');
                       }
-                      if ($cInfo->customers_id != 1 && $account_locked === false) {
+                      if ($cInfo->customers_id != 1 && $account_remove_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=confirm').'">'.BUTTON_DELETE.'</a>');
                       }
-                      if ($cInfo->customers_id != 1 && $account_locked === false) {
+                      if ($cInfo->customers_id != 1 && $account_remove_locked === false) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=editstatus').'">'.BUTTON_STATUS.'</a>');
                       }
                       if (($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) && $cInfo->customers_status == 0) {

@@ -25,16 +25,23 @@
     $messageStack->add($memo_retry_message, 'warning');
   }
 
+  // the memos of an account with admin status are shown and written with the right for it, like the account
+  $memo_account_locked = (isset($_GET['cID']) && customers_account_locked($_GET['cID']));
+  $memo_account_message = (defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.');
+
   if (isset($_GET['action'])) {
     switch ($_GET['action']) {
 
       case 'save':
+        if ($memo_account_locked === true) {
+          xtc_redirect(xtc_href_link('popup_memo.php', xtc_get_all_get_params(array('action'))));
+        }
         $memo_title = xtc_db_prepare_input($_POST['memo_title']);
         $memo_text = xtc_db_prepare_input($_POST['memo_text']);
 
         if ($memo_text != '' && $memo_title != '' ) {
           $sql_data_array = array(
-            'customers_id' => $_GET['cID'],
+            'customers_id' => (int)$_GET['cID'],
             'memo_date' => date("Y-m-d"),
             'memo_title' =>$memo_title,
             'memo_text' => nl2br($memo_text),
@@ -48,12 +55,10 @@
       case 'edit':
         // deleting needs the form with its token, not a link
         if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
-          // only a memo of this account, and of an account with admin status only with the right for it
-          if (admin_form_posted() && isset($_GET['cID']) && customers_account_locked($_GET['cID'])) {
-            $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
-          } elseif (admin_form_posted()) {
+          // only a memo of this account; for an account with admin status the page shows its message
+          if ($memo_account_locked !== true && admin_form_posted()) {
             xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."' AND customers_id = '".(isset($_GET['cID']) ? (int)$_GET['cID'] : 0)."'");
-          } else {
+          } elseif ($memo_account_locked !== true) {
             $messageStack->add_session($memo_retry_message, 'warning');
           }
         }
@@ -77,6 +82,10 @@
         echo '<div class="clear"></div>'.$messageStack->output();
       }
     ?>
+    <?php if ($memo_account_locked === true) { ?>
+    <div class="clear"></div>
+    <div class="main pdg2"><?php echo $memo_account_message; ?></div>
+    <?php } else { ?>
     <?php echo xtc_draw_form('customers_memo', 'popup_memo.php', 'action=save&cID='.(int)$_GET['cID'], 'post'); ?>  
       <table class="tableConfig borderall">
         <tr>
@@ -86,5 +95,6 @@
         </tr>
       </table>
     </form>
+    <?php } ?>
   </body>
 </html>
