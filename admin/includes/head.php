@@ -118,11 +118,8 @@
       if (e && e.stopPropagation) {
         e.stopPropagation();
       }
-      // a redirect from http to https would turn the POST into a GET, so the request leaves with https like this page
-      var target = link.href;
-      if (window.location.protocol == 'https:' && link.protocol == 'http:' && link.host == window.location.host) {
-        target = 'https:' + target.substring(link.protocol.length);
-      }
+      // a redirect to another protocol, host or port would turn the POST into a GET, so the request goes to the address of this page
+      var target = window.location.protocol + '//' + window.location.host + link.pathname + link.search;
       var form = $('<form method="post"></form>').attr('action', target);
       <?php if (defined('CSRF_TOKEN_SYSTEM') && CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) { ?>
       form.append($('<input type="hidden"/>').attr('name', <?php echo json_encode((string)$_SESSION['CSRFName']); ?>).val(<?php echo json_encode((string)$_SESSION['CSRFToken']); ?>));
