@@ -15,22 +15,50 @@
   
   $exts = array("log","log\.zip","log\.gz", "log\.[0-9]+");
   
+  // true for a name as the list shows it: a plain file name with one of the extensions
+  function logs_file_name($file) {
+    global $exts;
+
+    if (!is_string($file)
+        || $file === ''
+        || basename($file) !== $file
+        || preg_match('/[\\\\\x00-\x1f\x7f]/', $file)
+        )
+    {
+      return false;
+    }
+    foreach ($exts as $value) {
+      if (xtc_CheckExt($file, $value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // resolved path of a listed file that lies in the log directory itself, false when it leads elsewhere
+  function logs_file_path($file) {
+    $dir = realpath(DIR_FS_LOG);
+    if (!logs_file_name($file) || $dir === false) {
+      return false;
+    }
+    $path = realpath($dir . DIRECTORY_SEPARATOR . $file);
+
+    return (($path !== false && dirname($path) === $dir && is_file($path)) ? $path : false);
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'download':
-        if (is_file(DIR_FS_LOG . $_GET['file'])) {
-          foreach ($exts as $value) {
-            if (xtc_CheckExt($_GET['file'], $value)) {
-              if ($fp = fopen(DIR_FS_LOG . $_GET['file'], 'rb')) {
-                $buffer = fread($fp, filesize(DIR_FS_LOG . $_GET['file']));
-                fclose($fp);
-                header('Content-type: application/x-octet-stream');
-                header('Content-disposition: attachment; filename=' . $_GET['file']);
-                echo $buffer;
-                exit;              
-              }
-            }
+        $log_file = logs_file_path(isset($_GET['file']) ? $_GET['file'] : '');
+        if ($log_file !== false) {
+          if ($fp = fopen($log_file, 'rb')) {
+            $buffer = fread($fp, filesize($log_file));
+            fclose($fp);
+            header('Content-type: application/x-octet-stream');
+            header('Content-disposition: attachment; filename=' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $_GET['file']));
+            echo $buffer;
+            exit;              
           }
         }
         $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
