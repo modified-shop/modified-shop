@@ -27,7 +27,9 @@
       return $value;
     }
     if (strpos($value, '<') !== false && !xtc_remove_active_content_available()) {
-      return encode_htmlspecialchars($value);
+      // the encoded text is longer, so it ends at the limit as well
+      $value = encode_htmlspecialchars($value);
+      return (($max_length > 0) ? xtc_remove_active_content_cut($value, (int)$max_length) : $value);
     }
 
     $removed = false;

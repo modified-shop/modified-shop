@@ -280,7 +280,7 @@
     // no declaration: the text as it is, unless it ends in an open tag, which the text that follows it in a page
     // would complete
     if ($changed === false && $tags[0] === $tags[1]
-        && !preg_match('/<\/?[a-z][a-z0-9]*[ \t\n\f\r]*\/?[^> \t\n\f\r\/]|<\/(?![a-z])|<[!?]|<[a-z\/][^>]*$/i', $value)
+        && !preg_match('/<\/?[a-z][a-z0-9]*+[ \t\n\f\r]*+\/?+[^> \t\n\f\r\/]|<\/(?![a-z])|<[!?]|<[a-z\/][^>]*$/i', $value)
         )
     {
       $kept = $value;
