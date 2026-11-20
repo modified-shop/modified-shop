@@ -179,7 +179,7 @@
                               $onclick_link = 'file=' . rawurlencode($entry);
                             }
                             ?>
-                              <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_LOGS, 'action=download&file=' . rawurlencode($entry)) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . encode_htmlspecialchars($entry); ?></td>
+                              <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_LOGS, 'action=download&file=' . rawurlencode($entry)) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . encode_htmlspecialchars($entry, ENT_COMPAT | ENT_SUBSTITUTE); ?></td>
                               <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_LOG . $entry)); ?></td>
                               <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_LOG . $entry)); ?> bytes</td>
                             </tr>
@@ -211,16 +211,16 @@
                     if (!isset($buInfo) || !is_object($buInfo)) {
                       break;
                     }
-                    $heading[] = array('text' => '<b>' . encode_htmlspecialchars($buInfo->file) . '</b>');
+                    $heading[] = array('text' => '<b>' . encode_htmlspecialchars($buInfo->file, ENT_COMPAT | ENT_SUBSTITUTE) . '</b>');
                     $contents = array('form' => xtc_draw_form('delete', FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file) . '&action=deleteconfirm'));
                     $contents[] = array('text' => TEXT_DELETE_INTRO);
-                    $contents[] = array('text' => '<br /><b>' . encode_htmlspecialchars($buInfo->file) . '</b>');
+                    $contents[] = array('text' => '<br /><b>' . encode_htmlspecialchars($buInfo->file, ENT_COMPAT | ENT_SUBSTITUTE) . '</b>');
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file)) . '">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
 
                   default:
                     if (isset($buInfo) && is_object($buInfo)) {
-                      $heading[] = array('text' => '<b>' . encode_htmlspecialchars($buInfo->file) . '</b>');
+                      $heading[] = array('text' => '<b>' . encode_htmlspecialchars($buInfo->file, ENT_COMPAT | ENT_SUBSTITUTE) . '</b>');
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file) . '&action=delete') . '">' . BUTTON_DELETE . '</a>'. '&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file) . '&action=download') . '">' . 'Download' . '</a><br/><br/>');
                     }
                     break;
