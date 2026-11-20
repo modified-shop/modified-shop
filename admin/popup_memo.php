@@ -16,6 +16,7 @@
 
   require('includes/application_top.php');
   require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+  require_once(DIR_FS_INC.'customers_account_locked.inc.php');
   include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/customers.php');
 
   // the central token check refused the form and removed the POST
@@ -47,8 +48,11 @@
       case 'edit':
         // deleting needs the form with its token, not a link
         if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
-          if (admin_form_posted()) {
-            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."'");
+          // only a memo of this account, and of an account with admin status only with the right for it
+          if (admin_form_posted() && isset($_GET['cID']) && customers_account_locked($_GET['cID'])) {
+            $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
+          } elseif (admin_form_posted()) {
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."' AND customers_id = '".(isset($_GET['cID']) ? (int)$_GET['cID'] : 0)."'");
           } else {
             $messageStack->add_session($memo_retry_message, 'warning');
           }

@@ -325,7 +325,7 @@
                         }
                       }
                       $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_reviews', 'on', true).' '.TEXT_DELETE_REVIEWS_ELEMENTS);
-                      $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id) . '">' . BUTTON_CANCEL . '</a>');
+                      $contents[] = array('align' => 'center', 'text' => xtc_draw_hidden_field('multi_customers_form', '1') . '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id) . '">' . BUTTON_CANCEL . '</a>');
                     }
                     
                     if (isset($_POST['multi_status']) && xtc_not_null($_POST['multi_status'])) {
@@ -341,7 +341,7 @@
                         }
                       }
                       $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('customers_status', $customers_statuses_array));
-                      $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'.BUTTON_UPDATE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
+                      $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_draw_hidden_field('multi_customers_form', '1').'<input type="submit" class="button" value="'.BUTTON_UPDATE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
                     }
                     break;
                 

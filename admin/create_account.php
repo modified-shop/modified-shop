@@ -68,6 +68,15 @@
     $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
     $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
     $customers_status_c = xtc_db_prepare_input($_POST['status']);
+    // one checked number of an existing group decides about the right, the account and its admin rights
+    $customers_status_c = ((is_scalar($customers_status_c) && ctype_digit((string)$customers_status_c)) ? (int)$customers_status_c : -1);
+    $status_check_query = xtc_db_query("SELECT customers_status_id
+                                          FROM ".TABLE_CUSTOMERS_STATUS."
+                                         WHERE customers_status_id = '".$customers_status_c."'
+                                         LIMIT 1");
+    if (xtc_db_num_rows($status_check_query) < 1) {
+      $customers_status_c = (int)DEFAULT_CUSTOMERS_STATUS_ID;
+    }
     
     $default_address_id = xtc_db_prepare_input($_POST['default_address_id']);
     $entry_street_address = xtc_db_prepare_input($_POST['entry_street_address']);
@@ -115,7 +124,7 @@
     }
 
     // an account with admin status is created with the right for the admin rights only
-    if ((string)$customers_status_c == '0') {
+    if ($customers_status_c == 0) {
       $admin_access = get_admin_access($_SESSION['customer_id']);
       if (!isset($admin_access['accounting']) || $admin_access['accounting'] != 1) {
         $error = true;
@@ -320,7 +329,7 @@
       xtc_db_query("INSERT INTO ".TABLE_CUSTOMERS_INFO." (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) VALUES ('".$cc_id."', '0', now())");
 
       // Create insert into admin access table if admin is created.
-      if ($customers_status_c == '0') {
+      if ($customers_status_c == 0) {
         xtc_db_query("INSERT INTO ".TABLE_ADMIN_ACCESS." (customers_id) VALUES ('".$cc_id."')");
       }
 

@@ -23,6 +23,7 @@
 
   require ('includes/application_top.php');
   require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+  require_once(DIR_FS_INC.'customers_account_locked.inc.php');
   
   require(DIR_WS_INCLUDES . 'get_states.php');
 
@@ -63,9 +64,10 @@
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
     // deleting needs the form with its token, not a link
-    if (admin_form_posted()) {
+    // only a memo of this account, and of an account with admin status only with the right for it
+    if (admin_form_posted() && !customers_account_locked($customers_id)) {
       $mID = xtc_db_prepare_input($_GET['mID']);
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."' AND customers_id = '".$customers_id."'");
     }
     xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action', 'special')).'cID='.$customers_id.'&action=edit'));
   }
@@ -81,30 +83,6 @@
   {
     $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
     xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'address_book_id', 'default'))));
-  }
-
-  // accounts with admin status are managed with the right for the admin rights (accounting)
-  function customers_manage_admins() {
-    $admin_access = get_admin_access($_SESSION['customer_id']);
-
-    return (isset($admin_access['accounting']) && $admin_access['accounting'] == 1);
-  }
-
-  // true when this admin must not change the account; with $remove also the main account, it is never deleted and keeps its status
-  function customers_account_locked($customers_id, $remove = false) {
-    $customers_id = (int)$customers_id;
-    if ($remove === true && $customers_id == 1) {
-      return true;
-    }
-    if ($customers_id == (int)$_SESSION['customer_id'] || customers_manage_admins()) {
-      return false;
-    }
-    $check_query = xtc_db_query("SELECT customers_status
-                                   FROM ".TABLE_CUSTOMERS."
-                                  WHERE customers_id = '".$customers_id."'");
-    $check = xtc_db_fetch_array($check_query);
-
-    return (is_array($check) && (int)$check['customers_status'] == 0);
   }
 
   // only whole numbers above zero, each one once
@@ -308,7 +286,8 @@
           break;
 
       case 'statusconfirm' :    
-        if (!isset($_POST['multi_customers_confirm']) && (int)$customers_id > 0) {
+        // the bulk form with nothing selected must not fall back to the account of the URL
+        if (!isset($_POST['multi_customers_confirm']) && !isset($_POST['multi_customers_form']) && (int)$customers_id > 0) {
           $_POST['multi_customers_confirm'] = array($customers_id);
         }
         
@@ -764,7 +743,8 @@
         break;
 
       case 'deleteconfirm' :
-        if (!isset($_POST['multi_customers_confirm']) && (int)$customers_id > 0) {
+        // the bulk form with nothing selected must not fall back to the account of the URL
+        if (!isset($_POST['multi_customers_confirm']) && !isset($_POST['multi_customers_form']) && (int)$customers_id > 0) {
           $_POST['multi_customers_confirm'] = array($customers_id);
         }
         
