@@ -35,7 +35,7 @@
     if (defined('ATTRIBUTE_MODEL_DELIMITER') && ATTRIBUTE_MODEL_DELIMITER != '') {
       $delimiters[] = ATTRIBUTE_MODEL_DELIMITER;
     }
-    if (preg_match_all('/<br\s*\/?>/i', $model, $matches)) {
+    if (preg_match_all('/<br[\t\n\f\r ]*\/?>/i', $model, $matches)) {
       $delimiters = array_merge($delimiters, $matches[0]);
     }
     // a line break that was cut cannot be read from the value

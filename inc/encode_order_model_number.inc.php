@@ -24,6 +24,15 @@
       $joined = get_order_model_parts($model, $orders_products_id);
       if ($joined !== false) {
         $encoded = encode_model_number($model, $joined['numbers'], $flags);
+      } elseif (preg_match('/<br[\t\n\f\r ]*\/?>/i', $model)) {
+        // the stored value does not tell a joined number from an own one: a line break stays one, the rest is text
+        $parts = preg_split('/(<br[\t\n\f\r ]*\/?>)/i', $model, -1, PREG_SPLIT_DELIM_CAPTURE);
+        foreach ($parts as $key => $part) {
+          if ($key % 2 == 0) {
+            $parts[$key] = encode_model_number($part, array(), $flags);
+          }
+        }
+        $encoded = implode('', $parts);
       }
     }
 

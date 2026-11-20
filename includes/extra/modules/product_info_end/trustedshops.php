@@ -24,10 +24,9 @@
     if ($placeholders == 1 || $placeholders == 2) {
       // the model number is written for the place of its placeholder: a script, or markup
       require_once(DIR_FS_INC.'encode_model_number.inc.php');
+      require_once(DIR_FS_INC.'markup_ends_in_script.inc.php');
       $products_model = (string)$product->data['products_model'];
-      $before = substr($product_sticker, 0, strrpos($product_sticker, '%s'));
-      $script = strripos($before, '<script');
-      if ($script !== false && strpos($before, '>', $script) !== false && stripos($before, '</script', $script) === false) {
+      if (markup_ends_in_script(substr($product_sticker, 0, strrpos($product_sticker, '%s')))) {
         $products_model = strtr($products_model, array('\\' => '\\\\', "'" => '\\u0027', '"' => '\\u0022', '`' => '\\u0060', '$' => '\\u0024', '<' => '\\u003C', '>' => '\\u003E', '&' => '\\u0026', "\r" => '\\r', "\n" => '\\n'));
       } else {
         $products_model = encode_model_number($products_model);
