@@ -307,41 +307,55 @@
     }
   
 
-    // the subscription list returns the key Zettle signs its webhooks with
+    // the subscription list returns the keys Zettle signs its webhooks with: the keys of this shop,
+    // an empty text when Zettle has no subscription of this shop, false when the list did not arrive
     function saveSigningKey() {
       $subscriptions = $this->getSubscriptions();
       $scheme = $this->get_subscription_scheme();
 
-      $signing_key = '';
+      // without the list the stored keys stay as they are
+      if (!is_array($subscriptions)
+          || isset($subscriptions['error'])
+          || !isset($subscriptions['status'])
+          || (int)$subscriptions['status'] != 200
+          )
+      {
+        return false;
+      }
+
       $shop_keys = array();
-      if (is_array($subscriptions)) {
-        // the answer also carries headers, status and reason
-        foreach ($subscriptions as $subscription) {
-          if (!is_array($subscription)
-              || !isset($subscription['signingKey'])
-              || !is_string($subscription['signingKey'])
-              || $subscription['signingKey'] == ''
-              || strpos($subscription['signingKey'], ',') !== false
-              )
-          {
-            continue;
-          }
-          // every subscription that delivers to this shop signs with a key of its own
-          if (isset($subscription['destination']) && $subscription['destination'] == $scheme['destination']) {
-            $shop_keys[$subscription['signingKey']] = $subscription['signingKey'];
-          }
-          // without one the first as in the module
-          if ($signing_key == '') {
-            $signing_key = $subscription['signingKey'];
+      // the answer also carries headers, status and reason
+      foreach ($subscriptions as $subscription) {
+        if (!is_array($subscription)
+            || !isset($subscription['signingKey'])
+            || !is_string($subscription['signingKey'])
+            || $subscription['signingKey'] == ''
+            || strpos($subscription['signingKey'], ',') !== false
+            || !isset($subscription['destination'])
+            || $subscription['destination'] != $scheme['destination']
+            || !isset($subscription['eventNames'])
+            || !is_array($subscription['eventNames'])
+            || count($subscription['eventNames']) < 1
+            )
+        {
+          continue;
+        }
+        // the name of an event is not signed: a subscription that also delivers other events could have one of
+        // them sent under a name the webhook handles. A list without names stands for all events
+        $shop_events = true;
+        foreach ($subscription['eventNames'] as $event_name) {
+          if (!is_string($event_name) || !in_array($event_name, $scheme['eventNames'], true)) {
+            $shop_events = false;
+            break;
           }
         }
+        // every subscription that delivers to this shop signs with a key of its own
+        if ($shop_events === true) {
+          $shop_keys[$subscription['signingKey']] = $subscription['signingKey'];
+        }
       }
-      if (count($shop_keys) > 0) {
-        $signing_key = implode(',', $shop_keys);
-      }
-      if ($signing_key == '') {
-        return '';
-      }
+      // a subscription that is gone or changed loses its key here
+      $signing_key = implode(',', $shop_keys);
 
       $check_query = xtc_db_query("SELECT configuration_key
                                      FROM ".TABLE_CONFIGURATION."
@@ -351,7 +365,7 @@
                          SET configuration_value = '".xtc_db_input($signing_key)."',
                              sort_order = '-1'
                        WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
-      } else {
+      } elseif ($signing_key != '') {
         xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '-1', NOW())");
       }
 
@@ -359,8 +373,8 @@
     }
 
 
-    // the lookup is a request to Zettle, calls to the webhook start it once in 15 minutes
-    static function signingKeyLookupAllowed() {
+    // the lookup is a request to Zettle, calls to the webhook start it once in the given number of seconds
+    static function signingKeyLookupAllowed($interval = 900) {
       $now = time();
       $check_query = xtc_db_query("SELECT configuration_value
                                      FROM ".TABLE_CONFIGURATION."
@@ -372,7 +386,7 @@
       }
 
       $check = xtc_db_fetch_array($check_query);
-      if ((int)$check['configuration_value'] > ($now - 900)) {
+      if ((int)$check['configuration_value'] > ($now - (int)$interval)) {
         return false;
       }
 
