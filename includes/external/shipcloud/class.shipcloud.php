@@ -150,29 +150,49 @@ class shipcloud {
       return false;
     }
 
-    $created = xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_SHIPCLOUD_EVENTS." (
-                    `tracking_id` int(11) NOT NULL,
-                    `event_type` varchar(64) NOT NULL,
-                    `event_count` int(11) NOT NULL DEFAULT 0,
-                    `date_added` datetime NOT NULL,
-                    PRIMARY KEY (`tracking_id`, `event_type`)
-                  )");
-    $added = xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', NOW())");
-
-    // one statement: of several deliveries at the same time only as many pass as shipcloud has events
-    $claimed = xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
-                               SET event_count = event_count + 1
-                             WHERE tracking_id = '".(int)$tracking_id."'
-                               AND event_type = '".xtc_db_input($type)."'
-                               AND event_count < '".(int)$count."'");
-    $taken = xtc_db_affected_rows();
-
-    // a statement that failed is no answer, shipcloud delivers the event again
-    if ($created === false || $added === false || $claimed === false) {
+    // a statement that failed is no answer, shipcloud delivers the event again; nothing is counted after it.
+    // The table is created only while it is missing, a later call needs no right to create tables
+    $table_query = xtc_db_query("SHOW TABLES LIKE '".xtc_db_input(TABLE_SHIPCLOUD_EVENTS)."'");
+    if ($table_query === false) {
+      return null;
+    }
+    if (xtc_db_num_rows($table_query) < 1
+        && xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_SHIPCLOUD_EVENTS." (
+                           `tracking_id` int(11) NOT NULL,
+                           `event_type` varchar(64) NOT NULL,
+                           `event_count` int(11) NOT NULL DEFAULT 0,
+                           `date_added` datetime NOT NULL,
+                           PRIMARY KEY (`tracking_id`, `event_type`)
+                         )") === false
+        )
+    {
+      return null;
+    }
+    if (xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', NOW())") === false) {
       return null;
     }
 
-    return ($taken > 0);
+    // one statement: of several deliveries at the same time only as many pass as shipcloud has events
+    if (xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                         SET event_count = event_count + 1
+                       WHERE tracking_id = '".(int)$tracking_id."'
+                         AND event_type = '".xtc_db_input($type)."'
+                         AND event_count < '".(int)$count."'") === false)
+    {
+      return null;
+    }
+
+    return (xtc_db_affected_rows() > 0);
+  }
+
+
+  // gives a taken event back when the order could not be updated with it
+  public function release_event($tracking_id, $type) {
+    xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                     SET event_count = event_count - 1
+                   WHERE tracking_id = '".(int)$tracking_id."'
+                     AND event_type = '".xtc_db_input(strtoupper($type))."'
+                     AND event_count > 0");
   }
 
 

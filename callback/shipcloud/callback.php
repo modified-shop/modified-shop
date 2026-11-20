@@ -98,6 +98,14 @@ if (is_array($request)
 
     // update order
     $oID = $order->info['orders_id'];
+    // the confirmation took time, the order keeps the status it has now
+    $status_query = xtc_db_query("SELECT orders_status
+                                    FROM ".TABLE_ORDERS."
+                                   WHERE orders_id = '".(int)$oID."'");
+    $status_array = (($status_query !== false) ? xtc_db_fetch_array($status_query) : false);
+    if (is_array($status_array)) {
+      $order->info['orders_status_id'] = $status_array['orders_status'];
+    }
     $status = $order->info['orders_status_id'];
     $comments = decode_htmlentities(constant($type));
     $order_updated = false;
@@ -107,7 +115,32 @@ if (is_array($request)
     // only the parcel this callback belongs to
     $_POST['tracking_id'] = array($orders['tracking_id']);
     
-    define('_VALID_XTC', true);
-    include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
+    // the event counts as taken only with its history entry, otherwise shipcloud delivers it again
+    $history_query = xtc_db_query("SELECT MAX(orders_status_history_id) AS history_id
+                                     FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                    WHERE orders_id = '".(int)$oID."'");
+    $history = (($history_query !== false) ? xtc_db_fetch_array($history_query) : false);
+    $history_stored = false;
+    if (is_array($history)) {
+      try {
+        define('_VALID_XTC', true);
+        include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
+
+        $history_query = xtc_db_query("SELECT COUNT(*) AS total
+                                         FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                        WHERE orders_id = '".(int)$oID."'
+                                          AND orders_status_history_id > '".(int)$history['history_id']."'
+                                          AND comments = '".xtc_db_input($comments)."'");
+        $history = (($history_query !== false) ? xtc_db_fetch_array($history_query) : false);
+        $history_stored = (is_array($history) && $history['total'] > 0);
+      } catch (Throwable $ex) {
+        $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => $ex->getMessage()));
+      }
+    }
+    if ($history_stored !== true) {
+      $shipcloud->release_event($orders['tracking_id'], $type);
+      header('HTTP/1.1 503 Service Unavailable');
+      exit();
+    }
   }
 }
