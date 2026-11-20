@@ -216,9 +216,9 @@ if (isset($_GET['action'])) {
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
                                         // an archive can hold a file without an entry for its folder
                                         if ($fileinfo['dirname'] != '.' && !file_exists($base_folder . $fileinfo['dirname'])) {
-                                            // a file in the place of a folder stays the error of this entry
-                                            $parent = dirname($base_folder . $fileinfo['dirname']);
-                                            while (!file_exists($parent) && dirname($parent) != $parent) {
+                                            // a file or a link without target in the place of a folder stays the error of this entry
+                                            $parent = $base_folder . $fileinfo['dirname'];
+                                            while (!file_exists($parent) && !is_link($parent) && dirname($parent) != $parent) {
                                                 $parent = dirname($parent);
                                             }
                                             if (is_dir($parent) && is_writable($parent)) {
