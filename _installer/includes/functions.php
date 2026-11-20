@@ -126,21 +126,19 @@
   }
   
   
+  // both need admin/includes/functions/db_functions.php, as on the backup page of the administration
   function check_schema($entry) {
     $schema = glob(DIR_FS_BACKUP . $entry . "/schema.{sql,sql.gz,gz,zip}", GLOB_BRACE);
-    if (isset($schema[0])) return basename($schema[0]);
+    if (isset($schema[0]) && backup_entry_path(basename($schema[0]), $entry) !== false) return basename($schema[0]);
   }
 
 
   function calculate_filesize($entry) {
-    if (is_dir(DIR_FS_BACKUP . $entry)) {
-      $total = 0;      
-      foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {      
-        $total += filesize($files);
-      }
-      return number_format($total);
+    $stat = backup_entry_stat($entry);
+    if ($stat !== false && $stat['is_dir']) {
+      return number_format(backup_folder_size($entry, array('sql', 'gz', 'zip')));
     }
-    return number_format(filesize(DIR_FS_BACKUP . $entry));
+    return number_format(($stat !== false && $stat['is_file']) ? $stat['size'] : 0);
   }
 
 
