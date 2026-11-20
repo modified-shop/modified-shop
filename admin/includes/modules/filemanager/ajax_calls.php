@@ -216,13 +216,20 @@ if (isset($_GET['action'])) {
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
                                         // an archive can hold a file without an entry for its folder
                                         if ($fileinfo['dirname'] != '.' && !file_exists($base_folder . $fileinfo['dirname'])) {
-                                            // a file or a link without target in the place of a folder stays the error of this entry
+                                            // only below the upload folder, also where a link in the path leads
                                             $parent = $base_folder . $fileinfo['dirname'];
                                             while (!file_exists($parent) && !is_link($parent) && dirname($parent) != $parent) {
                                                 $parent = dirname($parent);
                                             }
-                                            if (is_dir($parent) && is_writable($parent)) {
+                                            $parent = realpath($parent);
+                                            $upload = realpath($config['current_path']);
+                                            if ($parent !== false && $upload !== false && strpos($parent . DIRECTORY_SEPARATOR, $upload . DIRECTORY_SEPARATOR) === 0) {
+                                                // a folder that cannot be created is the error of this entry, without a message of its own
+                                                set_error_handler(function () {
+                                                    return true;
+                                                }, E_WARNING);
                                                 create_folder($base_folder . $fileinfo['dirname']);
+                                                restore_error_handler();
                                             }
                                         }
                                         // an entry must not replace a file that is already there or an earlier entry of the archive
