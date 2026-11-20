@@ -81,9 +81,10 @@ if (is_array($current_domain_delete)
 set_session_cookie(0, $session_cookie_path, $session_cookie_domain, $session_cookie_secure, $session_cookie_httponly, $session_cookie_samesite);
 
 // set the session ID if it exists
-// an ID from the request never replaces the session cookie of the browser
+// an ID from the request never replaces the session cookie of the browser.
+// A page can take it for itself with SESSION_ID_FROM_REQUEST while cookies stay required for its links and forms
 $session_id_from_request = false;
-if (SESSION_FORCE_COOKIE_USE != 'True' && !isset($_COOKIE[xtc_session_name()])) {
+if ((SESSION_FORCE_COOKIE_USE != 'True' || defined('SESSION_ID_FROM_REQUEST')) && !isset($_COOKIE[xtc_session_name()])) {
   // only a value that can be a session ID, an empty or broken one starts a normal session
   $session_request_id = '';
   if (isset($_POST[xtc_session_name()]) && is_string($_POST[xtc_session_name()]) && preg_match('/^[0-9a-zA-Z]+$/', $_POST[xtc_session_name()])) {
