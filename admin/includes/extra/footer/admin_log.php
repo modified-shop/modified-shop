@@ -184,15 +184,16 @@
                 }
               }
               if (MODULE_ADMIN_LOG_SHOW_DETAILS_FULL == 'false') {
+                // action and value of a posted status link are shown also when the entry before had no such field.
+                // All other fields are compared as before, a form can hold access data of a module
+                $log_link = array_intersect_key($log['text'], array('action' => 1, 'flag' => 1));
                 if ($lc == 0) {
                   $base = $log['text'];
+                } else {
+                  $log_link = array_diff_key($log_link, $base);
                 }
                 $base_new = array_merge($base, $log['text']);
-                // the first entry has none before it: a posted status link shows its action and value,
-                // a form stays without details as before, it can hold access data of a module
-                if ($lc != 0 || count(array_diff(array_keys($log['text']), array('action', 'flag'))) > 0) {
-                  $log['text'] = arrayRecursiveLogDiff($base, $base_new);
-                }
+                $log['text'] = array_merge(arrayRecursiveLogDiff($base, $base_new), $log_link);
               }
               // the names of the fields are text of the request like their values
               $log['text'] = arrayRecursiveLogKeys($log['text']);
@@ -235,12 +236,6 @@
           }
         }
       } else {
-        $aReturn[$mKey] = $mValue;
-      }
-    }
-    // a field the entry before did not have is a change as well
-    foreach ($aArray2 as $mKey => $mValue) {
-      if (!array_key_exists($mKey, $aArray1)) {
         $aReturn[$mKey] = $mValue;
       }
     }
