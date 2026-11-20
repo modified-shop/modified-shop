@@ -15,7 +15,11 @@
 		setTimeout("$('#suggestions').slideUp();", 100);
 	}
   <?php if (SEARCH_AC_STATUS == 'true' && (!defined('MODULE_SEMKNOX_SYSTEM_STATUS') || MODULE_SEMKNOX_SYSTEM_STATUS == 'false')) { ?>
-  var session_id = '<?php echo xtc_session_id(); ?>';
+  <?php
+    // the request carries the session id only where the links of the page carry it as well
+    $ac_session_id = ((SESSION_FORCE_COOKIE_USE == 'False' && isset($GLOBALS['cookie']) && $GLOBALS['cookie'] === false) ? xtc_session_id() : '');
+  ?>
+  var session_id = '<?php echo $ac_session_id; ?>';
   
   function ac_ajax_call(post_params) {
     $.ajax({

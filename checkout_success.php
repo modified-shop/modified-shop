@@ -83,8 +83,9 @@ $smarty->assign('FORM_END', '</form>');
 $popup_params = $main->getPopupParams();
 $smarty->assign('BUTTON_PRINT', xtc_image_button('print.gif', TEXT_PRINT, 'style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,  '.(defined('TPL_POPUP_PRODUCT_PRINT_SIZE') ? TPL_POPUP_PRODUCT_PRINT_SIZE : POPUP_PRINT_ORDER_SIZE).'\')"'));
 $smarty->assign('BUTTON_PRINT_LAYER', '<a title="'.TEXT_PRINT.'" target="_blank" class="'.$popup_params['link_class'].'" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order.$popup_params['link_parameters'], 'SSL'). '"/>'. xtc_image_button('print.gif', TEXT_PRINT) .'</a>');
-// the print view takes no session from the address, without the cookie it would refuse the order
-if (isset($session_id_from_request) && $session_id_from_request === true) {
+// where cookies are required the print view takes no session from the address and would refuse the order.
+// A shop that works without cookies has the id in the link, there the button stays
+if (isset($session_id_from_request) && $session_id_from_request === true && SESSION_FORCE_COOKIE_USE != 'False') {
   $smarty->assign('BUTTON_PRINT', '');
   $smarty->assign('BUTTON_PRINT_LAYER', '');
 }
