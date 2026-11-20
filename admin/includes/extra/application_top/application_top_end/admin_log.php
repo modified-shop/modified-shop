@@ -13,10 +13,15 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   if (defined('MODULE_ADMIN_LOG_STATUS') && MODULE_ADMIN_LOG_STATUS == 'true') {
-    // a posted link has no fields when the form token is switched off
+    // the posted status link of a manufacturer has no fields when the form token is switched off
     if (isset($_POST)
         && (count($_POST) > 0
-            || (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['action']) && is_string($_GET['action']) && $_GET['action'] != '')
+            || (isset($_SERVER['REQUEST_METHOD'])
+                && $_SERVER['REQUEST_METHOD'] == 'POST'
+                && basename($PHP_SELF) == 'manufacturers.php'
+                && isset($_GET['action'])
+                && $_GET['action'] === 'setflag'
+                )
             )
         )
     {

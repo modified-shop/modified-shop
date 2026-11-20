@@ -169,6 +169,18 @@
           while ($log = xtc_db_fetch_array($log_query)) {
             if (MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') {
               $log['text'] = unserialize(base64_decode($log['text']));
+              // entries written before the form token was left out still carry it, under a name that changes
+              if (is_array($log['text'])) {
+                foreach ($log['text'] as $log_key => $log_value) {
+                  if (is_string($log_value)
+                      && preg_match('/^x[0-9a-zA-Z]{5}$/', (string)$log_key)
+                      && preg_match('/^[0-9a-zA-Z]{32}$/', $log_value)
+                      )
+                  {
+                    unset($log['text'][$log_key]);
+                  }
+                }
+              }
               if (MODULE_ADMIN_LOG_SHOW_DETAILS_FULL == 'false') {
                 if ($lc == 0) {
                   $base = $log['text'];
