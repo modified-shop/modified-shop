@@ -188,8 +188,9 @@
                   $base = $log['text'];
                 }
                 $base_new = array_merge($base, $log['text']);
-                // the first entry has none before it and shows what it stored
-                if ($lc != 0) {
+                // the first entry has none before it: a posted status link shows its action and value,
+                // a form stays without details as before, it can hold access data of a module
+                if ($lc != 0 || count(array_diff(array_keys($log['text']), array('action', 'flag'))) > 0) {
                   $log['text'] = arrayRecursiveLogDiff($base, $base_new);
                 }
               }
