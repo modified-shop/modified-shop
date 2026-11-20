@@ -73,7 +73,19 @@
     
       $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
       $smarty->assign('NOTIFY_COMMENTS', nl2br(encode_htmlspecialchars($notify_comments, ENT_NOQUOTES)));
-      $smarty->assign('ORDER_STATUS', $orders_status_lang_array[$lang][$status]);
+      // the name in the language of the order, without one there that of another language
+      $order_status_name = '';
+      if (isset($orders_status_lang_array[$lang][$status])) {
+        $order_status_name = $orders_status_lang_array[$lang][$status];
+      } elseif (isset($orders_status_lang_array) && is_array($orders_status_lang_array)) {
+        foreach ($orders_status_lang_array as $status_names) {
+          if (isset($status_names[$status])) {
+            $order_status_name = $status_names[$status];
+            break;
+          }
+        }
+      }
+      $smarty->assign('ORDER_STATUS', $order_status_name);
       $smarty->assign('ORDER_STATUS_ID', $status);
 
       // assign language

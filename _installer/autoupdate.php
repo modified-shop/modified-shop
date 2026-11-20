@@ -651,6 +651,8 @@
                            && in_array($_POST['db_charset'], array('latin1', 'utf8', 'utf8mb4'), true)
                            && isset($_POST['db_engine'])
                            && in_array($_POST['db_engine'], array('MyISAM', 'InnoDB'), true)
+                           // as in the form and in the installation: utf8mb4 needs InnoDB
+                           && ($_POST['db_charset'] != 'utf8mb4' || $_POST['db_engine'] == 'InnoDB')
                            );
         if ($convert_values === true
             || ($convert_now === false && isset($_GET['action']) && $_GET['action'] == 'convertdb')
