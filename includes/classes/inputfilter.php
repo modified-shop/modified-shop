@@ -86,12 +86,17 @@ class Inputfilter {
                                        'products_ean',
                                        );
 
+    // of the short list, the text columns: they take the text of the cleaner whatever its length
+    private $content_keys_text = array('memo_title',
+                                       'memo_text',
+                                       );
+
     public function __construct()
     {
         $this->params = array();
     }
 
-    public function removeActiveContent($value, $keep = false)
+    public function removeActiveContent($value, $keep = false, $fit = true)
     {
         require_once(DIR_FS_CATALOG.'inc/xtc_remove_active_content.inc.php');
 
@@ -102,8 +107,9 @@ class Inputfilter {
         }
 
         $removed = false;
-        // $keep: a value that loses nothing stays as typed, see xtc_remove_active_content_keep()
-        $value = (($keep === true) ? xtc_remove_active_content_keep($value, $removed) : xtc_remove_active_content($value, $removed));
+        // $keep: what the cleaner only spells its own way stays as typed, see xtc_remove_active_content_keep();
+        // $fit: the value does not get longer than typed, so what fits its column still fits
+        $value = (($keep === true) ? xtc_remove_active_content_keep($value, $removed, $fit) : xtc_remove_active_content($value, $removed));
         if ($removed === true) {
             $this->active_content_removed = true;
         }
@@ -248,7 +254,7 @@ class Inputfilter {
                           && in_array($key, $this->content_keys)
                           )
                       {
-                        $this->params[$key] = $this->removeActiveContent($value, in_array($key, $this->content_keys_keep));
+                        $this->params[$key] = $this->removeActiveContent($value, in_array($key, $this->content_keys_keep), !in_array($key, $this->content_keys_text));
                       }
                     }
                   break;

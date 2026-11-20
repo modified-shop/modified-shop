@@ -226,17 +226,18 @@
    * xtc_remove_active_content_keep()
    *
    * like xtc_remove_active_content(), for short texts such as names, labels and codes that are stored in
-   * narrow columns or passed on as plain text: a text that loses nothing keeps its bytes, because the
-   * cleaner writes &amp;, quotes and tag names its own way and the text would grow
+   * narrow columns or passed on as plain text: what the cleaner only spells its own way stays as typed,
+   * because the cleaner writes &amp;, quotes and tag names its own way and the text would grow
    *
    * @param mixed $value text or array of texts
    * @param boolean $removed set to true when something was removed
+   * @param mixed $max_length characters the text may have where it is stored, true: not more than it has
    * @return mixed
    */
-  function xtc_remove_active_content_keep($value, &$removed = false) {
+  function xtc_remove_active_content_keep($value, &$removed = false, $max_length = 0) {
     if (is_array($value)) {
       foreach ($value as $key => $val) {
-        $value[$key] = xtc_remove_active_content_keep($val, $removed);
+        $value[$key] = xtc_remove_active_content_keep($val, $removed, $max_length);
       }
       return $value;
     }
@@ -250,39 +251,263 @@
     if ($changed === true) {
       $removed = true;
     }
+    $charset = xtc_remove_active_content_charset($value);
 
+    // nothing removed and no tag with an attribute, comment or declaration: the text as it is,
+    // unless it ends in an open tag, which the text that follows it in a page would complete
+    if ($changed === false && !preg_match('/<[a-z\/][^>]*=|<[!?]|<(?:[a-z\/][^>]*)?$/i', $value)) {
+      $kept = $value;
+    } else {
+      $kept = xtc_remove_active_content_merge($value, $clean, $charset);
+    }
+
+    $max_length = (($max_length === true) ? xtc_remove_active_content_length($value, $charset) : (int)$max_length);
+    if ($max_length > 0 && xtc_remove_active_content_length($kept, $charset) > $max_length) {
+      // first every part in its shorter spelling, then rather without the tags than cut off by the column
+      $kept = xtc_remove_active_content_merge($value, $clean, $charset, true);
+      if (xtc_remove_active_content_length($kept, $charset) > $max_length) {
+        $kept = xtc_remove_active_content_text($value, $clean, $charset, $max_length);
+        $removed = true;
+      }
+    }
+
+    return $kept;
+  }
+
+
+  // the charset xtc_remove_active_content() reads a text in
+  function xtc_remove_active_content_charset($value) {
+    return ((!preg_match('/[\x80-\xFF]/', $value) || !function_exists('mb_check_encoding') || mb_check_encoding($value, 'UTF-8')) ? 'UTF-8' : 'ISO-8859-15');
+  }
+
+
+  // characters as the database counts them
+  function xtc_remove_active_content_length($value, $charset = '') {
+    if ($charset == '') {
+      $charset = xtc_remove_active_content_charset($value);
+    }
+
+    return (($charset == 'UTF-8' && function_exists('mb_strlen')) ? mb_strlen($value, 'UTF-8') : strlen($value));
+  }
+
+
+  // whether two texts between tags say the same
+  function xtc_remove_active_content_same_text($typed, $clean, $charset) {
+    if ($typed === $clean) {
+      return true;
+    }
+    if ($charset != 'UTF-8') {
+      // the cleaner writes a character where the typed text has an entity
+      $typed = xtc_remove_active_content_convert($typed, 'UTF-8', $charset);
+      $clean = xtc_remove_active_content_convert($clean, 'UTF-8', $charset);
+    }
+
+    return (html_entity_decode($typed, ENT_QUOTES | ENT_HTML5, 'UTF-8') === html_entity_decode($clean, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+  }
+
+
+  /**
+   * xtc_remove_active_content_merge()
+   *
+   * the text of the cleaner with everything as typed that the cleaner only spells its own way: a browser may
+   * read a tag differently than the cleaner, so a tag is taken as typed only when it is plainly written and
+   * the cleaner kept its attributes and values; the text between the tags when the cleaner read the same
+   *
+   * @param string $value typed text
+   * @param string $clean text of the cleaner
+   * @param string $charset see xtc_remove_active_content_charset()
+   * @param boolean $short of two spellings of a part the shorter one instead of the typed one
+   * @return string
+   */
+  function xtc_remove_active_content_merge($value, $clean, $charset, $short = false) {
     $parts = preg_split('/(<[^>]*>)/', $clean, -1, PREG_SPLIT_DELIM_CAPTURE);
     if (!is_array($parts)) {
       return $clean;
     }
 
-    if ($changed === false) {
-      // nothing removed and no tag with an attribute, comment or declaration: the text as it is
-      if (!preg_match('/<[a-z\/][^>]*=|<[!?]/i', $value)) {
-        return $value;
-      }
-      // a browser may read an attribute differently than the cleaner, so the text stays as it is
-      // only when the cleaner kept every tag and changed nothing but its spelling
-      $clean_tags = array();
-      foreach ($parts as $i => $part) {
-        if ($i % 2 == 1) {
-          $clean_tags[] = $part;
-        }
-      }
-      if (xtc_remove_active_content_tags($value) === $clean_tags) {
-        return $value;
-      }
-    }
-
     // outside of tags an & before anything but a letter, a digit or # is read as the character itself
     foreach ($parts as $i => $part) {
       if ($i % 2 == 0) {
-        $short = preg_replace('/&amp;(?![a-z0-9#])/i', '&', $part);
-        $parts[$i] = ((is_string($short)) ? $short : $part);
+        $text = preg_replace('/&amp;(?![a-z0-9#])/i', '&', $part);
+        $parts[$i] = ((is_string($text)) ? $text : $part);
       }
     }
 
+    $typed = preg_split('/(<[^>]*>)/', $value, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $tags = xtc_remove_active_content_tags($value);
+    if (is_array($typed) && is_array($tags) && count($typed) == count($parts)) {
+      $merged = array();
+      foreach ($parts as $i => $part) {
+        if ($i % 2 == 0) {
+          $piece = ((xtc_remove_active_content_same_text($typed[$i], $part, $charset)) ? $typed[$i] : false);
+        } else {
+          $piece = xtc_remove_active_content_merge_tag($typed[$i], $tags[$i], $part);
+        }
+        // the cleaner moved text or wrote another element: its text as a whole
+        if ($piece === false) {
+          return implode('', $parts);
+        }
+        if ($short === true && xtc_remove_active_content_length($part, $charset) < xtc_remove_active_content_length($piece, $charset)) {
+          $piece = $part;
+        }
+        $merged[] = $piece;
+      }
+
+      return implode('', $merged);
+    }
+
     return implode('', $parts);
+  }
+
+
+  /**
+   * xtc_remove_active_content_merge_tag()
+   *
+   * a tag of the typed text and the tag the cleaner made of it as one tag
+   *
+   * @param string $typed tag as typed
+   * @param array $tag the same tag from xtc_remove_active_content_tags()
+   * @param string $clean tag of the cleaner
+   * @return mixed tag, false when the cleaner wrote another element
+   */
+  function xtc_remove_active_content_merge_tag($typed, $tag, $clean) {
+    if ($tag['tag'] === $clean) {
+      return $typed;
+    }
+    if (!preg_match('/^<[a-z0-9]+/', $tag['tag'], $name)
+        || !preg_match('/^(<[a-z0-9]+)((?: [a-z][a-z0-9:_-]*="[^"]*")*)(?: \/)?>$/D', $clean, $match)
+        || $name[0] !== $match[1]
+        )
+    {
+      return false;
+    }
+    preg_match_all('/ ([a-z][a-z0-9:_-]*)="([^"]*)"/', $match[2], $attributes, PREG_SET_ORDER);
+
+    // an attribute the cleaner kept with its value is written as typed, the others as the cleaner writes them
+    $merged = '';
+    $same = (count($attributes) == count($tag['attributes']));
+    $next = 0;
+    foreach ($attributes as $k => $attribute) {
+      $piece = $attribute[0];
+      $kept = false;
+      for ($i = $next, $n = count($tag['attributes']); $i < $n; $i++) {
+        if ($tag['attributes'][$i][0] === $attribute[1]) {
+          if (xtc_remove_active_content_same_value($attribute[1], $tag['attributes'][$i][1], $attribute[2])) {
+            $piece = $tag['attributes'][$i][2];
+            $kept = ($i == $k);
+          }
+          $next = $i + 1;
+          break;
+        }
+      }
+      if ($kept === false) {
+        $same = false;
+      }
+      $merged .= $piece;
+    }
+
+    return (($same) ? $typed : $tag['open'].$merged.'>');
+  }
+
+
+  /**
+   * xtc_remove_active_content_same_value()
+   *
+   * whether the cleaner changed nothing but the spelling of an attribute value
+   *
+   * @param string $name attribute name
+   * @param string $typed value from xtc_remove_active_content_tags()
+   * @param string $clean value of the cleaner
+   * @return boolean
+   */
+  function xtc_remove_active_content_same_value($name, $typed, $clean) {
+    if ($typed === $clean) {
+      return true;
+    }
+    $space = '/[ \t\n\f\r]+/';
+    if ($name == 'class') {
+      return (preg_split($space, $typed, -1, PREG_SPLIT_NO_EMPTY) === preg_split($space, $clean, -1, PREG_SPLIT_NO_EMPTY));
+    }
+    // a word where the cleaner writes the number of a colour
+    $colour = '/^[a-z]+\x01#[0-9a-f]{6}$/Di';
+    if ($name == 'color' || $name == 'bgcolor') {
+      return (preg_match($colour, $typed."\x01".$clean) == 1);
+    }
+    if ($name != 'style') {
+      return false;
+    }
+
+    // the same declarations: the cleaner writes no spaces, lower case and a ; at the end
+    $styles = array();
+    foreach (array($typed, $clean) as $style) {
+      $declarations = array();
+      foreach (explode(';', $style) as $declaration) {
+        $declaration = trim((string)preg_replace($space, ' ', $declaration), ' ');
+        if ($declaration === '') {
+          continue;
+        }
+        $pos = strpos($declaration, ':');
+        if ($pos === false) {
+          return false;
+        }
+        $declarations[] = array(strtolower(rtrim(substr($declaration, 0, $pos), ' ')), ltrim(substr($declaration, $pos + 1), ' '));
+      }
+      $styles[] = $declarations;
+    }
+    if (count($styles[0]) != count($styles[1])) {
+      return false;
+    }
+    foreach ($styles[0] as $i => $declaration) {
+      if ($declaration[0] !== $styles[1][$i][0]
+          || (strtolower($declaration[1]) !== strtolower($styles[1][$i][1]) && !preg_match($colour, $declaration[1]."\x01".$styles[1][$i][1]))
+          )
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  /**
+   * xtc_remove_active_content_text()
+   *
+   * the text between the tags, for a place that has no room for the text with its tags
+   *
+   * @param string $value typed text
+   * @param string $clean text of the cleaner
+   * @param string $charset see xtc_remove_active_content_charset()
+   * @param int $max_length characters
+   * @return string
+   */
+  function xtc_remove_active_content_text($value, $clean, $charset, $max_length) {
+    $texts = array();
+    foreach (array($clean, $value) as $html) {
+      // a space where a line or a block ends, so that two words do not become one
+      $text = preg_replace('/<\/?(?:br|hr|p|div|li|dd|dt|tr|td|th|h[1-6]|blockquote|pre|center|table|ul|ol|dl)(?![a-z0-9])[^>]*>/i', ' ', $html);
+      $text = ((is_string($text)) ? preg_replace('/<[^>]*>/', '', $text) : $text);
+      $text = ((is_string($text)) ? preg_replace('/ {2,}/', ' ', $text) : $text);
+      $texts[] = ((is_string($text)) ? trim($text, ' ') : false);
+    }
+    // the cleaner writes a < only where a tag starts
+    $text = (($texts[0] !== false) ? preg_replace('/&amp;(?![a-z0-9#])/i', '&', $texts[0]) : strip_tags($clean));
+    if (!is_string($text)) {
+      $text = strip_tags($clean);
+    }
+    // as typed when the cleaner read the same text
+    if ($texts[1] !== false && strpos($texts[1], '<') === false && xtc_remove_active_content_same_text($texts[1], $text, $charset)) {
+      $text = $texts[1];
+    }
+
+    if (xtc_remove_active_content_length($text, $charset) > $max_length) {
+      $text = (($charset == 'UTF-8' && function_exists('mb_substr')) ? mb_substr($text, 0, $max_length, 'UTF-8') : substr($text, 0, $max_length));
+      // not in the middle of an entity
+      $short = preg_replace('/&[#a-z0-9]*$/i', '', $text);
+      $text = ((is_string($short)) ? $short : $text);
+    }
+
+    return $text;
   }
 
 
@@ -292,7 +517,7 @@
    * the tags of a text in the spelling of the cleaner: names in lower case, one space, values in double quotes
    *
    * @param string $value
-   * @return mixed array of tags, false when a tag is not a plainly written formatting tag
+   * @return mixed array of tags by their position in the text, false when a tag is not a plainly written formatting tag
    */
   function xtc_remove_active_content_tags($value) {
     // elements whose content is plain text for every browser
@@ -317,17 +542,21 @@
         continue;
       }
       if (preg_match('/^<\/('.$plain.')'.$space.'*>$/Di', $part, $match)) {
-        $tags[] = '</'.strtolower($match[1]).'>';
+        $tags[$i] = array('tag' => '</'.strtolower($match[1]).'>', 'attributes' => array());
       } elseif (preg_match('/^<('.$plain.')((?:'.$attribute.')*)'.$space.'*\/?>$/Di', $part, $match)) {
         $tag = '<'.strtolower($match[1]);
-        if ($match[2] != '' && preg_match_all('/'.$attribute.'/i', $match[2], $attributes, PREG_SET_ORDER)) {
-          foreach ($attributes as $found) {
+        $attributes = array();
+        if ($match[2] != '' && preg_match_all('/'.$attribute.'/i', $match[2], $found_attributes, PREG_SET_ORDER)) {
+          foreach ($found_attributes as $found) {
             $text = ((isset($found[4]) && $found[4] != '') ? $found[4] : ((isset($found[3]) && $found[3] != '') ? $found[3] : $found[2]));
-            // an & before anything but a letter, a digit or # is the character itself
-            $tag .= ' '.strtolower($found[1]).'="'.preg_replace('/&(?![a-z0-9#])/i', '&amp;', $text).'"';
+            // an & is the character itself before anything but a letter, a digit or #, and in a value also before name=
+            $text = preg_replace('/&(?![a-z0-9#])|&(?=[a-z0-9]+=)/i', '&amp;', $text);
+            // name, value, attribute as typed
+            $attributes[] = array(strtolower($found[1]), $text, $found[0]);
+            $tag .= ' '.strtolower($found[1]).'="'.$text.'"';
           }
         }
-        $tags[] = $tag.'>';
+        $tags[$i] = array('tag' => $tag.'>', 'open' => '<'.$match[1], 'attributes' => $attributes);
       } else {
         return false;
       }

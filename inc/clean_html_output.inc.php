@@ -31,23 +31,13 @@
     }
 
     $removed = false;
-    $clean = xtc_remove_active_content_keep($value, $removed);
 
-    // the cleaner can write a text longer than it was: rather without its tags than cut off by the column
-    if ($max_length > 0 && $clean !== $value && clean_html_output_length($clean) > $max_length) {
-      $plain = preg_replace('/&amp;(?![a-z0-9#])/i', '&', strip_tags($clean));
-      $clean = ((is_string($plain)) ? $plain : strip_tags($clean));
-    }
-
-    return $clean;
+    // with $max_length a text that would be longer loses its tags instead of being cut off by the column
+    return xtc_remove_active_content_keep($value, $removed, $max_length);
   }
 
   // characters as the database counts them
   function clean_html_output_length($value) {
-    if (function_exists('mb_strlen') && function_exists('mb_check_encoding') && mb_check_encoding($value, 'UTF-8')) {
-      return mb_strlen($value, 'UTF-8');
-    }
-
-    return strlen($value);
+    return xtc_remove_active_content_length($value);
   }
 ?>
