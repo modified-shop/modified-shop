@@ -207,6 +207,10 @@
                                  WHERE content_group = '5'
                                    AND languages_id = '".(int)$_SESSION['languages_id']."'");
     $ml_meta = xtc_db_fetch_array($ml_meta_query, true);
+    // a language without the start page content uses the defaults of the shop
+    if (!is_array($ml_meta)) {
+      $ml_meta = array('ml_meta_title' => '', 'ml_meta_description' => '', 'ml_meta_keywords' => '');
+    }
     foreach ($ml_meta as $k => $v) {
       $ml_meta_default = constant(strtoupper(substr($k, 3)));
       // the shop title is no per-language setting, a '::' in it must survive
