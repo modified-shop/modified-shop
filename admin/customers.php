@@ -108,6 +108,19 @@
   if ($action) {
     switch ($action) {
       case 'new_order_confirm':
+        // shipping and payment module name a language file, here or when the order is edited:
+        // only what the menus of the form offer, an installed module or no payment
+        if (!isset($_POST['shipping'])
+            || !is_string($_POST['shipping'])
+            || !in_array($_POST['shipping'].'.php', explode(';', MODULE_SHIPPING_INSTALLED), true)
+            || !isset($_POST['payment'])
+            || !is_string($_POST['payment'])
+            || ($_POST['payment'] != 'no_payment' && !in_array($_POST['payment'].'.php', explode(';', MODULE_PAYMENT_INSTALLED), true))
+            )
+        {
+          xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
+        }
+
         // customers
         $customers1_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
         $customers1 = xtc_db_fetch_array($customers1_query);
@@ -256,9 +269,14 @@
         break;
 
       case 'delete_confirm_adressbook' :
+          // the default address stays, also one that became the default after the confirmation was shown
           xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK."
                               WHERE address_book_id = '".(int) $_GET['address_book_id']."'
-                                AND customers_id = '".$customers_id."'");
+                                AND customers_id = '".$customers_id."'
+                                AND NOT EXISTS (SELECT 1
+                                                  FROM ".TABLE_CUSTOMERS."
+                                                 WHERE customers_id = '".$customers_id."'
+                                                   AND customers_default_address_id = '".(int) $_GET['address_book_id']."')");
           xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete_confirm_adressbook')).'cID='.(int)$customers_id));
           break;
 
@@ -270,6 +288,10 @@
                                                WHERE address_book_id = '".(int) $_GET['default']."'
                                                  AND customers_id = '".$customers_id."'");
           $address_book_array = xtc_db_fetch_array($address_book_query);
+          // the address can be gone since the list was shown
+          if (!is_array($address_book_array)) {
+            xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'update_default_adressbook', 'default')).'cID='.$customers_id.'&action=address_book'));
+          }
 
           if (ACCOUNT_GENDER != 'true') {
             unset($address_book_array['customers_gender']);
