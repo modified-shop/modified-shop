@@ -136,8 +136,8 @@
   function calculate_filesize($entry) {
     if (!function_exists('backup_entry_stat')) {
       if (is_dir(DIR_FS_BACKUP . $entry)) {
-        $total = 0;      
-        foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {      
+        $total = 0;
+        foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {
           $total += filesize($files);
         }
         return number_format($total);
