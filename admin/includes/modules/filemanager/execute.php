@@ -317,7 +317,7 @@ if (isset($_GET['action'])) {
                         exit;
                     }
 
-                    duplicate_file($path_thumb, $name, $ftp, $config);
+                    duplicate_file($path_thumb, $name, $ftp, $config, true);
 
                     if (!$ftp && $config['fixed_image_creation']) {
                         $info = pathinfo($path);
@@ -329,7 +329,7 @@ if (isset($_GET['action'])) {
                             $base_dir = $paths . substr_replace($info['dirname'] . "/", '', 0, strlen($config['current_path']));
 
                             if (file_exists($base_dir . $config['fixed_image_creation_name_to_prepend'][$k] . $info['filename'] . $config['fixed_image_creation_to_append'][$k] . "." . $info['extension'])) {
-                                duplicate_file($base_dir . $config['fixed_image_creation_name_to_prepend'][$k] . $info['filename'] . $config['fixed_image_creation_to_append'][$k] . "." . $info['extension'], $config['fixed_image_creation_name_to_prepend'][$k] . $name . $config['fixed_image_creation_to_append'][$k]);
+                                duplicate_file($base_dir . $config['fixed_image_creation_name_to_prepend'][$k] . $info['filename'] . $config['fixed_image_creation_to_append'][$k] . "." . $info['extension'], $config['fixed_image_creation_name_to_prepend'][$k] . $name . $config['fixed_image_creation_to_append'][$k], null, null, true);
                             }
                         }
                     }

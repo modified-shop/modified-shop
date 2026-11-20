@@ -273,15 +273,37 @@ function deleteDir($dir,$ftp = null, $config = null)
 *
 * @param  string  $old_path
 * @param  string  $name      New file name without extension
+* @param  bool    $replace   true for the thumbnail or a derived image of a copy that was just made
 *
-* @return  bool
+* @return  bool|null  false when the name is taken
 */
-function duplicate_file( $old_path, $name, $ftp = null, $config = null )
+function duplicate_file( $old_path, $name, $ftp = null, $config = null, $replace = false )
 {
 	$info = pathinfo($old_path);
 	$new_path = $info['dirname'] . "/" . $name . "." . $info['extension'];
 	if($ftp){
 		try{
+			if (!$replace) {
+				// FTP cannot create a file only when its name is free, so the listing of the folder decides
+				$found = false;
+				$taken = false;
+				foreach ($ftp->nlist("/".$info['dirname']) as $entry) {
+					$entry = fix_strtolower(basename($entry));
+					if ($entry == fix_strtolower($info['basename'])) {
+						$found = true;
+					}
+					if ($entry == fix_strtolower($name . "." . $info['extension'])) {
+						$taken = true;
+					}
+				}
+				if ($taken) {
+					return false;
+				}
+				// a listing without the source file is not complete
+				if (!$found) {
+					return null;
+				}
+			}
 			$tmp = time().$name . "." . $info['extension'];
 			$ftp->get($tmp, "/".$old_path, FTP_BINARY);
 			$ftp->put("/".$new_path, $tmp, FTP_BINARY);
@@ -298,8 +320,12 @@ function duplicate_file( $old_path, $name, $ftp = null, $config = null )
 			{
 				return false;
 			}
+			if ($replace) {
+				return copy($old_path, $new_path);
+			}
 
-			return copy($old_path, $new_path);
+			// a copy never takes the place of another file
+			return rfm_copy_new($old_path, $new_path, filesize($old_path));
 		}
 	}
 }
