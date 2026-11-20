@@ -904,12 +904,17 @@ function backup_folder_size($folder, $endings) {
   return $total;
 }
 
-// table and charset lines from the head of a backup, read from the open stream
-function backup_entry_header($fp, $compressed) {
+// table and charset lines from the head of a backup, read from the open stream;
+// $damaged says that compressed data ended or broke inside a part of it
+function backup_entry_header($fp, $compressed, &$damaged = false) {
   $lines = array();
   $buffer = '';
   $read = 0;
   $context = false;
+  $damaged = false;
+  // PHP may be set to take a lone carriage return for the end of a line, as fgets() does then
+  $detect = (bool)ini_get('auto_detect_line_endings');
+  $eol = "\n";
 
   // a plain file with the ending of a compressed one is read as it is, like gzopen() does
   $data = (string)fread($fp, 2);
@@ -917,10 +922,12 @@ function backup_entry_header($fp, $compressed) {
     $compressed = false;
   }
   if ($compressed && ($context = inflate_init(ZLIB_ENCODING_GZIP)) === false) {
+    $damaged = true;
     return $lines;
   }
 
   $last = false;
+  $open = $compressed;
   while ($data !== '') {
     if ($compressed) {
       // every write of a backup appends a gzip member of its own
@@ -930,11 +937,13 @@ function backup_entry_header($fp, $compressed) {
         $used = (($part !== false) ? inflate_get_read_len($context) - $read : 0);
         // what follows the last member is no gzip data, like null bytes at the end: the text read so far counts
         if ($part === false || (inflate_get_status($context) == ZLIB_STREAM_END && $used < 1)) {
+          $damaged = ($part === false && $open === true);
           $last = true;
           break;
         }
         $plain .= $part;
-        if (inflate_get_status($context) != ZLIB_STREAM_END) {
+        $open = (inflate_get_status($context) != ZLIB_STREAM_END);
+        if ($open === true) {
           $read += strlen($data);
           break;
         }
@@ -943,6 +952,7 @@ function backup_entry_header($fp, $compressed) {
       }
       $data = $plain;
     }
+    $more = !($last || feof($fp));
     $buffer .= $data;
     // the lines are taken by their place and the rest is cut once: a small piece may hold many short lines
     $offset = 0;
@@ -952,8 +962,22 @@ function backup_entry_header($fp, $compressed) {
       if ($length - $offset > 1 && substr_compare($buffer, "--", $offset, 2) != 0) {
         return $lines;
       }
+      if ($detect === true) {
+        $cr = strpos($buffer, "\r", $offset);
+        $lf = strpos($buffer, "\n", $offset);
+        if ($cr !== false && $cr == $length - 1 && $more === true) {
+          // a line feed may follow in the next piece
+          break;
+        }
+        if ($cr !== false && $lf !== $cr + 1 && ($lf === false || $lf > $cr)) {
+          $eol = "\r";
+          $detect = false;
+        } elseif ($lf !== false) {
+          $detect = false;
+        }
+      }
       // a line has at most 4095 characters, like fgets($fp, 4096) before
-      $pos = strpos($buffer, "\n", $offset);
+      $pos = strpos($buffer, $eol, $offset);
       if ($pos === false || $pos - $offset > 4094) {
         if ($length - $offset < 4095) {
           break;
@@ -968,7 +992,11 @@ function backup_entry_header($fp, $compressed) {
     }
     $buffer = (string)substr($buffer, $offset);
     // small pieces of a compressed file, a piece may grow a thousandfold
-    $data = (($last || feof($fp)) ? '' : (string)fread($fp, (($compressed) ? 512 : 8192)));
+    $data = (($more === true) ? (string)fread($fp, (($compressed) ? 512 : 8192)) : '');
+  }
+  // the file ended inside a compressed part
+  if ($compressed && $open === true && $last === false) {
+    $damaged = true;
   }
   if (substr($buffer, 0, 9) == "-- TABLE|" || substr($buffer, 0, 10) == "-- Charset") {
     $lines[] = $buffer;
@@ -997,7 +1025,6 @@ function getBackupData($file, $dir = '') {
     fclose($fp);
     $fp = false;
   }
-  $file_array['readable'] = ($fp !== false);
   // a file of the directory that cannot be opened keeps the date and size of its entry
   $stat = (($fp !== false) ? fstat($fp) : backup_entry_stat($file, $file_array['dir']));
   if ($fp !== false || ($stat !== false && $stat['is_file'])) {
@@ -1010,6 +1037,7 @@ function getBackupData($file, $dir = '') {
   }
 
   $lines = array();
+  $damaged = false;
   $extension = '.sql';
   switch (substr($file, -3)) {
     case 'zip': 
@@ -1019,7 +1047,7 @@ function getBackupData($file, $dir = '') {
       $file_array['compression'] = 'GZIP';
       $extension = '.sql.gz';
       if ($fp !== false) {
-        $lines = backup_entry_header($fp, true);
+        $lines = backup_entry_header($fp, true, $damaged);
       }
       break;
     default: 
@@ -1032,6 +1060,8 @@ function getBackupData($file, $dir = '') {
   if ($fp !== false) {
     fclose($fp);
   }
+  // a head that could not be read to its end tells nothing sure about the backup
+  $file_array['readable'] = ($fp !== false && $damaged === false);
 
   foreach ($lines as $line) {
     if (substr($line, 0, 9) == "-- TABLE|") {

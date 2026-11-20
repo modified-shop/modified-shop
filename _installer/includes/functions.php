@@ -126,14 +126,24 @@
   }
   
   
-  // both need admin/includes/functions/db_functions.php, as on the backup page of the administration
+  // both use the checks of admin/includes/functions/db_functions.php where the files of the shop have them already
   function check_schema($entry) {
     $schema = glob(DIR_FS_BACKUP . $entry . "/schema.{sql,sql.gz,gz,zip}", GLOB_BRACE);
-    if (isset($schema[0]) && backup_entry_path(basename($schema[0]), $entry) !== false) return basename($schema[0]);
+    if (isset($schema[0]) && (!function_exists('backup_entry_path') || backup_entry_path(basename($schema[0]), $entry) !== false)) return basename($schema[0]);
   }
 
 
   function calculate_filesize($entry) {
+    if (!function_exists('backup_entry_stat')) {
+      if (is_dir(DIR_FS_BACKUP . $entry)) {
+        $total = 0;      
+        foreach (glob(DIR_FS_BACKUP . $entry . "/*.{sql,gz,zip}", GLOB_BRACE) as $files) {      
+          $total += filesize($files);
+        }
+        return number_format($total);
+      }
+      return number_format(filesize(DIR_FS_BACKUP . $entry));
+    }
     $stat = backup_entry_stat($entry);
     if ($stat !== false && $stat['is_dir']) {
       return number_format(backup_folder_size($entry, array('sql', 'gz', 'zip')));
