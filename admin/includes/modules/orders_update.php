@@ -90,20 +90,21 @@
 
     // the entry is stored before the mail goes out: an update whose entry fails sends nothing,
     // its repeat would send the mail a second time. Only a stored entry counts as an update
+    $comments_sent = ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0);
     $sql_data_array = array(
       'orders_id' => $oID,
       'orders_status_id' => $status,
       'date_added' => 'now()',
-      // set once the mail went out
+      // an entry with a mail gets both marks of the mail once it went out
       'customer_notified' => 0,
       'comments' => $comments,
-      'comments_sent' => ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0)
+      'comments_sent' => (($customer_notified == 1) ? 0 : $comments_sent)
     );
     $order_updated = (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array) !== false);
     $orders_status_history_id = xtc_db_insert_id();
 
     if ($customer_notified == 1 && $order_updated === true) {
-      $customer_mail_sent = xtc_php_mail(EMAIL_BILLING_ADDRESS,
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
                    EMAIL_BILLING_NAME,
                    $order->customer['email_address'],
                    $order->customer['name'],
@@ -117,11 +118,11 @@
                    $txt_mail,
                    3
                    );
-      if ($customer_mail_sent !== false) {
-        xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
-                         SET customer_notified = 1
-                       WHERE orders_status_history_id = '".(int)$orders_status_history_id."'");
-      }
+      // whatever the mail function reports, as before: the DHL action looks for an entry with this mark
+      xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY."
+                       SET customer_notified = 1,
+                           comments_sent = ".(int)$comments_sent."
+                     WHERE orders_status_history_id = '".(int)$orders_status_history_id."'");
                  
       //send copy to admin
       if (defined('STATUS_EMAIL_SENT_COPY_TO_ADMIN') && STATUS_EMAIL_SENT_COPY_TO_ADMIN == 'true') {
