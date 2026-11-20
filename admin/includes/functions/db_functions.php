@@ -825,218 +825,74 @@ function GetTableData($table) {
   }
 }
 
-// resolved path of an entry of the backup directory or of a folder in it, false when it leads elsewhere
-function backup_entry_path($entry, $folder = '') {
-  $dir = realpath(DIR_FS_BACKUP);
-  if ($dir !== false && $folder != '') {
-    // the folder itself has to lie in the backup directory
-    $dir = backup_entry_path($folder);
-  }
-  if ($dir === false
-      || !is_string($entry)
-      || $entry === ''
-      || basename($entry) !== $entry
-      || strpos($entry, "\0") !== false
-      )
-  {
-    return false;
-  }
-  $path = realpath($dir . DIRECTORY_SEPARATOR . $entry);
-
-  return (($path !== false && dirname($path) === $dir) ? $path : false);
-}
-
-// lstat() of an entry: the entry itself, also when a link was placed since the check
-function backup_entry_stat($entry, $folder = '') {
-  $path = backup_entry_path($entry, $folder);
-  clearstatcache();
-  $stat = (($path !== false) ? @lstat($path) : false);
-  if (!is_array($stat)) {
-    return false;
-  }
-  $stat['is_file'] = (($stat['mode'] & 0170000) == 0100000);
-  $stat['is_dir'] = (($stat['mode'] & 0170000) == 0040000);
-
-  return $stat;
-}
-
-// true when the stream is the regular file that the path names itself, not the target of a link placed since the check
-function backup_entry_opened($fp, $path) {
-  clearstatcache(true);
-  $opened = fstat($fp);
-  $entry = @lstat($path);
-
-  // without a file number the identity cannot be confirmed
-  return (is_array($opened)
-          && is_array($entry)
-          && realpath($path) === $path
-          && ($entry['mode'] & 0170000) == 0100000
-          && $opened['ino'] != 0
-          && $opened['dev'] == $entry['dev']
-          && $opened['ino'] == $entry['ino']);
-}
-
-// size of the regular files of a backup folder, a link counts nothing
-function backup_folder_size($folder, $pattern) {
-  $total = 0;
-  $dir = backup_entry_path($folder);
-  if ($dir !== false) {
-    $files_array = glob($dir . DIRECTORY_SEPARATOR . $pattern, GLOB_BRACE);
-    foreach ((is_array($files_array) ? $files_array : array()) as $sqlfile) {
-      clearstatcache();
-      $stat = @lstat($sqlfile);
-      if (is_array($stat) && ($stat['mode'] & 0170000) == 0100000) {
-        $total += $stat['size'];
-      }
-    }
-    // the folder may have been replaced meanwhile
-    clearstatcache(true);
-    if (realpath($dir) !== $dir) {
-      $total = 0;
-    }
-  }
-
-  return $total;
-}
-
-// table and charset lines from the head of a backup, read from the open stream
-function backup_entry_header($fp, $compressed) {
-  $lines = array();
-  $buffer = '';
-  $read = 0;
-  $context = false;
-
-  // a plain file with the ending of a compressed one is read as it is, like gzopen() does
-  $data = (string)fread($fp, 2);
-  if ($compressed && $data !== "\x1f\x8b") {
-    $compressed = false;
-  }
-  if ($compressed && ($context = inflate_init(ZLIB_ENCODING_GZIP)) === false) {
-    return $lines;
-  }
-
-  $last = false;
-  while ($data !== '') {
-    if ($compressed) {
-      // every write of a backup appends a gzip member of its own
-      $plain = '';
-      while ($data !== '') {
-        $part = @inflate_add($context, $data);
-        $used = (($part !== false) ? inflate_get_read_len($context) - $read : 0);
-        // what follows the last member is no gzip data, like null bytes at the end: the text read so far counts
-        if ($part === false || (inflate_get_status($context) == ZLIB_STREAM_END && $used < 1)) {
-          $last = true;
-          break;
-        }
-        $plain .= $part;
-        if (inflate_get_status($context) != ZLIB_STREAM_END) {
-          $read += strlen($data);
-          break;
-        }
-        $data = (string)substr($data, $used);
-        $read = 0;
-      }
-      $data = $plain;
-    }
-    $buffer .= $data;
-    while ($buffer !== '') {
-      // backed up tables are in head of file, so the first two characters of a statement end the reading
-      if (strlen($buffer) > 1 && substr($buffer, 0, 2) != "--") {
-        return $lines;
-      }
-      // a line has at most 4095 characters, like fgets($fp, 4096) before
-      $pos = strpos($buffer, "\n");
-      if ($pos === false || $pos > 4094) {
-        if (strlen($buffer) < 4095) {
-          break;
-        }
-        $pos = 4094;
-      }
-      $line = substr($buffer, 0, $pos + 1);
-      $buffer = (string)substr($buffer, $pos + 1);
-      if (substr($line, 0, 9) == "-- TABLE|" || substr($line, 0, 10) == "-- Charset") {
-        $lines[] = $line;
-      }
-    }
-    // small pieces of a compressed file, a piece may grow a thousandfold
-    $data = (($last || feof($fp)) ? '' : (string)fread($fp, (($compressed) ? 512 : 8192)));
-  }
-  if (substr($buffer, 0, 9) == "-- TABLE|" || substr($buffer, 0, 10) == "-- Charset") {
-    $lines[] = $buffer;
-  }
-
-  return $lines;
-}
-
 function getBackupData($file, $dir = '') {
   $file_array = array();
   $file_array['file'] = $file;
   $file_array['dir'] = rtrim($dir, '/');
-  $file_array['date'] = '';
-  $file_array['size'] = number_format(0) . ' bytes';
+  $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $dir . $file));
+  $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $dir . $file)) . ' bytes';
   $file_array['table_list'] = array();
   $file_array['tables_row_count'] = 0;
-
-  // date, size and tables come from a stream that was compared with the entry after opening
-  $fp = false;
-  $path = backup_entry_path($file, $file_array['dir']);
-  if ($path !== false
-      && ($fp = @fopen($path, 'rb')) !== false
-      && !backup_entry_opened($fp, $path)
-      )
-  {
-    fclose($fp);
-    $fp = false;
-  }
-  if ($fp !== false) {
-    $stat = fstat($fp);
-    $file_array['date'] = date(PHP_DATE_TIME_FORMAT, $stat['mtime']);
-    $file_array['size'] = number_format($stat['size']) . ' bytes';
-  }
-
+  
   if ($file_array['dir'] != '') {
-    $file_array['size'] = number_format(backup_folder_size($file_array['dir'], '*.{sql,gz}')) . ' bytes';
+    $filesize = 0;
+    $files_array = glob(DIR_FS_BACKUP . $dir . "*.{sql,gz}", GLOB_BRACE);
+    foreach ($files_array as $sqlfile) {
+      $filesize += filesize($sqlfile);
+    }
+    $file_array['size'] = number_format($filesize) . ' bytes';
   }
-
-  $lines = array();
-  $extension = '.sql';
+  
   switch (substr($file, -3)) {
     case 'zip': 
       $file_array['compression'] = 'ZIP'; 
       break;
     case '.gz': 
       $file_array['compression'] = 'GZIP';
-      $extension = '.sql.gz';
-      if ($fp !== false) {
-        $lines = backup_entry_header($fp, true);
-      }
+      if ($fp = gzopen(DIR_FS_BACKUP . $dir . $file, 'r')) {
+        while ( ! gzeof($fp) ) {
+          $line = gzgets($fp, 4096);
+          if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+          if (substr($line, 0, 9) == "-- TABLE|") {
+            $table_info = explode('|',trim(substr($line, 9)));
+            $file_array['table_list'][] = array(
+              'name' => $table_info[0],
+              'file' => $table_info[0].'.sql.gz',
+              'rows' => $table_info[1],
+              'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+              'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+            );
+            $file_array['tables_row_count'] += $table_info[1];
+          }
+          if (substr($line, 0, 10) == "-- Charset") {
+            $file_array['charset'] = trim(substr($line, 11));
+          }
+        }
+      }                          
       break;
     default: 
       $file_array['compression'] = TEXT_NO_EXTENSION; 
-      if ($fp !== false) {
-        $lines = backup_entry_header($fp, false);
+      if ($fp = fopen(DIR_FS_BACKUP . $dir . $file, 'r')) {
+        while ( ! feof($fp) ) {
+          $line = fgets($fp, 4096);
+          if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+          if (substr($line, 0, 9) == "-- TABLE|") {
+            $table_info = explode('|',trim(substr($line, 9)));
+            $file_array['table_list'][] = array(
+              'name' => $table_info[0],
+              'file' => $table_info[0].'.sql',
+              'rows' => $table_info[1],
+              'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+              'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+            );
+            $file_array['tables_row_count'] += $table_info[1];
+          }
+          if (substr($line, 0, 10) == "-- Charset") {
+            $file_array['charset'] = trim(substr($line, 11));
+          }
+        }
       }
       break;
-  }
-  if ($fp !== false) {
-    fclose($fp);
-  }
-
-  foreach ($lines as $line) {
-    if (substr($line, 0, 9) == "-- TABLE|") {
-      $table_info = explode('|',trim(substr($line, 9)));
-      $file_array['table_list'][] = array(
-        'name' => $table_info[0],
-        'file' => $table_info[0].$extension,
-        'rows' => $table_info[1],
-        'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
-        'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
-      );
-      $file_array['tables_row_count'] += $table_info[1];
-    }
-    if (substr($line, 0, 10) == "-- Charset") {
-      $file_array['charset'] = trim(substr($line, 11));
-    }
   }
   
   return $file_array;
