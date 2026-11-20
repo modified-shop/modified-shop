@@ -136,7 +136,20 @@
       }
   
       if (count($sql_data_array) > 0) {
-        $text = base64_encode(serialize($_POST));
+        // the form token is no part of the change
+        $log_data = $_POST;
+        if (isset($_SESSION['CSRFName'])) {
+          unset($log_data[$_SESSION['CSRFName']]);
+        }
+        // a posted link carries its change in the address
+        if (count($log_data) < 1) {
+          foreach (array('action', 'flag') as $key) {
+            if (isset($_GET[$key]) && is_string($_GET[$key])) {
+              $log_data[$key] = $_GET[$key];
+            }
+          }
+        }
+        $text = base64_encode(serialize($log_data));
         
         if (isset($sql_data_array[0])) {
           foreach ($sql_data_array as $sql_data) {
