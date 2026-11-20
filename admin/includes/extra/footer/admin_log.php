@@ -160,7 +160,8 @@
                                      FROM admin_log al
                                      JOIN ".TABLE_CUSTOMERS." c
                                           ON al.customers_id = c.customers_id
-                                    WHERE ".$where);
+                                    WHERE ".$where."
+                                 ORDER BY al.id");
   
         if (xtc_db_num_rows($log_query) > 0) {
           echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
@@ -169,11 +170,12 @@
           while ($log = xtc_db_fetch_array($log_query)) {
             if (MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') {
               $log['text'] = unserialize(base64_decode($log['text']));
-              // entries written before the form token was left out still carry it, under a name that changes
+              // entries written before the form token was left out still carry it, under a name that changes:
+              // six signs, up to version 3.2.1 without the x in front
               if (is_array($log['text'])) {
                 foreach ($log['text'] as $log_key => $log_value) {
                   if (is_string($log_value)
-                      && preg_match('/^x[0-9a-zA-Z]{5}$/', (string)$log_key)
+                      && preg_match('/^[0-9a-zA-Z]{6}$/', (string)$log_key)
                       && preg_match('/^[0-9a-zA-Z]{32}$/', $log_value)
                       )
                   {
@@ -186,8 +188,13 @@
                   $base = $log['text'];
                 }
                 $base_new = array_merge($base, $log['text']);
-                $log['text'] = arrayRecursiveLogDiff($base, $base_new);
+                // the first entry has none before it and shows what it stored
+                if ($lc != 0) {
+                  $log['text'] = arrayRecursiveLogDiff($base, $base_new);
+                }
               }
+              // the names of the fields are text of the request like their values
+              $log['text'] = arrayRecursiveLogKeys($log['text']);
               $log = array_map_recursive('encode_htmlentities', $log);
             }
             echo '<div class="log_row">
@@ -235,6 +242,18 @@
       if (!array_key_exists($mKey, $aArray1)) {
         $aReturn[$mKey] = $mValue;
       }
+    }
+
+    return $aReturn;
+  }
+
+  function arrayRecursiveLogKeys($aArray) {
+    if (!is_array($aArray)) {
+      return $aArray;
+    }
+    $aReturn = array();
+    foreach ($aArray as $mKey => $mValue) {
+      $aReturn[encode_htmlentities((string)$mKey, ENT_COMPAT | ENT_SUBSTITUTE)] = arrayRecursiveLogKeys($mValue);
     }
 
     return $aReturn;
