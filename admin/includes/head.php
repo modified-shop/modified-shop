@@ -118,7 +118,12 @@
       if (e && e.stopPropagation) {
         e.stopPropagation();
       }
-      var form = $('<form method="post"></form>').attr('action', link.href);
+      // a redirect from http to https would turn the POST into a GET, so the request leaves with https like this page
+      var target = link.href;
+      if (window.location.protocol == 'https:' && link.protocol == 'http:' && link.host == window.location.host) {
+        target = 'https:' + target.substring(link.protocol.length);
+      }
+      var form = $('<form method="post"></form>').attr('action', target);
       <?php if (defined('CSRF_TOKEN_SYSTEM') && CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) { ?>
       form.append($('<input type="hidden"/>').attr('name', <?php echo json_encode((string)$_SESSION['CSRFName']); ?>).val(<?php echo json_encode((string)$_SESSION['CSRFToken']); ?>));
       <?php } ?>
