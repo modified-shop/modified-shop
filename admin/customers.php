@@ -377,7 +377,8 @@
             $sql_data_array = array ('customers_id' => $customers_id,
                                      'memo_date' => date("Y-m-d"),
                                      'memo_title' => $memo_title,
-                                     'memo_text' => $memo_text,
+                                     // stored like in the memo window, the display takes the added break out again
+                                     'memo_text' => nl2br($memo_text),
                                      'poster_id' => (int)$_SESSION['customer_id']
                                     );
             xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
