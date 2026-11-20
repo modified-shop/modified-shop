@@ -53,7 +53,7 @@
         $log_file = logs_file_path(isset($_GET['file']) ? $_GET['file'] : '');
         if ($log_file !== false) {
           if ($fp = fopen($log_file, 'rb')) {
-            $buffer = fread($fp, filesize($log_file));
+            $buffer = stream_get_contents($fp);
             fclose($fp);
             header('Content-type: application/x-octet-stream');
             header('Content-disposition: attachment; filename=' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $_GET['file']));
@@ -70,11 +70,12 @@
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
 
-        xtc_remove(DIR_FS_LOG . '/' . $_GET['file']);
-        if (!$xtc_remove_error) {
+        // the entry itself and nothing below it, also when it was replaced since the check
+        if (@unlink(DIR_FS_LOG . $_GET['file'])) {
           $messageStack->add_session(SUCCESS_LOG_DELETED, 'success');
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
+        $messageStack->add(ERROR_FILE_NOT_REMOVEABLE, 'error');
         break;
         
       case 'dellog':
@@ -142,7 +143,7 @@
                       $dir = dir(DIR_FS_LOG);
                       $contents_array = array();
                       while ($file = $dir->read()) {
-                        if (!is_dir(DIR_FS_LOG . $file)) {
+                        if (!is_dir(DIR_FS_LOG . $file) && logs_file_name($file)) {
                           foreach ($exts as $value) {
                             if (xtc_CheckExt($file, $value)) {
                               $contents_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
