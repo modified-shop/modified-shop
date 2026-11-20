@@ -60,7 +60,7 @@ class campaigns {
       $this->endM = $get_array['endM'];
       $this->endY = $get_array['endY'];
       $this->endDate = mktime(0, 0, 0, $this->endM, $this->endD, $this->endY);
-      $this->status = (isset($get_array['status']) ? (int)$get_array['status'] : 0);
+      $this->status = ((isset($get_array['status']) && is_scalar($get_array['status'])) ? (int)$get_array['status'] : 0);
       $this->campaign = $get_array['campaign'];
       $this->campaigns = $this->getCampaigns();
 

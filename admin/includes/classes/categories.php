@@ -54,6 +54,10 @@ class categories {
   // deletes an array of categories, with products
   // makes use of remove_category, remove_product
   function remove_categories($category_id) {
+    // 0 is the root of the tree, a value that is no number above zero must not reach it
+    if (!is_scalar($category_id) || !ctype_digit((string)$category_id) || (int)$category_id < 1) {
+      return;
+    }
     $category_id = (int)$category_id;
     $categories = xtc_get_category_tree($category_id, '', '0', '', true);
     $products = array();

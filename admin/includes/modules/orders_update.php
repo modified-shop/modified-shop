@@ -12,6 +12,9 @@
    
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
+  // one checked number for the update, the mail and the history, anything else keeps the status
+  $status = ((is_scalar($status) && ctype_digit((string)$status)) ? (int)$status : (int)$order->info['orders_status_id']);
+
   if ($order->info['orders_status_id'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
       xtc_db_query("UPDATE ".TABLE_ORDERS."

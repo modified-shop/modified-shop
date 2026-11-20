@@ -649,7 +649,15 @@
         {
           define('_VALID_XTC', true);
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
-          if (isset($_POST['action']) && $_POST['action'] == 'convertnow') {
+          // both values go into configure.php and into the statements: only those the form offers, otherwise nothing is written
+          if (isset($_POST['action'])
+              && $_POST['action'] == 'convertnow'
+              && isset($_POST['db_charset'])
+              && in_array($_POST['db_charset'], array('latin1', 'utf8', 'utf8mb4'), true)
+              && isset($_POST['db_engine'])
+              && in_array($_POST['db_engine'], array('MyISAM', 'InnoDB'), true)
+              )
+          {
             $action = 'convertnow';
 
             $new_db_charset = $_POST['db_charset'];
