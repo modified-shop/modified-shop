@@ -218,6 +218,12 @@
         $aReturn[$mKey] = $mValue;
       }
     }
+    // a field the entry before did not have is a change as well
+    foreach ($aArray2 as $mKey => $mValue) {
+      if (!array_key_exists($mKey, $aArray1)) {
+        $aReturn[$mKey] = $mValue;
+      }
+    }
 
     return $aReturn;
   }
