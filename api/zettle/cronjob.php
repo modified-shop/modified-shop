@@ -31,6 +31,12 @@
       && MODULE_CATEGORIES_ZETTLE_CATEGORIES_STATUS == 'true'
       )
   {
+    // the URL is public: one run at a time and one start in a minute
+    require_once(DIR_FS_INC.'xtc_batch_start.inc.php');
+    if (xtc_batch_start('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START', 60) !== true) {
+      die();
+    }
+
     $lng = new language(MODULE_CATEGORIES_ZETTLE_CATEGORIES_LANGUAGE);
     $language_id = $lng->language['languages_id'];
     

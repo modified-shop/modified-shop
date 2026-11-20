@@ -16,6 +16,12 @@
       && MODULE_SEMKNOX_SYSTEM_STATUS == 'true'
       )
   {
+    // the URL is public: one batch at a time and one start in 15 minutes
+    require_once (DIR_FS_INC.'xtc_batch_start.inc.php');
+    if (xtc_batch_start('MODULE_SEMKNOX_SYSTEM_BATCH_START', 900) !== true) {
+      die();
+    }
+
     // set time limit
     require_once (DIR_FS_INC.'xtc_set_time_limit.inc.php');
     xtc_set_time_limit(0);
