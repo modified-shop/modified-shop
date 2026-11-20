@@ -65,7 +65,8 @@
         break;
         
       case 'deleteconfirm':
-        if (!admin_form_posted() || strpos($_GET['file'], '..') !== false) {
+        // only a listed file, never a folder or the log directory itself
+        if (!admin_form_posted() || !isset($_GET['file']) || !logs_file_name($_GET['file']) || !is_file(DIR_FS_LOG . $_GET['file'])) {
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
 
