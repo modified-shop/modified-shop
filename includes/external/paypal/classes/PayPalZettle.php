@@ -352,9 +352,12 @@
         // them sent under a name the webhook handles. A list without names stands for all events
         $shop_events = (count($subscription['eventNames']) > 0);
         foreach ($subscription['eventNames'] as $event_name) {
-          if (!is_string($event_name) || !in_array($event_name, $scheme['eventNames'], true)) {
+          // a name that is no text: the subscription is not complete
+          if (!is_string($event_name)) {
+            return false;
+          }
+          if (!in_array($event_name, $scheme['eventNames'], true)) {
             $shop_events = false;
-            break;
           }
         }
         // every subscription that delivers to this shop signs with a key of its own
