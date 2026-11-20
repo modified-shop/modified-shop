@@ -121,7 +121,7 @@
                   if ($entry_firstname_error == true) {
                     echo xtc_draw_input_field('customers_firstname', $cInfo->customers_firstname).'&nbsp;'.ENTRY_FIRST_NAME_ERROR;
                   } else {
-                    echo $cInfo->customers_firstname.xtc_draw_hidden_field('customers_firstname', $cInfo->customers_firstname);
+                    echo encode_htmlspecialchars($cInfo->customers_firstname).xtc_draw_hidden_field('customers_firstname', $cInfo->customers_firstname);
                   }
                 } else {
                   echo xtc_draw_input_field('customers_firstname', $cInfo->customers_firstname, '', true);
@@ -137,7 +137,7 @@
                   if ($entry_lastname_error == true) {
                     echo xtc_draw_input_field('customers_lastname', $cInfo->customers_lastname).'&nbsp;'.ENTRY_LAST_NAME_ERROR;
                   } else {
-                    echo $cInfo->customers_lastname.xtc_draw_hidden_field('customers_lastname', $cInfo->customers_lastname);
+                    echo encode_htmlspecialchars($cInfo->customers_lastname).xtc_draw_hidden_field('customers_lastname', $cInfo->customers_lastname);
                   }
                 } else {
                   echo xtc_draw_input_field('customers_lastname', $cInfo->customers_lastname, '', true);
@@ -179,7 +179,7 @@
                   } elseif (isset($entry_email_address_exists) && $entry_email_address_exists == true) {
                     echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
                   } else {
-                    echo $cInfo->customers_email_address.xtc_draw_hidden_field('customers_email_address', $cInfo->customers_email_address);
+                    echo encode_htmlspecialchars($cInfo->customers_email_address).xtc_draw_hidden_field('customers_email_address', $cInfo->customers_email_address);
                   }
                 } else {
                   echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"', true);
@@ -247,7 +247,7 @@
                       if ($entry_vat_error == true) {
                         echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id).'&nbsp;'.$entry_vat_error_text;
                       } else {
-                        echo $cInfo->customers_vat_id.xtc_draw_hidden_field('customers_vat_id');
+                        echo encode_htmlspecialchars($cInfo->customers_vat_id).xtc_draw_hidden_field('customers_vat_id');
                       }
                     } else {
                       echo xtc_draw_input_field('customers_vat_id', $cInfo->customers_vat_id);
@@ -276,7 +276,7 @@
                   if ($entry_street_address_error == true) {
                     echo xtc_draw_input_field('entry_street_address', $cInfo->entry_street_address).'&nbsp;'.ENTRY_STREET_ADDRESS_ERROR;
                   } else {
-                    echo $cInfo->entry_street_address.xtc_draw_hidden_field('entry_street_address', $cInfo->entry_street_address);
+                    echo encode_htmlspecialchars($cInfo->entry_street_address).xtc_draw_hidden_field('entry_street_address', $cInfo->entry_street_address);
                   }
                 } else {
                   echo xtc_draw_input_field('entry_street_address', $cInfo->entry_street_address, '', true);
@@ -306,7 +306,7 @@
                   if ($entry_post_code_error == true) {
                     echo xtc_draw_input_field('entry_postcode', $cInfo->entry_postcode).'&nbsp;'.ENTRY_POST_CODE_ERROR;
                   } else {
-                    echo $cInfo->entry_postcode.xtc_draw_hidden_field('entry_postcode', $cInfo->entry_postcode);
+                    echo encode_htmlspecialchars($cInfo->entry_postcode).xtc_draw_hidden_field('entry_postcode', $cInfo->entry_postcode);
                   }
                 } else {
                   echo xtc_draw_input_field('entry_postcode', $cInfo->entry_postcode, '', true);
@@ -322,7 +322,7 @@
                   if ($entry_city_error == true) {
                     echo xtc_draw_input_field('entry_city', $cInfo->entry_city).'&nbsp;'.ENTRY_CITY_ERROR;
                   } else {
-                    echo $cInfo->entry_city.xtc_draw_hidden_field('entry_city', $cInfo->entry_city);
+                    echo encode_htmlspecialchars($cInfo->entry_city).xtc_draw_hidden_field('entry_city', $cInfo->entry_city);
                   }
                 } else {
                   echo xtc_draw_input_field('entry_city', $cInfo->entry_city, '', true);
@@ -367,7 +367,7 @@
                       echo xtc_draw_input_field('entry_state', xtc_get_zone_code($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)).'&nbsp;'.ENTRY_STATE_ERROR;
                     }
                   } else {
-                    echo $entry_state.xtc_draw_hidden_field('entry_zone_id', $cInfo->entry_zone_id).xtc_draw_hidden_field('entry_state', $cInfo->entry_state);
+                    echo encode_htmlspecialchars($entry_state).xtc_draw_hidden_field('entry_zone_id', $cInfo->entry_zone_id).xtc_draw_hidden_field('entry_state', $cInfo->entry_state);
                   }
                 } else {
                   echo xtc_draw_input_field('entry_state', xtc_get_zone_code($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state));
@@ -395,7 +395,7 @@
                   if (isset($entry_telephone_error) && $entry_telephone_error == true) {
                     echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone).'&nbsp;'.ENTRY_TELEPHONE_NUMBER_ERROR;
                   } else {
-                    echo $cInfo->customers_telephone.xtc_draw_hidden_field('customers_telephone', $cInfo->customers_telephone);
+                    echo encode_htmlspecialchars($cInfo->customers_telephone).xtc_draw_hidden_field('customers_telephone', $cInfo->customers_telephone);
                   }
                 } else {
                   echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, '', (ACCOUNT_TELEPHONE_OPTIONAL == 'false'));
@@ -411,7 +411,7 @@
               <td class="dataTableConfig col-single-right">
               <?php
                 if ($processed == true) {
-                  echo $cInfo->customers_fax.xtc_draw_hidden_field('customers_fax', $cInfo->customers_fax);
+                  echo encode_htmlspecialchars($cInfo->customers_fax).xtc_draw_hidden_field('customers_fax', $cInfo->customers_fax);
                 } else {
                   echo xtc_draw_input_field('customers_fax', $cInfo->customers_fax);
                 }
@@ -474,7 +474,7 @@
             <?php  echo $xtPrice->xtcFormatCurrency($cInfo->amount).xtc_draw_hidden_field('amount', $cInfo->amount);
               /*
               if ($processed == true) {
-                echo $cInfo->amount.xtc_draw_hidden_field('amount', $cInfo->amount);
+                echo encode_htmlspecialchars($cInfo->amount).xtc_draw_hidden_field('amount', $cInfo->amount);
               } else {
                 echo xtc_draw_input_field('amount', $cInfo->amount);
               }

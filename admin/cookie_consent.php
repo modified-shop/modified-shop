@@ -448,7 +448,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_DESCRIPTION . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                      $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('cookies_description[' . $languages[$i]['id'] . ']', '', '45', '5', xtc_get_cookies_detail($vInfo->cookies_id, $languages[$i]['id'], 'cookies_description')));
+                      $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('cookies_description[' . $languages[$i]['id'] . ']', '', '45', '5', xtc_get_cookies_detail($vInfo->cookies_id, $languages[$i]['id'], 'cookies_description'), '', true, true));
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_COOKIES . '<br />' . xtc_draw_input_field('cookies_list', $vInfo->cookies_list) . '<br /><small>' . TEXT_INFO_VALUE_COOKIES_DESC . '</small><br />');
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_SORT . '<br />' . xtc_draw_input_field('sort_order', $vInfo->sort_order));
@@ -460,13 +460,13 @@ require (DIR_WS_INCLUDES.'head.php');
 
                     $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . $page . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->cookies_id . '&saction=deleteconfirm_values'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_VALUE_INTRO);
-                    $contents[] = array('text' => '<br /><b>' . xtc_get_cookies_detail($vInfo->cookies_id, $_SESSION['languages_id'], 'cookies_name') . '</b>');
+                    $contents[] = array('text' => '<br /><b>' . encode_htmlentities(xtc_get_cookies_detail($vInfo->cookies_id, $_SESSION['languages_id'], 'cookies_name')) . '</b>');
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $page . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->cookies_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   default:
                     if (isset($vInfo) && is_object($vInfo)) {
-                      $heading[] = array('text' => '<b>' . xtc_get_cookies_detail($vInfo->cookies_id, $_SESSION['languages_id'], 'cookies_name') . '</b>');
+                      $heading[] = array('text' => '<b>' . encode_htmlentities(xtc_get_cookies_detail($vInfo->cookies_id, $_SESSION['languages_id'], 'cookies_name')) . '</b>');
                       
                       $consent_buttons = '';
                       $consent_buttons .= '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $page . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->cookies_id . '&saction=edit_value') . '">' . BUTTON_EDIT . '</a> ';
@@ -520,7 +520,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_DESCRIPTION . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                      $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', '', '45', '5', xtc_get_cookies_categories_detail($oInfo->categories_id, $languages[$i]['id'], 'categories_description')));
+                      $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', '', '45', '5', xtc_get_cookies_categories_detail($oInfo->categories_id, $languages[$i]['id'], 'categories_description'), '', true, true));
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_SORT . '<br />' . xtc_draw_input_field('sort_order', $oInfo->sort_order));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $page . '&oID=' . $oInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
@@ -531,7 +531,7 @@ require (DIR_WS_INCLUDES.'head.php');
 
                     $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . $page . '&oID=' . $oInfo->categories_id . '&action=deleteconfirm_options'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_OPTION_INTRO);
-                    $contents[] = array('text' => '<br /><b>' . xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name') . '</b>');
+                    $contents[] = array('text' => '<br /><b>' . encode_htmlentities(xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name')) . '</b>');
                     $cookies_query = xtc_db_query("SELECT * 
                                                       FROM ".TABLE_COOKIE_CONSENT_COOKIES." 
                                                      WHERE categories_id = '".(int)$oInfo->categories_id."' 
@@ -545,7 +545,7 @@ require (DIR_WS_INCLUDES.'head.php');
 
                   default:
                     if (is_object($oInfo)) {
-                      $heading[] = array('text' => '<b>' . xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name') . '</b>');
+                      $heading[] = array('text' => '<b>' . encode_htmlentities(xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name')) . '</b>');
 
                       $consent_buttons = '';
                       $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $page . '&oID=' . $oInfo->categories_id . '&action=edit_option') . '">' . BUTTON_EDIT . '</a> ';
