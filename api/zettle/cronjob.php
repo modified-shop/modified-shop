@@ -41,6 +41,10 @@
     $language_id = $lng->language['languages_id'];
     
     $PayPalZettle = new PayPalZettle();
+    // every writing request of this run asks first whether the run still holds its lock
+    $PayPalZettle->write_guard = function () {
+      return xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START');
+    };
 
 
     // specials start and end by date without any write, the price still has to follow
@@ -135,10 +139,14 @@
 
       // reserved before the request, a lost answer must not create the products twice
       foreach ($import_products as $zettle_id => $products_uuid) {
-        xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
-                         SET products_uuid = '".xtc_db_input($products_uuid)."',
-                             bulk = IF(bulk < 0, bulk - 1, -1)
-                       WHERE zettle_id = '".(int)$zettle_id."'");
+        // without its reservation a product is not sent, a later run would give it another uuid
+        if (xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                             SET products_uuid = '".xtc_db_input($products_uuid)."',
+                                 bulk = IF(bulk < 0, bulk - 1, -1)
+                           WHERE zettle_id = '".(int)$zettle_id."'") === false)
+        {
+          die();
+        }
       }
 
       // without its lock another run can have reserved and sent the same products

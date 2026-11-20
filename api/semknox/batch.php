@@ -71,10 +71,13 @@
         $products_array = array_chunk($products_id_array, 1000);
         
         foreach ($semknox_array as $semknox) {                  
+          // the run goes on only with its lock and a working connection, before every request to the provider
+          if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
+            die();
+          }
           $response = $semknox->initBatch();
           if ($response->status == 'success') {
             foreach ($products_array as $key => $products) {       
-              // the run goes on only with its lock and a working connection
               if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
                 die();
               }
@@ -83,7 +86,10 @@
                 break 2;
               }
             }
-            if ($response->status == 'success' && xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') === true) {  
+            if ($response->status == 'success') {  
+              if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
+                die();
+              }
               $semknox->startBatch();
             }
           }
