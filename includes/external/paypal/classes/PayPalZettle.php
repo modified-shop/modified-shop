@@ -313,6 +313,7 @@
       $scheme = $this->get_subscription_scheme();
 
       $signing_key = '';
+      $shop_keys = array();
       if (is_array($subscriptions)) {
         // the answer also carries headers, status and reason
         foreach ($subscriptions as $subscription) {
@@ -320,19 +321,23 @@
               || !isset($subscription['signingKey'])
               || !is_string($subscription['signingKey'])
               || $subscription['signingKey'] == ''
+              || strpos($subscription['signingKey'], ',') !== false
               )
           {
             continue;
           }
-          // the subscription of this shop, without one the first as in the module
+          // every subscription that delivers to this shop signs with a key of its own
           if (isset($subscription['destination']) && $subscription['destination'] == $scheme['destination']) {
-            $signing_key = $subscription['signingKey'];
-            break;
+            $shop_keys[$subscription['signingKey']] = $subscription['signingKey'];
           }
+          // without one the first as in the module
           if ($signing_key == '') {
             $signing_key = $subscription['signingKey'];
           }
         }
+      }
+      if (count($shop_keys) > 0) {
+        $signing_key = implode(',', $shop_keys);
       }
       if ($signing_key == '') {
         return '';
@@ -343,10 +348,11 @@
                                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
       if (xtc_db_num_rows($check_query) > 0) {
         xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                         SET configuration_value = '".xtc_db_input($signing_key)."'
+                         SET configuration_value = '".xtc_db_input($signing_key)."',
+                             sort_order = '-1'
                        WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
       } else {
-        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '2', NOW())");
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '-1', NOW())");
       }
 
       return $signing_key;
@@ -361,7 +367,7 @@
                                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'");
       if (xtc_db_num_rows($check_query) < 1) {
         // with the unique key of the table a second call at the same time adds nothing
-        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '2', NOW())");
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '-1', NOW())");
         return (xtc_db_affected_rows() > 0);
       }
 
@@ -392,7 +398,54 @@
       }
 
       // the text exactly as it arrived, a changed timestamp or payload must not pass
-      return hash_equals(hash_hmac('sha256', $request['timestamp'].'.'.$request['payload'], $signing_key), strtolower($signature));
+      foreach (explode(',', (string)$signing_key) as $key) {
+        if ($key != '' && hash_equals(hash_hmac('sha256', $request['timestamp'].'.'.$request['payload'], $key), strtolower($signature))) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
+    // the event name is not part of the signed text: the payload has to have the form Zettle documents for this event
+    static function isEventPayload($event_name, $data) {
+      if (!is_string($event_name) || !is_array($data)) {
+        return false;
+      }
+
+      switch ($event_name) {
+        case 'InventoryBalanceChanged':
+          return (isset($data['balanceBefore'], $data['balanceAfter'])
+                  && is_array($data['balanceBefore'])
+                  && is_array($data['balanceAfter'])
+                  && !isset($data['productUuid'])
+                  );
+
+        case 'InventoryTrackingStarted':
+          return (isset($data['productUuid'], $data['created'])
+                  && is_string($data['productUuid'])
+                  && !isset($data['changeInformation'])
+                  && !isset($data['balanceBefore'])
+                  );
+
+        case 'InventoryTrackingStopped':
+          return (isset($data['productUuid'], $data['changeInformation'])
+                  && is_string($data['productUuid'])
+                  && !isset($data['created'])
+                  && !isset($data['balanceBefore'])
+                  );
+
+        case 'ProductDeleted':
+          return (isset($data['uuid'], $data['variants'])
+                  && is_string($data['uuid'])
+                  && is_array($data['variants'])
+                  && !isset($data['productUuid'])
+                  && !isset($data['balanceBefore'])
+                  );
+      }
+
+      return false;
     }
 
 

@@ -72,6 +72,11 @@
       }
 
       $data = json_decode($request['payload'], true);
+
+      // only the timestamp and the payload are signed, an event sent under another name is ignored
+      if (!isset($request['eventName']) || !PayPalZettle::isEventPayload($request['eventName'], $data)) {
+        die();
+      }
       
       switch ($request['eventName']) {
         case 'InventoryBalanceChanged':
