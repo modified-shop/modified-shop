@@ -151,8 +151,10 @@ if (isset($_GET['action'])) {
             break;
 
         case 'extract':
-            if (!$config['extract_files']) {
+            // FTP cannot create a file only when its name is free, so an archive could replace files there
+            if (!$config['extract_files'] || $ftp) {
                 response(trans('wrong action').AddErrorLocation())->send();
+                exit;
             }
             if ($ftp) {
                 $path = $config['ftp_base_url'].$config['upload_dir'] . $_POST['path'];
@@ -177,6 +179,11 @@ if (isset($_GET['action'])) {
             }
 
             $info = pathinfo($path);
+            // entries that would replace a file or another entry are left out and reported,
+            // entries that could not be written as well
+            $skipped_files = array();
+            $failed_files = array();
+            $omitted_files = array();
 
             switch ($info['extension']) {
                 case "zip":
@@ -205,7 +212,15 @@ if (isset($_GET['action'])) {
                                 if (! (substr($FullFileName['name'], -1, 1) == "/")) {
                                     $fileinfo = pathinfo($FullFileName['name']);
                                     if (in_array(strtolower($fileinfo['extension']), $config['ext'])) {
-                                        copy('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $FullFileName['name']);
+                                        // inner dots of the file name are replaced like on upload
+                                        $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
+                                        // an entry must not replace a file that is already there or an earlier entry of the archive
+                                        $written = rfm_copy_new('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name, $FullFileName['size']);
+                                        if ($written === false) {
+                                            $skipped_files[] = $FullFileName['name'];
+                                        } elseif ($written === null) {
+                                            $failed_files[] = $FullFileName['name'];
+                                        }
                                     }
                                 }
                             }
@@ -230,8 +245,22 @@ if (isset($_GET['action'])) {
                     $phar = new PharData($path);
                     $phar->decompressFiles();
                     $files = array();
-                    check_files_extensions_on_phar($phar, $files, '', $config);
-                    $phar->extractTo($base_folder, $files, true);
+                    check_files_extensions_on_phar($phar, $files, '', $config, $omitted_files);
+                    // a file that is already there stays, the entry is reported;
+                    // extractTo() checks the target and writes it in two steps, so each file is created on its own
+                    foreach ($files as $tar_file) {
+                        if (!is_dir(dirname($base_folder . $tar_file))) {
+                            create_folder(dirname($base_folder . $tar_file));
+                        }
+                        $tar_source = 'phar://' . realpath($path) . '/' . $tar_file;
+                        $tar_size = @filesize($tar_source);
+                        $written = rfm_copy_new($tar_source, $base_folder . $tar_file, (($tar_size !== false) ? $tar_size : null));
+                        if ($written === false) {
+                            $skipped_files[] = $tar_file;
+                        } elseif ($written === null) {
+                            $failed_files[] = $tar_file;
+                        }
+                    }
                     break;
 
                 default:
@@ -243,6 +272,22 @@ if (isset($_GET['action'])) {
                 unlink($path);
                 $ftp->putAll($base_folder, "/".$config['ftp_base_folder'] . $config['upload_dir'] . fix_dirname($_POST['path']), FTP_BINARY);
                 deleteDir($base_folder);
+            }
+
+            if (count($skipped_files) > 0 || count($failed_files) > 0 || count($omitted_files) > 0) {
+                $messages = array();
+                if (count($omitted_files) > 0) {
+                    // TAR entries with inner dots in the name are not extracted
+                    $messages[] = trans('wrong name') . ': ' . rfm_esc(implode(', ', $omitted_files));
+                }
+                if (count($skipped_files) > 0) {
+                    $messages[] = trans('Rename_existing_file') . ': ' . rfm_esc(implode(', ', $skipped_files));
+                }
+                if (count($failed_files) > 0) {
+                    $messages[] = trans('File_Save_Error') . ' ' . rfm_esc(implode(', ', $failed_files));
+                }
+                response(implode('<br>', $messages) . AddErrorLocation())->send();
+                exit;
             }
 
 

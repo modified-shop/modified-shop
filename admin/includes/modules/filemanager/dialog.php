@@ -467,7 +467,7 @@ $get_params = http_build_query($get_params);
     <input type="hidden" id="lang_error_upload" value="<?php echo trans('Error_Upload');?>" />
     <input type="hidden" id="lang_select" value="<?php echo trans('Select');?>" />
     <input type="hidden" id="lang_extract" value="<?php echo trans('Extract');?>" />
-    <input type="hidden" id="extract_files" value="<?php if($config['extract_files']) echo 1; else echo 0;?>" />
+    <input type="hidden" id="extract_files" value="<?php if($config['extract_files'] && !$ftp) echo 1; else echo 0;?>" />
     <input type="hidden" id="transliteration" value="<?php echo $config['transliteration']?"true":"false";?>" />
     <input type="hidden" id="convert_spaces" value="<?php echo $config['convert_spaces']?"true":"false";?>" />
     <input type="hidden" id="replace_with" value="<?php echo $config['convert_spaces']? $config['replace_with'] : "";?>" />

@@ -273,15 +273,37 @@ function deleteDir($dir,$ftp = null, $config = null)
 *
 * @param  string  $old_path
 * @param  string  $name      New file name without extension
+* @param  bool    $replace   true for the thumbnail or a derived image of a copy that was just made
 *
-* @return  bool
+* @return  bool|null  false when the name is taken
 */
-function duplicate_file( $old_path, $name, $ftp = null, $config = null )
+function duplicate_file( $old_path, $name, $ftp = null, $config = null, $replace = false )
 {
 	$info = pathinfo($old_path);
 	$new_path = $info['dirname'] . "/" . $name . "." . $info['extension'];
 	if($ftp){
 		try{
+			if (!$replace) {
+				// FTP cannot create a file only when its name is free, so the listing of the folder decides
+				$found = false;
+				$taken = false;
+				foreach ($ftp->nlist("/".$info['dirname']) as $entry) {
+					$entry = fix_strtolower(basename($entry));
+					if ($entry == fix_strtolower($info['basename'])) {
+						$found = true;
+					}
+					if ($entry == fix_strtolower($name . "." . $info['extension'])) {
+						$taken = true;
+					}
+				}
+				if ($taken) {
+					return false;
+				}
+				// a listing without the source file is not complete
+				if (!$found) {
+					return null;
+				}
+			}
 			$tmp = time().$name . "." . $info['extension'];
 			$ftp->get($tmp, "/".$old_path, FTP_BINARY);
 			$ftp->put("/".$new_path, $tmp, FTP_BINARY);
@@ -298,8 +320,12 @@ function duplicate_file( $old_path, $name, $ftp = null, $config = null )
 			{
 				return false;
 			}
+			if ($replace) {
+				return copy($old_path, $new_path);
+			}
 
-			return copy($old_path, $new_path);
+			// a copy never takes the place of another file
+			return rfm_copy_new($old_path, $new_path, filesize($old_path));
 		}
 	}
 }
@@ -592,7 +618,7 @@ function create_folder($path = null, $path_thumbs = null,$ftp = null,$config = n
 		$ftp->mkdir($path);
 		$ftp->mkdir($path_thumbs);
 	}else{
-		if(file_exists($path) || file_exists($path_thumbs)){
+		if(file_exists($path) || ($path_thumbs && file_exists($path_thumbs))){
 			return false;
 		}
 		$oldumask = umask(0);
@@ -650,11 +676,11 @@ function check_files_extensions_on_path($path, $ext)
 function check_file_extension($extension,$config){
 	$check = false;
 	if (!$config['ext_blacklist']) {
-		if(in_array(mb_strtolower($extension), $conf['ext'])){
+		if(in_array(mb_strtolower($extension), $config['ext'])){
 			$check = true;
 		}
     } else {
-    	if(!in_array(mb_strtolower($extension), $conf['ext_blacklist'])){
+		if(!in_array(mb_strtolower($extension), $config['ext_blacklist'])){
 			$check = true;
 		}
     }
@@ -674,24 +700,34 @@ function check_file_extension($extension,$config){
 * @param  array   $files
 * @param  string  $basepath
 * @param  string  $ext
+* @param  array   $omitted   files with an allowed extension that are left out for their name
 */
-function check_files_extensions_on_phar($phar, &$files, $basepath, $config)
+function check_files_extensions_on_phar($phar, &$files, $basepath, $config, &$omitted = null)
 {
 	foreach ($phar as $file)
 	{
 		if ($file->isFile())
 		{
-			if (check_file_extension($file->getExtension()))
+			if (check_file_extension($file->getExtension(), $config))
 			{
-				$files[] = $basepath . $file->getFileName();
+				// a name with more than one dot is left out and listed, an entry of a TAR archive is not renamed
+				if (substr_count($file->getFileName(), '.') < 2)
+				{
+					$files[] = $basepath . $file->getFileName();
+				}
+				elseif (is_array($omitted))
+				{
+					$omitted[] = $basepath . $file->getFileName();
+				}
 			}
 		}
 		else
 		{
 			if ($file->isDir())
 			{
-				$iterator = new DirectoryIterator($file);
-				check_files_extensions_on_phar($iterator, $files, $basepath . $file->getFileName() . '/', $config);
+				// the full path keeps the recursion inside the archive for deeper folders
+				$iterator = new DirectoryIterator($file->getPathname());
+				check_files_extensions_on_phar($iterator, $files, $basepath . $file->getFileName() . '/', $config, $omitted);
 			}
 		}
 	}
@@ -786,6 +822,64 @@ function sanitize($str)
 *
 * @return string
 */
+/**
+* Replace the inner dots of a file name like the upload does
+*
+* Servers that map every extension of a name, e.g. Apache AddHandler, would run
+* "example.php.gif" as a script.
+*
+* @param  string  $name
+* @param  bool    $has_extension  false for a name the extension is appended to later
+*
+* @return string
+*/
+function rfm_replace_inner_dots($name, $has_extension = true)
+{
+	$parts = explode('.', (string)$name);
+	if (!$has_extension) {
+		return implode('-', $parts);
+	}
+	if (count($parts) > 2) {
+		$ext = array_pop($parts);
+		return implode('-', $parts) . '.' . $ext;
+	}
+	return (string)$name;
+}
+
+/**
+* Write a new file from a stream, a file that is already there is never replaced
+*
+* The mode x creates the file only when its name is free, in one step, so a file that
+* appears between a check and the write stays as well.
+*
+* @param  string    $source
+* @param  string    $target
+* @param  int|null  $size    expected size of the file, when it is known
+*
+* @return bool|null  true when written, false when the target exists,
+*                    null when source or target cannot be opened or the copy is incomplete
+*/
+function rfm_copy_new($source, $target, $size = null)
+{
+	$in = @fopen($source, 'rb');
+	if ($in === false) {
+		return null;
+	}
+	$out = @fopen($target, 'xb');
+	if ($out === false) {
+		fclose($in);
+		return (file_exists($target) ? false : null);
+	}
+	$copied = stream_copy_to_stream($in, $out);
+	fclose($in);
+	// a part of a file would keep the name taken for the next attempt
+	if (!fclose($out) || $copied === false || ($size !== null && $copied != $size)) {
+		@unlink($target);
+		return null;
+	}
+	return true;
+}
+
 function fix_filename($str, $config, $is_folder = false)
 {
 	$str = sanitize($str);
