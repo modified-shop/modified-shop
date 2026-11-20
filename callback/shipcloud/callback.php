@@ -120,10 +120,11 @@ if (is_array($request)
     try {
       define('_VALID_XTC', true);
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
-      $history_stored = ($order_updated === true);
     } catch (Throwable $ex) {
       $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => $ex->getMessage()));
     }
+    // an error after the entry, in the mail for instance, leaves the entry stored: it counts
+    $history_stored = ($order_updated === true);
     if ($history_stored !== true) {
       $shipcloud->release_event();
       header('HTTP/1.1 503 Service Unavailable');
