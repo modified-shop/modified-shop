@@ -214,6 +214,10 @@ if (isset($_GET['action'])) {
                                     if (in_array(strtolower($fileinfo['extension']), $config['ext'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
+                                        // an archive can hold a file without an entry for its folder
+                                        if ($fileinfo['dirname'] != '.' && !file_exists($base_folder . $fileinfo['dirname'])) {
+                                            create_folder($base_folder . $fileinfo['dirname']);
+                                        }
                                         // an entry must not replace a file that is already there or an earlier entry of the archive
                                         $written = rfm_copy_new('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name, $FullFileName['size']);
                                         if ($written === false) {
