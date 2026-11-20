@@ -227,7 +227,7 @@
    *
    * like xtc_remove_active_content(), for short texts such as names, labels and codes that are stored in
    * narrow columns or passed on as plain text: a text that loses nothing keeps its bytes, because the
-   * cleaner writes &amp;, <br /> and tag names its own way and the text would grow
+   * cleaner writes &amp;, quotes and tag names its own way and the text would grow
    *
    * @param mixed $value text or array of texts
    * @param boolean $removed set to true when something was removed
@@ -251,24 +251,89 @@
       $removed = true;
     }
 
-    // nothing removed and no tag with an attribute, comment or declaration: the text as it is.
-    // With attributes the browser may read a value differently than the cleaner, so those come from the cleaner
-    if ($changed === false && !preg_match('/<[a-z\/][^>]*=|<[!?]/i', $value)) {
-      return $value;
+    $parts = preg_split('/(<[^>]*>)/', $clean, -1, PREG_SPLIT_DELIM_CAPTURE);
+    if (!is_array($parts)) {
+      return $clean;
     }
 
-    // outside of tags an & can only become a character, never markup, so it gets its short form back
-    $parts = preg_split('/(<[^>]*>)/', $clean, -1, PREG_SPLIT_DELIM_CAPTURE);
-    if (is_array($parts)) {
+    if ($changed === false) {
+      // nothing removed and no tag with an attribute, comment or declaration: the text as it is
+      if (!preg_match('/<[a-z\/][^>]*=|<[!?]/i', $value)) {
+        return $value;
+      }
+      // a browser may read an attribute differently than the cleaner, so the text stays as it is
+      // only when the cleaner kept every tag and changed nothing but its spelling
+      $clean_tags = array();
       foreach ($parts as $i => $part) {
-        if ($i % 2 == 0) {
-          $parts[$i] = str_replace('&amp;', '&', $part);
+        if ($i % 2 == 1) {
+          $clean_tags[] = $part;
         }
       }
-      $clean = implode('', $parts);
+      if (xtc_remove_active_content_tags($value) === $clean_tags) {
+        return $value;
+      }
     }
 
-    return $clean;
+    // outside of tags an & before anything but a letter, a digit or # is read as the character itself
+    foreach ($parts as $i => $part) {
+      if ($i % 2 == 0) {
+        $short = preg_replace('/&amp;(?![a-z0-9#])/i', '&', $part);
+        $parts[$i] = ((is_string($short)) ? $short : $part);
+      }
+    }
+
+    return implode('', $parts);
+  }
+
+
+  /**
+   * xtc_remove_active_content_tags()
+   *
+   * the tags of a text in the spelling of the cleaner: names in lower case, one space, values in double quotes
+   *
+   * @param string $value
+   * @return mixed array of tags, false when a tag is not a plainly written formatting tag
+   */
+  function xtc_remove_active_content_tags($value) {
+    // elements whose content is plain text for every browser
+    $plain = '(?:a|abbr|b|big|blockquote|br|center|cite|code|dd|del|div|dl|dt|em|font|h[1-6]|hr|i|img|ins|li|ol|p|pre|q|s|small|span|strike|strong|sub|sup|table|tbody|td|tfoot|th|thead|tr|tt|u|ul)';
+    // the characters a browser takes as space inside a tag; \s would add the vertical tab
+    $space = '[ \t\n\f\r]';
+    // name="value", name='value' or name=value; a value without quotes ends at a space or at the end of the tag
+    $attribute = $space.'+([a-z][a-z0-9-]*)'.$space.'*='.$space.'*(?:"([^"]*)"|\'([^\'"]*)\'|([^\s"\'=<>`]+))';
+
+    $parts = preg_split('/(<[^>]*>)/', $value, -1, PREG_SPLIT_DELIM_CAPTURE);
+    if (!is_array($parts)) {
+      return false;
+    }
+
+    $tags = array();
+    foreach ($parts as $i => $part) {
+      if ($i % 2 == 0) {
+        // a < that opens no tag
+        if (strpos($part, '<') !== false) {
+          return false;
+        }
+        continue;
+      }
+      if (preg_match('/^<\/('.$plain.')'.$space.'*>$/Di', $part, $match)) {
+        $tags[] = '</'.strtolower($match[1]).'>';
+      } elseif (preg_match('/^<('.$plain.')((?:'.$attribute.')*)'.$space.'*\/?>$/Di', $part, $match)) {
+        $tag = '<'.strtolower($match[1]);
+        if ($match[2] != '' && preg_match_all('/'.$attribute.'/i', $match[2], $attributes, PREG_SET_ORDER)) {
+          foreach ($attributes as $found) {
+            $text = ((isset($found[4]) && $found[4] != '') ? $found[4] : ((isset($found[3]) && $found[3] != '') ? $found[3] : $found[2]));
+            // an & before anything but a letter, a digit or # is the character itself
+            $tag .= ' '.strtolower($found[1]).'="'.preg_replace('/&(?![a-z0-9#])/i', '&amp;', $text).'"';
+          }
+        }
+        $tags[] = $tag.'>';
+      } else {
+        return false;
+      }
+    }
+
+    return $tags;
   }
 
   function xtc_remove_active_content_fingerprint($html, $config) {

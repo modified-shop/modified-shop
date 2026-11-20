@@ -1516,7 +1516,8 @@
                                        WHERE tax_rate = '".$ust['tax_rate']."'");
       $ust_desc = xtc_db_fetch_array($ust_desc_query);
 
-      $title = parse_multi_language_html($ust_desc['tax_description'], $lang['code']);
+      // the title column takes 255 characters
+      $title = parse_multi_language_html($ust_desc['tax_description'], $lang['code'], false, 254 - clean_html_output_length($tax_info));
       $title = $tax_info . $title.':';
 
       if ($ust['tax_value_new']) {

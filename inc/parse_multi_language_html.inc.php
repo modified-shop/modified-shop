@@ -22,9 +22,10 @@
    * @param string $text stored multi language value
    * @param string $lang_code language code
    * @param boolean $admin see parse_multi_language_value()
+   * @param int $max_length see clean_html_output()
    * @return string
    */
-  function parse_multi_language_html($text, $lang_code, $admin = false) {
-    return clean_html_output(parse_multi_language_value($text, $lang_code, $admin));
+  function parse_multi_language_html($text, $lang_code, $admin = false, $max_length = 0) {
+    return clean_html_output(parse_multi_language_value($text, $lang_code, $admin), $max_length);
   }
 ?>

@@ -21,6 +21,16 @@
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
   require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
 
+  defined('ERROR_TAX_DESCRIPTION_LENGTH') or define('ERROR_TAX_DESCRIPTION_LENGTH', 'Error: The descriptions of all languages together may be at most %s characters long, HTML and language codes included. Nothing was saved.');
+
+  // the descriptions of all languages share one column, which would cut a longer value
+  function tax_rates_description_max_length() {
+    $column_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_TAX_RATES." LIKE 'tax_description'");
+    $column = xtc_db_fetch_array($column_query);
+
+    return ((isset($column['Type']) && preg_match('/char\((\d+)\)/i', $column['Type'], $match)) ? (int)$match[1] : 0);
+  }
+
   // set languages
   $languages = xtc_get_languages();
 
@@ -47,6 +57,12 @@
           }
         }
         $tax_description = implode('||', $tax_description_array);
+
+        $max_length = tax_rates_description_max_length();
+        if ($max_length > 0 && clean_html_output_length($tax_description) > $max_length) {
+          $messageStack->add_session(sprintf(ERROR_TAX_DESCRIPTION_LENGTH, $max_length), 'error');
+          xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&action=new'));
+        }
 
         $sql_data_array = array(
           'tax_zone_id' => $tax_zone_id, 
@@ -77,6 +93,12 @@
         $stored = xtc_db_fetch_array($stored_query);
 
         $tax_description = merge_multi_language_value($tax_description, (isset($stored['tax_description']) ? $stored['tax_description'] : ''));
+
+        $max_length = tax_rates_description_max_length();
+        if ($max_length > 0 && clean_html_output_length($tax_description) > $max_length) {
+          $messageStack->add_session(sprintf(ERROR_TAX_DESCRIPTION_LENGTH, $max_length), 'error');
+          xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $tax_rates_id . '&action=edit'));
+        }
 
         $sql_data_array = array(
           'tax_zone_id' => $tax_zone_id, 
