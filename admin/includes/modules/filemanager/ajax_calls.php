@@ -215,22 +215,24 @@ if (isset($_GET['action'])) {
                                         // inner dots of the file name are replaced like on upload
                                         $target_name = (($fileinfo['dirname'] != '.') ? $fileinfo['dirname'] . '/' : '') . rfm_replace_inner_dots($fileinfo['basename']);
                                         // an archive can hold a file without an entry for its folder
-                                        if ($fileinfo['dirname'] != '.' && !file_exists($base_folder . $fileinfo['dirname'])) {
-                                            // only below the upload folder, also where a link in the path leads
-                                            $parent = $base_folder . $fileinfo['dirname'];
-                                            while (!file_exists($parent) && !is_link($parent) && dirname($parent) != $parent) {
-                                                $parent = dirname($parent);
+                                        if ($fileinfo['dirname'] != '.') {
+                                            // a folder that cannot be checked or created is the error of this entry, without a message of its own
+                                            set_error_handler(function () {
+                                                return true;
+                                            }, E_WARNING);
+                                            if (!file_exists($base_folder . $fileinfo['dirname'])) {
+                                                // only below the upload folder, also where a link in the path leads
+                                                $parent = $base_folder . $fileinfo['dirname'];
+                                                while (!file_exists($parent) && !is_link($parent) && dirname($parent) != $parent) {
+                                                    $parent = dirname($parent);
+                                                }
+                                                $parent = realpath($parent);
+                                                $upload = realpath($config['current_path']);
+                                                if ($parent !== false && $upload !== false && strpos($parent . DIRECTORY_SEPARATOR, $upload . DIRECTORY_SEPARATOR) === 0) {
+                                                    create_folder($base_folder . $fileinfo['dirname']);
+                                                }
                                             }
-                                            $parent = realpath($parent);
-                                            $upload = realpath($config['current_path']);
-                                            if ($parent !== false && $upload !== false && strpos($parent . DIRECTORY_SEPARATOR, $upload . DIRECTORY_SEPARATOR) === 0) {
-                                                // a folder that cannot be created is the error of this entry, without a message of its own
-                                                set_error_handler(function () {
-                                                    return true;
-                                                }, E_WARNING);
-                                                create_folder($base_folder . $fileinfo['dirname']);
-                                                restore_error_handler();
-                                            }
+                                            restore_error_handler();
                                         }
                                         // an entry must not replace a file that is already there or an earlier entry of the archive
                                         $written = rfm_copy_new('zip://' . $path . '#' . $FullFileName['name'], $base_folder . $target_name, $FullFileName['size']);
