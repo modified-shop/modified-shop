@@ -51,11 +51,13 @@
     public $client_id;
     public $LoggingManager;
     public $zettle_version = '1.11';
+    // true when the last answer was a JSON list
+    public $response_list = false;
     
-    function __construct() {    
+    function __construct($timeout = 20) {
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_zettle_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'zettle', 'debug');
 
-      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => 5, 'timeout' => 20));
+      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => min(5, (int)$timeout), 'timeout' => (int)$timeout));
 
       $this->client_id = self::CLIENT_ID;
       $this->api_key = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '';
@@ -318,6 +320,7 @@
           || isset($subscriptions['error'])
           || !isset($subscriptions['status'])
           || (int)$subscriptions['status'] != 200
+          || $this->response_list !== true
           )
       {
         return false;
@@ -369,24 +372,46 @@
         xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '-1', NOW())");
       }
 
+      // the time the keys were read: a valid event has them read again after a day
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".time()."'
+                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_TIME'");
+      if (xtc_db_affected_rows() < 1) {
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_TIME', '".time()."', '6', '-1', NOW())");
+      }
+
       return $signing_key;
     }
 
 
-    // the lookup is a request to Zettle, calls to the webhook start it once in the given number of seconds
-    static function signingKeyLookupAllowed($interval = 900) {
+    // the lookup is a request to Zettle. Calls to the webhook start one in 15 minutes: at once when no stored key
+    // fits, with a fitting key only when the keys were read more than a day ago. An attempt without an answer
+    // leaves that time as it is, so the next one follows after 15 minutes
+    static function signingKeyLookupAllowed($signed = false) {
       $now = time();
-      $check_query = xtc_db_query("SELECT configuration_value
+      $check_time = null;
+      $key_time = 0;
+      $check_query = xtc_db_query("SELECT configuration_key,
+                                          configuration_value
                                      FROM ".TABLE_CONFIGURATION."
-                                    WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'");
-      if (xtc_db_num_rows($check_query) < 1) {
+                                    WHERE configuration_key IN ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_TIME')");
+      while ($check = xtc_db_fetch_array($check_query)) {
+        if ($check['configuration_key'] == 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK') {
+          $check_time = $check['configuration_value'];
+        } else {
+          $key_time = (int)$check['configuration_value'];
+        }
+      }
+      if ($signed === true && $key_time > ($now - 86400)) {
+        return false;
+      }
+
+      if ($check_time === null) {
         // with the unique key of the table a second call at the same time adds nothing
         xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '-1', NOW())");
         return (xtc_db_affected_rows() > 0);
       }
-
-      $check = xtc_db_fetch_array($check_query);
-      if ((int)$check['configuration_value'] > ($now - (int)$interval)) {
+      if ((int)$check_time > ($now - 900)) {
         return false;
       }
 
@@ -394,7 +419,7 @@
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                        SET configuration_value = '".$now."'
                      WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'
-                       AND configuration_value = '".xtc_db_input($check['configuration_value'])."'");
+                       AND configuration_value = '".xtc_db_input($check_time)."'");
 
       return (xtc_db_affected_rows() > 0);
     }
@@ -716,14 +741,17 @@
           $status = $response->getStatusCode();
           $reason = $response->getReasonPhrase();
 
-          $response = $response->getBody()->getContents();
-          $response = json_decode($response, true);
+          $response_text = $response->getBody()->getContents();
+          $response = json_decode($response_text, true);
+          // an answer that is no JSON must not read as an empty list
+          $this->response_list = (is_array($response) && substr(ltrim($response_text), 0, 1) == '[');
           $response['headers'] = $headers;
           $response['status'] = $status;
           $response['reason'] = $reason;
         }
         return $response;
       } catch (Exception $ex) {
+        $this->response_list = false;
         // connection failures come without a response
         $ex_response = (method_exists($ex, 'getResponse')) ? $ex->getResponse() : null;
 

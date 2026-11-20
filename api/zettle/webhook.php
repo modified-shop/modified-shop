@@ -50,9 +50,10 @@
       $signed = ($signing_key != '' && PayPalZettle::isValidSignature($request, $signature, $signing_key));
 
       // no key yet, or the subscription was created again and signs with a new one: one lookup in 15 minutes.
-      // Stored keys are read again once a day, a subscription that is gone or changed loses its key
-      if (PayPalZettle::signingKeyLookupAllowed(($signed === true) ? 86400 : 900)) {
-        $PayPalZettle = new PayPalZettle();
+      // Stored keys are read again after a day, a subscription that is gone or changed loses its key
+      if (PayPalZettle::signingKeyLookupAllowed($signed === true)) {
+        // Zettle waits 10 seconds for the answer to a delivery, the token and the list get 3 seconds each
+        $PayPalZettle = new PayPalZettle(3);
         $lookup_key = $PayPalZettle->saveSigningKey();
         // without an answer from Zettle the stored keys decide
         if ($lookup_key !== false) {
