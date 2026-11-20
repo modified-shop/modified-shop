@@ -18,10 +18,25 @@
     $space = "\t\n\f\r ";
     $text_elements = array('script', 'style', 'textarea', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript');
 
-    // inside svg and math every element holds markup: from a script on, all of it counts as script
+    // svg and math hold elements of their own, $foreign are the open ones
     $foreign = array();
-    $foreign_open = array('svg' => 0, 'math' => 0);
-    $foreign_script = false;
+    $foreign_root = '';
+    $foreign_start = 0;
+    $foreign_scripts = 0;
+    // start tags that end svg and math, and their elements whose content is HTML again
+    $html_tags = array('b', 'big', 'blockquote', 'body', 'br', 'center', 'code', 'dd', 'div', 'dl', 'dt', 'em', 'embed', 'font',
+                       'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'hr', 'i', 'img', 'li', 'listing', 'menu', 'meta', 'nobr', 'ol',
+                       'p', 'pre', 'ruby', 's', 'small', 'span', 'strong', 'strike', 'sub', 'sup', 'table', 'tt', 'u', 'ul', 'var');
+    $html_content = array('svg' => array('foreignobject', 'desc', 'title'),
+                          'math' => array('mi', 'mo', 'mn', 'ms', 'mtext', 'annotation-xml'));
+    // inside a select element browsers differ in what they take as a tag
+    $select_start = false;
+    $select_tags = array('style', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'svg', 'math');
+    // where the reading is not sure, every script tag behind $start counts
+    $any_script = function ($start) use ($markup) {
+      return (preg_match('/<script[\t\n\f\r \/>]/i', $markup, $match, PREG_OFFSET_CAPTURE, $start) === 1
+              && strpos($markup, '>', $match[0][1] + 7) !== false);
+    };
 
     // the place behind a tag whose attributes begin at $pos and whether it closes itself:
     // a quote counts only where a value begins
@@ -82,7 +97,7 @@
         } elseif (count($foreign) > 0 && substr($markup, $pos, 9) === '<![CDATA[') {
           $end = strpos($markup, ']]>', $pos + 9);
           if ($end === false) {
-            return $foreign_script;
+            return ($foreign_scripts > 0);
           }
           $end += 3;
         } else {
@@ -92,7 +107,7 @@
           }
         }
         if ($end === false) {
-          return $foreign_script;
+          return false;
         }
         $pos = $end;
         continue;
@@ -108,7 +123,7 @@
         } else {
           $end = strpos($markup, '>', $name_start);
           if ($end === false) {
-            return $foreign_script;
+            return false;
           }
           $pos = $end + 1;
         }
@@ -116,37 +131,52 @@
       }
       $name = strtolower($match[0]);
 
+      $tag_start = $pos;
       $tag = $tag_end($name_start + strlen($match[0]));
       if ($tag === false) {
-        return $foreign_script;
+        return false;
       }
       $pos = $tag[0];
       $self_closing = $tag[1];
 
-      if ($name == 'svg' || $name == 'math') {
+      if (count($foreign) > 0) {
+        $open = count($foreign) - 1;
         if ($closing === false) {
-          if ($self_closing === false) {
+          $known = (!in_array($name, $html_tags) && !in_array($foreign[$open], $html_content[$foreign_root]));
+          if ($known === true && $self_closing === false) {
             $foreign[] = $name;
-            $foreign_open[$name]++;
+            $foreign_scripts += (($name == 'script') ? 1 : 0);
           }
-        } elseif ($foreign_open[$name] > 0) {
-          do {
-            $closed = array_pop($foreign);
-            $foreign_open[$closed]--;
-          } while ($closed != $name);
-          if (count($foreign) == 0) {
-            $foreign_script = false;
+        } else {
+          while ($open >= 0 && $foreign[$open] != $name) {
+            $open--;
+          }
+          $known = ($open >= 0);
+          while ($known === true && count($foreign) > $open) {
+            $foreign_scripts -= ((array_pop($foreign) == 'script') ? 1 : 0);
           }
         }
-        continue;
-      }
-      if (count($foreign) > 0) {
-        if ($name == 'script' && $closing === false) {
-          $foreign_script = true;
+        if ($known === false) {
+          // from here the rules of HTML decide what is open
+          return $any_script($foreign_start);
         }
         continue;
       }
       if ($closing === true) {
+        continue;
+      }
+      if ($name == 'select' && $select_start === false) {
+        $select_start = $tag_start;
+      }
+      if ($select_start !== false && in_array($name, $select_tags)) {
+        return $any_script($select_start);
+      }
+      if ($name == 'svg' || $name == 'math') {
+        if ($self_closing === false) {
+          $foreign = array($name);
+          $foreign_root = $name;
+          $foreign_start = $tag_start;
+        }
         continue;
       }
       if ($name == 'plaintext') {
@@ -197,5 +227,5 @@
       $pos = $tag[0];
     }
 
-    return $foreign_script;
+    return ($foreign_scripts > 0);
   }

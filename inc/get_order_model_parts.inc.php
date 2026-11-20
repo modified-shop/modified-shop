@@ -12,8 +12,10 @@
 
   require_once(DIR_FS_INC.'get_joined_model_parts.inc.php');
 
-  // the joined attribute numbers in the model number of an order position, see get_joined_model_parts()
+  // the joined attribute numbers in the model number of an order position, see get_joined_model_parts();
+  // an own number of the product is its one part without numbers, false says that the stored data does not tell
   function get_order_model_parts($model, $orders_products_id) {
+    $model = (string)$model;
     $numbers = array();
     $numbers_query = xtc_db_query("SELECT attributes_model
                                      FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
@@ -23,6 +25,20 @@
       $numbers[] = $numbers_array['attributes_model'];
     }
     $joined = get_joined_model_parts($model, $numbers);
+
+    // the checkout takes the own number of a product as it is; a cut value is looked for behind it
+    if ($joined === false) {
+      $model_query = xtc_db_query("SELECT p.products_model
+                                     FROM ".TABLE_ORDERS_PRODUCTS." op
+                                     JOIN ".TABLE_PRODUCTS." p
+                                          ON p.products_id = op.products_id
+                                    WHERE op.orders_products_id = '".(int)$orders_products_id."'");
+      $model_array = xtc_db_fetch_array($model_query);
+      if (is_array($model_array) && $model != '' && (string)$model_array['products_model'] === $model) {
+        return array('delimiter' => '', 'parts' => array($model), 'numbers' => array());
+      }
+      $joined = get_joined_model_parts($model, $numbers, true);
+    }
 
     // a position from before the numbers were stored, or one with attributes changed later, has those of the catalog
     if ($joined === false) {
@@ -36,7 +52,7 @@
         while ($numbers_array = xtc_db_fetch_array($numbers_query)) {
           $numbers[] = $numbers_array['attributes_model'];
         }
-        $joined = get_joined_model_parts($model, $numbers);
+        $joined = get_joined_model_parts($model, $numbers, true);
       }
     }
 

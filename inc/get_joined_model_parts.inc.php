@@ -11,8 +11,9 @@
    ---------------------------------------------------------------------------------------*/
 
   // an order position without an own number holds its attribute numbers, joined by the delimiter of that time:
-  // returns this delimiter and the numbers in $model, or false when $model is not made of the $attribute_models
-  function get_joined_model_parts($model, $attribute_models) {
+  // returns this delimiter and the numbers in $model, or false when $model is not made of the $attribute_models;
+  // $stored: $model was read from an order position
+  function get_joined_model_parts($model, $attribute_models, $stored = false) {
     $model = (string)$model;
     $length = strlen($model);
 
@@ -41,11 +42,16 @@
     // a line break that was cut cannot be read from the value
     $delimiters = array_unique(array_merge($delimiters, array('<br />', '<br>', '<br/>')));
 
-    // orders_products.products_model holds 64 characters, a longer joined value was cut there:
-    // at 64 characters of the stored text, or at 64 bytes where the column counts bytes
-    $cut = ($length == 64
-            || (function_exists('mb_strlen') && mb_check_encoding($model, 'UTF-8') && mb_strlen($model, 'UTF-8') == 64)
-            );
+    // orders_products.products_model holds 64 characters, a longer joined value was cut when it was stored;
+    // a character is a byte only where the database has no UTF-8 charset
+    $cut = false;
+    if ($stored === true) {
+      if (defined('DB_SERVER_CHARSET') && strpos(DB_SERVER_CHARSET, 'utf8') === false) {
+        $cut = ($length == 64);
+      } else {
+        $cut = (preg_match_all('/./su', $model) === 64);
+      }
+    }
 
     foreach ($delimiters as $delimiter) {
       $delimiter = (string)$delimiter;
