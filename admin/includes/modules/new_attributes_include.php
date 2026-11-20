@@ -141,6 +141,9 @@ require (DIR_WS_INCLUDES.'head.php');
   <?php 
 	if (!isset($_GET['iframe'])) {
 	  require(DIR_WS_INCLUDES . 'header.php'); 
+	} elseif (isset($messageStack) && is_object($messageStack) && $messageStack->size > 0) {
+	  // the header prints the notes, the iframe has none
+	  echo '<div class="fixed_messageStack">'.$messageStack->output().'</div>';
 	}
 	?>
   <!-- header_eof //-->
