@@ -520,7 +520,11 @@
       break;
 
     case 'convertdb':
-      if ($convert['num_tables'] > 0) {
+      // a run that was started before the start checked the combination goes on only with one it accepts
+      if ($convert['num_tables'] > 0
+          && ($convert['db_charset'] != 'utf8mb4' || $convert['db_engine'] == 'InnoDB')
+          )
+      {
         $info_text = TEXT_INFO_DO_CONVERT;
         xtc_set_time_limit(0);
         $nr = $convert['nr'];
