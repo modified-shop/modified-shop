@@ -15,7 +15,7 @@
    *
    * start of a job behind a public URL: one run at a time and one start per interval.
    * The lock is on the connection the run works with, a connection of its own stays idle during
-   * a long run and the server closes it. Before MySQL 5.7.5 the session lock of this request ends here
+   * a long run and the server closes it. The session of the request is closed before, the run does not store one
    *
    * @param string $configuration_key  row that keeps the time of the last start
    * @param int $interval  seconds between two starts
@@ -31,8 +31,12 @@
       return false;
     }
 
-    // named locks are server wide, the name carries the database
-    $lock_name = 'MODbat_'.md5(DB_DATABASE.'|'.$configuration_key);
+    // before MySQL 5.7.5 a connection holds one lock, the session gives its own back first
+    if (session_status() === PHP_SESSION_ACTIVE) {
+      session_write_close();
+    }
+
+    $lock_name = xtc_batch_lock_name($configuration_key);
     $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($lock_name)."', 0) AS batch_lock");
     $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
     if (!is_array($lock) || !isset($lock['batch_lock']) || $lock['batch_lock'] != '1') {
@@ -94,6 +98,36 @@
     }
 
     return (int)$check['time_start'];
+  }
+
+
+  /**
+   * xtc_batch_lock_name()
+   *
+   * named locks are server wide, the name carries the database
+   *
+   * @param string $configuration_key
+   * @return string
+   */
+  function xtc_batch_lock_name($configuration_key) {
+    return 'MODbat_'.md5(DB_DATABASE.'|'.$configuration_key);
+  }
+
+
+  /**
+   * xtc_batch_running()
+   *
+   * true while this connection holds the lock of the run. A connection the server closed has lost it,
+   * another run can have started: the job asks before it writes to its provider again
+   *
+   * @param string $configuration_key
+   * @return boolean
+   */
+  function xtc_batch_running($configuration_key) {
+    $lock_query = xtc_db_query("SELECT (IS_USED_LOCK('".xtc_db_input(xtc_batch_lock_name($configuration_key))."') = CONNECTION_ID()) AS batch_lock");
+    $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
+
+    return (is_array($lock) && isset($lock['batch_lock']) && $lock['batch_lock'] == '1');
   }
 
 

@@ -141,6 +141,10 @@
                        WHERE zettle_id = '".(int)$zettle_id."'");
       }
 
+      // without its lock another run can have reserved and sent the same products
+      if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
+        die();
+      }
       $response = $PayPalZettle->setImport($products_array);
       
       if (isset($response['uuid'])) {
@@ -213,6 +217,10 @@
                                      LIMIT 50");
     if (xtc_db_num_rows($products_query) > 0) {
       while ($products = xtc_db_fetch_array($products_query)) {
+        // the rows are read already, the run goes on only with its lock and a working connection
+        if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
+          die();
+        }
         $response = $PayPalZettle->deleteProduct($products['products_uuid']);
         if ($products['products_uuid'] == '' 
             || ($response['status'] > 200 && $response['status'] < 300)
@@ -253,6 +261,9 @@
         $products['products_price'] = $xtPrice->xtcGetPrice($products['products_id'], false, 1, $products['products_tax_class_id'], $products['products_price']);
         $products['products_price'] *= 100;
         
+        if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
+          die();
+        }
         $product_response = $PayPalZettle->updateProduct($products_uuid, $products);
         
         if ($products['stock'] == 1) {

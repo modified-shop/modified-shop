@@ -74,12 +74,16 @@
           $response = $semknox->initBatch();
           if ($response->status == 'success') {
             foreach ($products_array as $key => $products) {       
+              // the run goes on only with its lock and a working connection
+              if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
+                die();
+              }
               $response = $semknox->uploadBatch($products);
               if ($response->status != 'success') {  
                 break 2;
               }
             }
-            if ($response->status == 'success') {  
+            if ($response->status == 'success' && xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') === true) {  
               $semknox->startBatch();
             }
           }
