@@ -242,8 +242,12 @@
       return $value;
     }
 
-    if (!is_string($value) || strpos($value, '<') === false || !xtc_remove_active_content_available()) {
+    if (!is_string($value)) {
       return $value;
+    }
+    if (strpos($value, '<') === false || !xtc_remove_active_content_available()) {
+      // a text without tags can be too long for its place as well
+      return ((is_int($max_length) && $max_length > 0) ? xtc_remove_active_content_cut($value, $max_length) : $value);
     }
 
     // a < at the very end opens no tag, the cleaner would drop it
@@ -252,15 +256,17 @@
 
     $changed = false;
     $clean = xtc_remove_active_content($source, $changed);
+    // the tags of both texts by name, end tags with their slash
+    $tags = array();
+    foreach (array($value, $clean) as $html) {
+      preg_match_all('/<(\/?[a-z][^\s\/>]*)[^>]*>/i', $html, $names);
+      $tags[] = array_map('strtolower', $names[1]);
+    }
     // what follows the end of a page or lies too deep is dropped before the cleaner counts it,
     // so an element that is typed but not in its text counts as removed as well
-    $elements = array();
-    foreach (array($value, $clean) as $html) {
-      preg_match_all('/<([a-z][^\s\/>]*)[^>]*>/i', $html, $names);
-      $elements[] = array_count_values(array_map('strtolower', $names[1]));
-    }
-    foreach ($elements[0] as $name => $count) {
-      if (!isset($elements[1][$name]) || $elements[1][$name] < $count) {
+    $elements = array_count_values(preg_grep('/^[^\/]/', $tags[1]));
+    foreach (array_count_values(preg_grep('/^[^\/]/', $tags[0])) as $name => $count) {
+      if (!isset($elements[$name]) || $elements[$name] < $count) {
         $changed = true;
         break;
       }
@@ -270,9 +276,13 @@
     }
     $charset = xtc_remove_active_content_charset($value);
 
-    // nothing removed and no tag with an attribute, comment or declaration: the text as it is,
-    // unless it ends in an open tag, which the text that follows it in a page would complete
-    if ($changed === false && !preg_match('/<[a-z\/][^>]*=|<[!?]|<[a-z\/][^>]*$/i', $value)) {
+    // nothing removed, every tag where the cleaner has it, and no tag with more than its name, no comment and
+    // no declaration: the text as it is, unless it ends in an open tag, which the text that follows it in a page
+    // would complete
+    if ($changed === false && $tags[0] === $tags[1]
+        && !preg_match('/<\/?[a-z][a-z0-9]*[ \t\n\f\r]*\/?[^> \t\n\f\r\/]|<\/(?![a-z])|<[!?]|<[a-z\/][^>]*$/i', $value)
+        )
+    {
       $kept = $value;
     } else {
       $kept = xtc_remove_active_content_end(xtc_remove_active_content_merge($value, $clean, $charset), $open);
@@ -287,21 +297,30 @@
         if (xtc_remove_active_content_length($text, $charset) > $max_length) {
           $text = xtc_remove_active_content_end(xtc_remove_active_content_text($short, $clean, $charset), $open);
         }
-        if (xtc_remove_active_content_length($text, $charset) > $max_length) {
-          $short = (($charset == 'UTF-8' && function_exists('mb_substr')) ? mb_substr($text, 0, $max_length, 'UTF-8') : substr($text, 0, $max_length));
-          // not in the middle of an entity, and no < whose next character is gone
-          if (preg_match('/&[#a-z0-9]*$/i', $short, $tail) && preg_match('/^[#a-z0-9]*;/i', substr($text, strlen($short)))) {
-            $short = substr($short, 0, -strlen($tail[0]));
-          }
-          $text = rtrim($short, '<');
-        }
-        $short = $text;
+        $short = xtc_remove_active_content_cut($text, $max_length, $charset);
         $removed = true;
       }
       $kept = $short;
     }
 
     return $kept;
+  }
+
+
+  // the first characters of a text that is too long: not up to the middle of an entity, and no < whose next character is gone
+  function xtc_remove_active_content_cut($text, $max_length, $charset = '') {
+    if ($charset == '') {
+      $charset = xtc_remove_active_content_charset($text);
+    }
+    if (xtc_remove_active_content_length($text, $charset) <= $max_length) {
+      return $text;
+    }
+    $short = (($charset == 'UTF-8' && function_exists('mb_substr')) ? mb_substr($text, 0, $max_length, 'UTF-8') : substr($text, 0, $max_length));
+    if (preg_match('/&[#a-z0-9]*$/i', $short, $tail) && preg_match('/^[#a-z0-9]*;/i', substr($text, strlen($short)))) {
+      $short = substr($short, 0, -strlen($tail[0]));
+    }
+
+    return rtrim($short, '<');
   }
 
 
@@ -544,7 +563,18 @@
       $texts[$i] = $text;
     }
 
-    return (($u < $count) ? false : $texts);
+    // what is left may be a tag the typed text does not close: the cleaner made a tag of it or dropped it
+    if ($u < $count) {
+      $rest = '';
+      for ($i = $u; $i < $count; $i++) {
+        $rest .= $units[$i][0];
+      }
+      if (!preg_match('/^<[a-z\/!?]/i', $rest)) {
+        return false;
+      }
+    }
+
+    return $texts;
   }
 
 
@@ -688,7 +718,9 @@
         }
       }
       $short = preg_replace('/ {2,}/', ' ', $text);
-      $texts[] = trim(((is_string($short)) ? $short : $text), ' ');
+      // a space behind a < stays, so that the < does not end the text
+      $short = preg_replace('/(?<!<)(?<!&lt;) +$/D', '', ((is_string($short)) ? $short : $text));
+      $texts[] = ltrim(((is_string($short)) ? $short : $text), ' ');
     }
 
     $text = xtc_remove_active_content_plain($texts[0]);

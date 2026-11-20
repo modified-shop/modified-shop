@@ -23,17 +23,18 @@
    * @return string
    */
   function clean_html_output($value, $max_length = 0) {
-    if (!is_string($value) || strpos($value, '<') === false) {
+    if (!is_string($value)) {
       return $value;
     }
-    if (!xtc_remove_active_content_available()) {
+    if (strpos($value, '<') !== false && !xtc_remove_active_content_available()) {
       return encode_htmlspecialchars($value);
     }
 
     $removed = false;
 
-    // with $max_length a text that would be longer loses its tags instead of being cut off by the column
-    return xtc_remove_active_content_keep($value, $removed, $max_length);
+    // with $max_length a text that would be longer loses its tags instead of being cut off by the column,
+    // and a text that is still too long, also one without tags, ends at the limit
+    return xtc_remove_active_content_keep($value, $removed, (int)$max_length);
   }
 
   // characters as the database counts them
