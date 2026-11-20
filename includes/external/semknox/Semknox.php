@@ -35,6 +35,8 @@
     protected $project_id;
     protected $api_key;
     public $version = '1.0';
+    // set by a run that works with a lock, asked directly before a batch upload
+    public $write_guard = null;
   
     function __construct($language_id, $timeout = 3) {
       // logger
@@ -125,6 +127,12 @@
       $response->status = 'success';
       
       if (isset($products_array['products'])) {
+        // reading the products took time, the run sends them only while it still holds its lock
+        if (is_callable($this->write_guard) && call_user_func($this->write_guard) !== true) {
+          $this->logger->log('semknox', __FUNCTION__.': run without lock');
+          $response->status = 'error';
+          return $response;
+        }
         try {
           $response = $this->client->post(
             sprintf('products/batch/upload?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),

@@ -53,6 +53,10 @@
           )
       {
         $semknox_array[$language['id']] = new Semknox($language['id'], 30);
+        // asked again directly before every upload, after the products were read
+        $semknox_array[$language['id']]->write_guard = function () {
+          return xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START');
+        };
       }
     }    
     

@@ -147,7 +147,20 @@
         {
           die();
         }
+        // a row that is gone was not reserved, a webhook removes the products deleted at Zettle
+        if (xtc_db_affected_rows() != 1) {
+          unset($import_products[$zettle_id]);
+          foreach ($products_array['products'] as $key => $data) {
+            if ($data['uuid'] == $products_uuid) {
+              unset($products_array['products'][$key]);
+            }
+          }
+        }
       }
+      if (count($import_products) < 1) {
+        die();
+      }
+      $products_array['products'] = array_values($products_array['products']);
 
       // without its lock another run can have reserved and sent the same products
       if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
