@@ -127,7 +127,8 @@
       $response->status = 'success';
       
       if (isset($products_array['products'])) {
-        // reading the products took time, the run sends them only while it still holds its lock
+        $products_array = $this->convertToString($products_array);
+        // reading and preparing the products took time, the run sends them only while it still holds its lock
         if (is_callable($this->write_guard) && call_user_func($this->write_guard) !== true) {
           $this->logger->log('semknox', __FUNCTION__.': run without lock');
           $response->status = 'error';
@@ -136,7 +137,7 @@
         try {
           $response = $this->client->post(
             sprintf('products/batch/upload?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
-            array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($products_array))
+            array(GuzzleHttp\RequestOptions::JSON => $products_array)
           );
           $json = $response->getBody();
           $response = json_decode($json);

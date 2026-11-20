@@ -93,6 +93,7 @@
         'products' => array()
       );
       $import_products = array();
+      $import_read = array();
       $existing_uuids = null;
       
       while ($products = xtc_db_fetch_array($products_query)) {
@@ -129,8 +130,10 @@
           $data['uuid'] = $products['products_uuid'];
         }
         $import_products[$products['zettle_id']] = $data['uuid'];
+        // the uuid as it was read, a row that got another one since then is not reserved
+        $import_read[$products['zettle_id']] = $products['products_uuid'];
   
-        $products_array['products'][] = $data;
+        $products_array['products'][$products['zettle_id']] = $data;
       }
       
       if (count($import_products) < 1) {
@@ -143,18 +146,15 @@
         if (xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
                              SET products_uuid = '".xtc_db_input($products_uuid)."',
                                  bulk = IF(bulk < 0, bulk - 1, -1)
-                           WHERE zettle_id = '".(int)$zettle_id."'") === false)
+                           WHERE zettle_id = '".(int)$zettle_id."'
+                             AND products_uuid = '".xtc_db_input($import_read[$zettle_id])."'") === false)
         {
           die();
         }
-        // a row that is gone was not reserved, a webhook removes the products deleted at Zettle
+        // a row that is gone or changed was not reserved: a webhook removes the products deleted at Zettle,
+        // the administration can have created the product there in the meantime
         if (xtc_db_affected_rows() != 1) {
-          unset($import_products[$zettle_id]);
-          foreach ($products_array['products'] as $key => $data) {
-            if ($data['uuid'] == $products_uuid) {
-              unset($products_array['products'][$key]);
-            }
-          }
+          unset($import_products[$zettle_id], $products_array['products'][$zettle_id]);
         }
       }
       if (count($import_products) < 1) {
