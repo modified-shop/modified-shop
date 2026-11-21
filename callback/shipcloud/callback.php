@@ -83,7 +83,7 @@ if (is_array($request)
     // the callback has no sender check, shipcloud has to confirm the event before the order changes
     $event = false;
     if (strpos($type, 'SHIPMENT.') === 0 && defined($type)) {
-      $event = $shipcloud->claim_event($orders['tracking_id'], $orders['sc_id'], $type);
+      $event = $shipcloud->claim_event($orders['tracking_id'], $orders['sc_id'], $type, $orders['orders_id']);
     }
     if ($event !== true) {
       // without an answer shipcloud sends the event again
@@ -107,7 +107,7 @@ if (is_array($request)
       $order->info['orders_status_id'] = $status_array['orders_status'];
     }
     $status = $order->info['orders_status_id'];
-    $comments = decode_htmlentities(constant($type));
+    $comments = $shipcloud->event_comment($type);
     $order_updated = false;
     $email_preview = false;
     $_POST['notify'] = ((MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shop') ? 'on' : 'off');
@@ -126,11 +126,11 @@ if (is_array($request)
     // an error after the entry, in the mail for instance, leaves the entry stored: it counts
     $history_stored = ($order_updated === true);
     if ($history_stored !== true) {
-      $shipcloud->release_event();
+      $shipcloud->release_event($orders['tracking_id'], $type);
       header('HTTP/1.1 503 Service Unavailable');
       exit();
     }
-    // the entry is written, an error status would only have it written a second time
+    // the entry is written and nothing is left to repeat, the next event of the order counts it
     if ($shipcloud->count_event($orders['tracking_id'], $type) !== true) {
       $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => 'history entry written but not counted: '.$type.' for shipment '.$orders['sc_id']));
     }
