@@ -374,12 +374,18 @@
             $entry_memo_text_error = true;
           }
           if ($error === false) {
+            // stored like in the memo window, the display takes the added break out again
+            $memo_stored = nl2br($memo_text);
+            if (strlen($memo_stored) > 65535) {
+              // the breaks would push the text over the size of the column: it stays plain with LF as line end.
+              // A break tag typed at the end of a line gets a space behind it, the display would take it for an added one
+              $memo_plain = preg_replace('#<br />(?=\n)#', '<br /> ', preg_replace('/\r\n|\n\r|\r/', "\n", $memo_text));
+              $memo_stored = ((strlen($memo_plain) > 65535) ? $memo_text : $memo_plain);
+            }
             $sql_data_array = array ('customers_id' => $customers_id,
                                      'memo_date' => date("Y-m-d"),
                                      'memo_title' => $memo_title,
-                                     // stored like in the memo window, the display takes the added break out again;
-                                     // a text the breaks would push over the size of the column stays as typed
-                                     'memo_text' => ((strlen(nl2br($memo_text)) > 65535) ? $memo_text : nl2br($memo_text)),
+                                     'memo_text' => $memo_stored,
                                      'poster_id' => (int)$_SESSION['customer_id']
                                     );
             xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
