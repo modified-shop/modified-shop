@@ -99,6 +99,7 @@
   define('TEXT_DB_RESTORE_DESC', 'You can restore your database from an existing backup here.');
   define('TEXT_INFO_DO_RESTORE', 'The database is being restored!');
   define('TEXT_INFO_DO_RESTORE_OK', 'The database was restored successfully!');
+  define('TEXT_DB_RESTORE_FILE_ERROR', 'The selected backup cannot be read. Nothing was restored.');
   
   define('TEXT_UPDATER_ORDER', 'Update steps');
   define('TEXT_DB_BACKUP_OPTIONS', 'Database options');

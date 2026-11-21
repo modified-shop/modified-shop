@@ -280,10 +280,14 @@
       }
 
       if (isset($_POST['restore_type']) && $_POST['restore_type'] == 'all') {
-        $dir = dir(DIR_FS_BACKUP.$restore['restore_dir']);
+        // only the files of the backup folder itself, none that a link leads to elsewhere
+        $restore_folder = rtrim($restore['restore_dir'], '/');
+        $dir = (($restore_folder == '' || backup_entry_path($restore_folder) !== false) ? dir(DIR_FS_BACKUP.$restore['restore_dir']) : false);
         $restore['restore_tables'] = array();
-        while ($file = $dir->read()) {
-          if (is_file(DIR_FS_BACKUP.$restore['restore_dir'].$file)
+        while ($dir !== false && $file = $dir->read()) {
+          $entry_stat = backup_entry_stat($file, $restore_folder);
+          if ($entry_stat !== false
+              && $entry_stat['is_file']
               && strpos($file, 'schema.sql') === false
               )
           {
