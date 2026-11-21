@@ -85,7 +85,8 @@
         && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin === true || $cookie === false))
        ) 
     {
-      if (!isset($session_id)) {
+      // a login renews the id within the request
+      if (!isset($session_id) || $session_id != xtc_session_name() . '=' . xtc_session_id()) {
         if ($session_started == true) {
           $session_id = xtc_session_name() . '=' . xtc_session_id();
         } elseif ( 

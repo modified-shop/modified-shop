@@ -1548,6 +1548,11 @@ fetch(cfg.ajax_url, {
     require_once(DIR_FS_INC.'write_customers_session.inc.php');
     require_once(DIR_FS_INC.'xtc_write_user_info.inc.php');
 
+    // the guest is logged in under a new session id, without one the account is not created
+    if (xtc_session_renew() !== true) {
+      return 0;
+    }
+
     $customers_password_time = time();
 
     $sql_data_array = array(
@@ -1585,10 +1590,6 @@ fetch(cfg.ajax_url, {
       'customers_info_date_of_last_logon' => 'now()',
     );
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
-
-    if (SESSION_RECREATE == 'True') {
-      xtc_session_recreate();
-    }
 
     $_SESSION['customer_id'] = $customer_id;
     $_SESSION['customer_time'] = $customers_password_time;
