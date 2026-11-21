@@ -756,7 +756,20 @@
     }
 
 
+    // a job sets a function here that tells whether it may still write to Zettle
+    public $write_guard = null;
+
     function call($url, $method, $body = array(), $headers = array()) {
+      // a run that has lost its lock sends no further writing request, the answer reads as a temporary error
+      if ($method != 'GET' && is_callable($this->write_guard) && call_user_func($this->write_guard) !== true) {
+        return array(
+          'headers' => array(),
+          'status' => 0,
+          'reason' => 'run without lock',
+          'error' => array('error' => 'run without lock', 'error_description' => 'run without lock'),
+        );
+      }
+
       $headers['X-iZettle-Application-Id'] = $this->client_id;
     
       try {

@@ -54,9 +54,45 @@
     }
   }
   
+  // resolved path of an entry that lies in the directory itself, false when it leads elsewhere
+  function backup_entry_path($entry, $dir = DIR_FS_BACKUP) {
+    if (!is_string($entry)
+        || $entry === ''
+        || basename($entry) !== $entry
+        || strpos($entry, "\0") !== false
+        )
+    {
+      return false;
+    }
+    $dir = realpath($dir);
+    if ($dir === false) {
+      return false;
+    }
+    $path = realpath($dir . DIRECTORY_SEPARATOR . $entry);
+
+    return (($path !== false && dirname($path) === $dir) ? $path : false);
+  }
+
+  // true when the stream is the regular file that the path names itself, not the target of a link placed since the check
+  function backup_entry_opened($fp, $path) {
+    clearstatcache(true);
+    $opened = fstat($fp);
+    $entry = @lstat($path);
+
+    // without a file number the identity cannot be confirmed
+    return (is_array($opened)
+            && is_array($entry)
+            && realpath($path) === $path
+            && ($entry['mode'] & 0170000) == 0100000
+            && $opened['ino'] != 0
+            && $opened['dev'] == $entry['dev']
+            && $opened['ino'] == $entry['ino']);
+  }
+
   function check_schema($entry) {
     $schema = glob(DIR_FS_BACKUP . $entry . "/schema.{sql,sql.gz,gz,zip}", GLOB_BRACE);
-    if (isset($schema[0])) return basename($schema[0]);
+    // the schema has to lie in the folder itself
+    if (isset($schema[0]) && backup_entry_path(basename($schema[0]), DIR_FS_BACKUP . $entry) !== false) return basename($schema[0]);
   }
   
   function calculate_filesize($entry) {
@@ -79,6 +115,9 @@
     return implode('<br>',$newdata);
   }
 
+  // the cache may still hold a path from before a link was placed
+  clearstatcache(true);
+
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'forget':
@@ -87,10 +126,22 @@
         xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         break;
       case 'download':
+        // only a plain name of a file that lies in the backup directory itself, also after resolving links
+        $backup_file = backup_entry_path(isset($_GET['file']) ? $_GET['file'] : '');
+        if ($backup_file === false || !is_file($backup_file)) {
+          $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
+          break;
+        }
         $extension = substr($_GET['file'], -3);
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
-          if ($fp = fopen(DIR_FS_BACKUP . $_GET['file'], 'rb')) {
-            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $_GET['file']));
+          if ($fp = fopen($backup_file, 'rb')) {
+            // the entry may have been replaced since the check
+            if (!backup_entry_opened($fp, $backup_file)) {
+              fclose($fp);
+              $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
+              break;
+            }
+            $buffer = stream_get_contents($fp);
             fclose($fp);
             header('Content-type: application/x-octet-stream');
             header('Content-disposition: attachment; filename=' . $_GET['file']);
@@ -102,7 +153,8 @@
         }
         break;
       case 'deleteconfirm':
-        if (strpos($_GET['file'], '..') !== false) {
+        // only an entry of the backup directory, never the directory itself
+        if (!isset($_GET['file']) || backup_entry_path($_GET['file']) === false) {
           xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         }
 
@@ -172,6 +224,10 @@
                     $contents_files_array = array();
                     $exts = array("sql","sql.zip","sql.gz");
                     while ($file = $dir->read()) {
+                      // an entry that leads out of the backup directory is not listed, so nothing of its target is read
+                      if (backup_entry_path($file) === false) {
+                        continue;
+                      }
                       if (!is_dir(DIR_FS_BACKUP . $file)) {
                         foreach ($exts as $value) {
                           if (xtc_CheckExt($file, $value)) {
@@ -301,6 +357,10 @@
                   $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 case 'restore':
+                  // no form without a selected backup
+                  if (!isset($buInfo) || !is_object($buInfo)) {
+                    break;
+                  }
                   $heading[] = array('text' => $info_heading);
                   $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file)));
                   $contents[] = array('text' => TEXT_INFO_RESTORE);
@@ -342,6 +402,10 @@
                   break;
 
                 case 'delete':
+                  // no form without a selected backup
+                  if (!isset($buInfo) || !is_object($buInfo)) {
+                    break;
+                  }
                   $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                   $contents = array('form' => xtc_draw_form('delete', FILENAME_BACKUP, 'file=' . (($buInfo->dir != '') ? $buInfo->dir : $buInfo->file) . '&action=deleteconfirm'));
                   $contents[] = array('text' => TEXT_DELETE_INTRO);

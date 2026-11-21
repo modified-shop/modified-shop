@@ -394,7 +394,8 @@ class product {
    */
   function getBreadcrumbModel() {
     if (($this->data['products_model'] != "") && DISPLAY_BREADCRUMB_OPTION == 'model') {
-      return $this->data['products_model'];
+      // the model number is text, the template strips tags from the title; JSON-LD decodes without single quotes
+      return htmlspecialchars($this->data['products_model'], ENT_COMPAT | ENT_HTML5, 'ISO-8859-1', false);
     }
     return $this->data['products_name'];
   }

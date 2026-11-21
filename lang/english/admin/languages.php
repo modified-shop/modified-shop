@@ -51,4 +51,12 @@ define ('TEXT_LANGUAGE_TRANSFER_TO', ' to ');
 define ('TEXT_LANGUAGE_TRANSFER_OK', 'Transfer successful!');
 define ('TEXT_LANGUAGE_TRANSFER_ERR', 'Please select a different language!');
 define ('TEXT_LANGUAGE_TRANSFER_INFO2', '<strong>ATTENTION:</strong> When transferring, the existing texts will be overwritten, so please be sure to backup the database before.');
+
+// checks on save
+define('ERROR_LANGUAGE_CODE', 'Error: The code may only contain letters, dash and underscore and be at most %s characters long.');
+define('ERROR_LANGUAGE_CODE_EXISTS', 'Error: Another language already uses this code.');
+define('ERROR_LANGUAGE_DIRECTORY', 'Error: The directory needs a plain name of at most %s characters and must hold the language file of the same name, e.g. lang/english/english.php.');
+define('ERROR_LANGUAGE_ADMIN_FILES', 'Error: As default language the language directory needs the admin language files, e.g. lang/english/admin/english.php and lang/english/admin/buttons.php.');
+define('ERROR_LANGUAGE_IMAGE', 'Error: The image must not contain quotes, angle brackets, backslashes, #, ? or .. and may be at most %s characters long.');
+define('ERROR_LANGUAGE_NOT_SAVED', 'Error: The language was not saved.');
 ?>

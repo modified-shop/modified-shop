@@ -36,6 +36,9 @@
   // include needed classes
   require_once(DIR_WS_CLASSES . 'currencies.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_COUPON_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -47,6 +50,15 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   $currencies = new currencies();
+
+  // these actions change data: they need a posted link with the token, a plain link is not enough
+  if (in_array($action, array('voucher_set_inactive', 'voucher_set_active', 'confirmdelete'), true)
+      && !admin_form_posted()
+      )
+  {
+    $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+    xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'uid'))));
+  }
 
   switch ($action) {
   	case 'voucher_set_inactive':
@@ -666,9 +678,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td  class="dataTableContent txta-c">
                       <?php
                       if ($cc_list['coupon_active'] == 'Y') {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_inactive&cID='.$cc_list['coupon_id'],'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_inactive&cID='.$cc_list['coupon_id'],'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_active&cID='.$cc_list['coupon_id'],'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                        echo '<a onclick="return postLink(this, event)" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_active&cID='.$cc_list['coupon_id'],'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                       }
                       ?>
                     </td>
@@ -692,7 +704,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.'] '.$cInfo->coupon_code.'</b>');
                   $contents[] = array('text' => TEXT_CONFIRM_DELETE);
                   $contents[] = array('align' => 'center', 'text' => 
-                    '<a class="button" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=confirmdelete&cID='.(int)$_GET['cID'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
+                    '<a class="button" onclick="return postLink(this, event)" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=confirmdelete&cID='.(int)$_GET['cID'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
                     '<a class="button" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'cID='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a>'
                   );
                   break;
@@ -728,10 +740,10 @@ require (DIR_WS_INCLUDES.'head.php');
 
                     $coupon_status = '';
                     if ($cInfo->coupon_active == 'N') {
-                      $change_coupon_status = '<a class="button nobr" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_active&cID='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_ON.'</a>';
+                      $change_coupon_status = '<a class="button nobr" onclick="return postLink(this, event)" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_active&cID='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_ON.'</a>';
                       $coupon_status = '&status=N';
                     } else {
-                      $change_coupon_status = '<a class="button nobr" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_inactive&cID='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_OFF.'</a>';
+                      $change_coupon_status = '<a class="button nobr" onclick="return postLink(this, event)" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cID', 'action')). 'action=voucher_set_inactive&cID='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_OFF.'</a>';
                     }
               
                     $customers_list = '';

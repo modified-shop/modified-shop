@@ -17,6 +17,11 @@
    --------------------------------------------------------------*/
   require('includes/application_top.php');
 
+  // an own admin translation may not have the texts yet
+  defined('ERROR_CURRENCY_CODE') or define('ERROR_CURRENCY_CODE', 'Error: The code may only contain letters and be at most %s characters long.');
+  defined('ERROR_CURRENCY_CODE_EXISTS') or define('ERROR_CURRENCY_CODE_EXISTS', 'Error: Another currency already uses this code.');
+  defined('ERROR_CURRENCY_NOT_SAVED') or define('ERROR_CURRENCY_NOT_SAVED', 'Error: The currency was not saved.');
+
   // include needed functions
   require_once(DIR_FS_INC.'quote_currency.inc.php');
 
@@ -44,12 +49,47 @@
 
     case 'insert':
     case 'save':
-      $title = xtc_db_prepare_input($_POST['title']);
+      // title and separators are plain text, the symbols may carry entities
+      $title = strip_tags(xtc_db_prepare_input($_POST['title']));
       $code = xtc_db_prepare_input($_POST['code']);
+      $currency_id = (($action == 'save') ? (int)$_GET['cID'] : 0);
+
+      // a new or changed code is checked like the currency switch, which keeps only letters;
+      // nothing is rewritten, and an unchanged code never blocks editing the currency
+      require_once(DIR_FS_INC.'xtc_input_validation.inc.php');
+      require_once(DIR_FS_INC.'get_column_length.inc.php');
+      $stored_code = false;
+      if ($action == 'save') {
+        $check_query = xtc_db_query("SELECT code
+                                       FROM " . TABLE_CURRENCIES . "
+                                      WHERE currencies_id = '" . (int)$currency_id . "'");
+        $stored = xtc_db_fetch_array($check_query);
+        $stored_code = (is_array($stored) ? $stored['code'] : false);
+      }
+      // without strict mode the database cuts a longer code
+      $code_length = get_column_length(TABLE_CURRENCIES, 'code');
+      $code_error = '';
+      if ($stored_code !== false && $code === $stored_code) {
+        // unchanged
+      } elseif (!is_string($code) || $code == '' || xtc_input_validation($code, 'char') !== $code || ($code_length > 0 && strlen($code) > $code_length)) {
+        $code_error = sprintf(ERROR_CURRENCY_CODE, $code_length);
+      } else {
+        $check_query = xtc_db_query("SELECT currencies_id
+                                       FROM " . TABLE_CURRENCIES . "
+                                      WHERE code = '" . xtc_db_input($code) . "'
+                                        AND currencies_id != '" . (int)$currency_id . "'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $code_error = ERROR_CURRENCY_CODE_EXISTS;
+        }
+      }
+      if ($code_error != '') {
+        $messageStack->add_session($code_error, 'error');
+        xtc_redirect(xtc_href_link(FILENAME_CURRENCIES, 'page=' . $page . (($action == 'save') ? '&cID=' . (int)$currency_id . '&action=edit' : '&action=new')));
+      }
       $symbol_left = xtc_db_prepare_input($_POST['symbol_left']);
       $symbol_right = xtc_db_prepare_input($_POST['symbol_right']);
-      $decimal_point = xtc_db_prepare_input($_POST['decimal_point']);
-      $thousands_point = xtc_db_prepare_input($_POST['thousands_point']);
+      $decimal_point = strip_tags(xtc_db_prepare_input($_POST['decimal_point']));
+      $thousands_point = strip_tags(xtc_db_prepare_input($_POST['thousands_point']));
       $decimal_places = xtc_db_prepare_input($_POST['decimal_places']);
       $value = xtc_db_prepare_input($_POST['value']);
       
@@ -65,11 +105,15 @@
       );
 
       if ($action == 'insert') {
-        xtc_db_perform(TABLE_CURRENCIES, $sql_data_array);
+        $saved = xtc_db_perform(TABLE_CURRENCIES, $sql_data_array);
         $currency_id = xtc_db_insert_id();
       } elseif ($action == 'save') {
-        $currency_id = (int)$_GET['cID'];
-        xtc_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
+        $saved = xtc_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
+      }
+      if (!$saved) {
+        // a failed save must not change anything else, e.g. the default currency
+        $messageStack->add_session(ERROR_CURRENCY_NOT_SAVED, 'error');
+        xtc_redirect(xtc_href_link(FILENAME_CURRENCIES, 'page=' . $page . (($action == 'save') ? '&cID=' . (int)$currency_id . '&action=edit' : '&action=new')));
       }
 
       if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
