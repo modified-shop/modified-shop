@@ -15,37 +15,67 @@
   
   $exts = array("log","log\.zip","log\.gz", "log\.[0-9]+");
   
+  // true for a name as the list shows it: a plain file name with one of the extensions
+  function logs_file_name($file) {
+    global $exts;
+
+    if (!is_string($file)
+        || $file === ''
+        || basename($file) !== $file
+        || preg_match('/[\\\\\x00-\x1f\x7f]/', $file)
+        )
+    {
+      return false;
+    }
+    foreach ($exts as $value) {
+      if (xtc_CheckExt($file, $value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // resolved path of a listed file that lies in the log directory itself, false when it leads elsewhere
+  function logs_file_path($file) {
+    $dir = realpath(DIR_FS_LOG);
+    if (!logs_file_name($file) || $dir === false) {
+      return false;
+    }
+    $path = realpath($dir . DIRECTORY_SEPARATOR . $file);
+
+    return (($path !== false && dirname($path) === $dir && is_file($path)) ? $path : false);
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'download':
-        if (is_file(DIR_FS_LOG . $_GET['file'])) {
-          foreach ($exts as $value) {
-            if (xtc_CheckExt($_GET['file'], $value)) {
-              if ($fp = fopen(DIR_FS_LOG . $_GET['file'], 'rb')) {
-                $buffer = fread($fp, filesize(DIR_FS_LOG . $_GET['file']));
-                fclose($fp);
-                header('Content-type: application/x-octet-stream');
-                header('Content-disposition: attachment; filename=' . $_GET['file']);
-                echo $buffer;
-                exit;              
-              }
-            }
+        $log_file = logs_file_path(isset($_GET['file']) ? $_GET['file'] : '');
+        if ($log_file !== false) {
+          if ($fp = fopen($log_file, 'rb')) {
+            $buffer = stream_get_contents($fp);
+            fclose($fp);
+            header('Content-type: application/x-octet-stream');
+            header('Content-disposition: attachment; filename=' . preg_replace('/[^a-zA-Z0-9_.-]/', '_', $_GET['file']));
+            echo $buffer;
+            exit;
           }
         }
         $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
         break;
         
       case 'deleteconfirm':
-        if (!admin_form_posted() || strpos($_GET['file'], '..') !== false) {
+        // only a listed file, never a folder or the log directory itself
+        if (!admin_form_posted() || !isset($_GET['file']) || !logs_file_name($_GET['file']) || !is_file(DIR_FS_LOG . $_GET['file'])) {
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
 
-        xtc_remove(DIR_FS_LOG . '/' . $_GET['file']);
-        if (!$xtc_remove_error) {
+        // the entry itself and nothing below it, also when it was replaced since the check
+        if (@unlink(DIR_FS_LOG . $_GET['file'])) {
           $messageStack->add_session(SUCCESS_LOG_DELETED, 'success');
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
+        $messageStack->add(ERROR_FILE_NOT_REMOVEABLE, 'error');
         break;
         
       case 'dellog':
@@ -113,7 +143,7 @@
                       $dir = dir(DIR_FS_LOG);
                       $contents_array = array();
                       while ($file = $dir->read()) {
-                        if (!is_dir(DIR_FS_LOG . $file)) {
+                        if (is_file(DIR_FS_LOG . $file) && logs_file_name($file)) {
                           foreach ($exts as $value) {
                             if (xtc_CheckExt($file, $value)) {
                               $contents_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
@@ -138,16 +168,18 @@
                             if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo)) {
                               $file_array['file'] = $entry;
                               $buInfo = new objectInfo($file_array);
+                              // the object trims its values, the name stays as the directory has it
+                              $buInfo->file = $entry;
                             }
                             if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
                               echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'">' . "\n";
-                              $onclick_link = 'file=' . $buInfo->file . '&action=download';
+                              $onclick_link = 'file=' . rawurlencode($buInfo->file) . '&action=download';
                             } else {
                               echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
-                              $onclick_link = 'file=' . $entry;
+                              $onclick_link = 'file=' . rawurlencode($entry);
                             }
                             ?>
-                              <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_LOGS, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
+                              <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_LOGS, 'action=download&file=' . rawurlencode($entry)) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . encode_htmlspecialchars($entry, ENT_COMPAT | ENT_SUBSTITUTE); ?></td>
                               <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_LOG . $entry)); ?></td>
                               <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_LOG . $entry)); ?> bytes</td>
                             </tr>
@@ -175,17 +207,21 @@
                 $contents = array();
                 switch ($action) {
                   case 'delete':
-                    $heading[] = array('text' => '<b>' . $buInfo->file . '</b>');
-                    $contents = array('form' => xtc_draw_form('delete', FILENAME_LOGS, 'file=' . $buInfo->file . '&action=deleteconfirm'));
+                    // the file of the link can be gone by now
+                    if (!isset($buInfo) || !is_object($buInfo)) {
+                      break;
+                    }
+                    $heading[] = array('text' => '<b>' . encode_htmlspecialchars($buInfo->file, ENT_COMPAT | ENT_SUBSTITUTE) . '</b>');
+                    $contents = array('form' => xtc_draw_form('delete', FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file) . '&action=deleteconfirm'));
                     $contents[] = array('text' => TEXT_DELETE_INTRO);
-                    $contents[] = array('text' => '<br /><b>' . $buInfo->file . '</b>');
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a><br/><br/>');
+                    $contents[] = array('text' => '<br /><b>' . encode_htmlspecialchars($buInfo->file, ENT_COMPAT | ENT_SUBSTITUTE) . '</b>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file)) . '">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
 
                   default:
                     if (isset($buInfo) && is_object($buInfo)) {
-                      $heading[] = array('text' => '<b>' . $buInfo->file . '</b>');
-                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . $buInfo->file . '&action=delete') . '">' . BUTTON_DELETE . '</a>'. '&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . $buInfo->file . '&action=download') . '">' . 'Download' . '</a><br/><br/>');
+                      $heading[] = array('text' => '<b>' . encode_htmlspecialchars($buInfo->file, ENT_COMPAT | ENT_SUBSTITUTE) . '</b>');
+                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file) . '&action=delete') . '">' . BUTTON_DELETE . '</a>'. '&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LOGS, 'file=' . rawurlencode($buInfo->file) . '&action=download') . '">' . 'Download' . '</a><br/><br/>');
                     }
                     break;
                 }
