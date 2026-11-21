@@ -21,6 +21,7 @@ require('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
+require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_STATS_STOCK_WARNING_RESULTS';
@@ -116,7 +117,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
                 echo '<tr class="dataTableRow brd-t" onmouseover="this.className=\'dataTableRowOver brd-t\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow brd-t\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_STOCK_WARNING . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL') . '\'">
                         <td class="dataTableContent">' . $rows . '.</td>
-                        <td class="dataTableContent">' .  $products['products_model'] . '</td>
+                        <td class="dataTableContent">' .  encode_model_number($products['products_model']) . '</td>
                         <td class="dataTableContent"><b>' . $products['products_name'] . '</b></td>
                         <td class="dataTableContent txta-c">';
                 if ($products['products_quantity'] <= STOCK_REORDER_LEVEL) {
@@ -141,7 +142,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 while ($products_attributes_values = xtc_db_fetch_array($products_attributes_query)) {
                   echo '<tr class="dataTableRowSub" onmouseover="this.className=\'dataTableRowSubOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRowSub\'">
                           <td class="dataTableContentSub">&nbsp;</td>
-                          <td class="dataTableContentSub">' .  $products_attributes_values['attributes_model'] . '</td>
+                          <td class="dataTableContentSub">' .  encode_model_number($products_attributes_values['attributes_model']) . '</td>
                           <td class="dataTableContentSub">&nbsp;&nbsp;&nbsp;&nbsp;-' . $products_attributes_values['products_options_values_name'] . '</td>
                           <td class="dataTableContentSub txta-c">';
                   if ($products_attributes_values['attributes_stock'] <= STOCK_REORDER_LEVEL) {

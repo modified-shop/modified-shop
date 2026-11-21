@@ -51,6 +51,7 @@
   // include needed functions
   require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
   require_once(DIR_FS_INC.'formatter_date.inc.php');
+  require_once(DIR_FS_INC.'encode_order_model_number.inc.php');
   
   // include needed classes
   require_once(DIR_WS_CLASSES . 'currencies.php');
@@ -456,7 +457,7 @@
                                 <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                                   <td class="dataTableContent">&nbsp;</td>
                                   <td class="dataTableContent txta-l">
-                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
+                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? encode_order_model_number($info[$i]['pmodel'], $info[$i]['orders_products_id']).' : ' : '').$info[$i]['pname']; ?></a>
                                     <?php
                                     if (is_array($info[$i]['attr'])) {
                                       foreach ($info[$i]['attr'] as $attr) {

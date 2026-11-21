@@ -22,6 +22,7 @@ include ('includes/application_top.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
 // create smarty elements
 $info_smarty = new Smarty();
@@ -82,7 +83,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // load all definitions from product class
   $productDataArray = $product->buildDataArray($product->data, 'info', false);
   foreach ($productDataArray as $key => $value) {
-    $info_smarty->assign($key, $value);
+    // the model number is text, also the one a product module has set
+    $info_smarty->assign($key, (($key == 'PRODUCTS_MODEL' && is_string($value)) ? encode_model_number($value) : $value));
   }
 
   /*
