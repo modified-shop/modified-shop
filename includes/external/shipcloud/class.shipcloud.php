@@ -190,9 +190,16 @@ class shipcloud {
     // lock ends with its connection: a request that breaks off leaves nothing behind that would keep the next delivery out
     $locked = false;
     if (is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'shipcloud_lock_link', false))) {
-      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($this->event_lock_name($orders_id))."', 10) AS event_lock", 'shipcloud_lock_link');
-      $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
-      $locked = (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
+      // xtc_db_connect() sets the time zone and the SQL mode of the shop on the first link only.
+      // This link writes the event, without them its dates would follow the clock of the database server
+      if (xtc_db_query("SET time_zone = '".date('P')."'", 'shipcloud_lock_link') !== false
+          && xtc_db_query("SET SESSION sql_mode=''", 'shipcloud_lock_link') !== false
+          )
+      {
+        $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($this->event_lock_name($orders_id))."', 10) AS event_lock", 'shipcloud_lock_link');
+        $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
+        $locked = (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
+      }
     }
     if ($locked !== true) {
       $this->release_event();
