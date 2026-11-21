@@ -118,7 +118,11 @@
       if (e && e.stopPropagation) {
         e.stopPropagation();
       }
-      var form = $('<form method="post"></form>').attr('action', link.href);
+      // the link is built with the configured address for http, a redirect from there would turn the POST into a GET.
+      // The request goes to the folder this page was loaded from, with the file and the parameters of the link
+      var folder = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+      var target = window.location.protocol + '//' + window.location.host + folder + link.pathname.substring(link.pathname.lastIndexOf('/') + 1) + link.search;
+      var form = $('<form method="post"></form>').attr('action', target);
       <?php if (defined('CSRF_TOKEN_SYSTEM') && CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) { ?>
       form.append($('<input type="hidden"/>').attr('name', <?php echo json_encode((string)$_SESSION['CSRFName']); ?>).val(<?php echo json_encode((string)$_SESSION['CSRFToken']); ?>));
       <?php } ?>

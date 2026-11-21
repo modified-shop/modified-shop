@@ -34,6 +34,7 @@
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
    
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+  require_once (DIR_FS_INC.'admin_form_posted.inc.php');
 
   // initiate template engine for mail
   $smarty = new Smarty();
@@ -44,6 +45,15 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   
+  // these actions change data: they need a posted link with the token, a plain link is not enough
+  if (in_array($action, array('releaseconfirm', 'deleteconfirm'), true)
+      && !admin_form_posted()
+      )
+  {
+    $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+    xtc_redirect(xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid'))));
+  }
+
   switch ($action) {
     case 'releaseconfirm':
       $gv_query = xtc_db_query("SELECT * 
@@ -215,12 +225,12 @@
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount).'</b>');
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=deleteconfirm&gid='.$gInfo->unique_id, 'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur(); return postLink(this, event);" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=deleteconfirm&gid='.$gInfo->unique_id, 'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 case 'release':
                   $heading[] = array('text' => '<b>[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount).'</b>');
                   $contents[] = array('text' => TEXT_INFO_REDEEM_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=releaseconfirm&gid='.$gInfo->unique_id, 'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur(); return postLink(this, event);" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=releaseconfirm&gid='.$gInfo->unique_id, 'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 default:
                   $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
