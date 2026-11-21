@@ -14,8 +14,9 @@
   
   if ($order->info['orders_status_id'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
+      // a comment alone leaves the status column alone, a change made in the meantime stays
       xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET orders_status = ".$status.",
+                       SET ".(($order->info['orders_status_id'] != $status) ? "orders_status = ".$status."," : '')."
                            last_modified = now()
                      WHERE orders_id = '".$oID."'");
     }
@@ -83,7 +84,31 @@
 
       //EMAIL PREVIEW
       include(DIR_FS_ADMIN.'includes/modules/email_preview.php');
-    
+
+      $customer_notified = 1;
+    }
+
+    // the entry is stored before the mail goes out: an update whose entry fails sends nothing,
+    // its repeat would send the mail a second time. Only a stored entry counts as an update
+    $sql_data_array = array(
+      'orders_id' => $oID,
+      'orders_status_id' => $status,
+      'date_added' => 'now()',
+      'customer_notified' => $customer_notified,
+      'comments' => $comments,
+      'comments_sent' => ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0)
+    );
+    $order_updated = (xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array) !== false);
+
+    // without its entry a new status goes back: the same update can be repeated and then gets entry and mail
+    if ($order_updated !== true && !$email_preview && $order->info['orders_status_id'] != $status) {
+      xtc_db_query("UPDATE ".TABLE_ORDERS."
+                       SET orders_status = '".(int)$order->info['orders_status_id']."'
+                     WHERE orders_id = '".$oID."'
+                       AND orders_status = '".(int)$status."'");
+    }
+
+    if ($customer_notified == 1 && $order_updated === true) {
       xtc_php_mail(EMAIL_BILLING_ADDRESS,
                    EMAIL_BILLING_NAME,
                    $order->customer['email_address'],
@@ -116,19 +141,6 @@
                      4
                      );
       }
-
-      $customer_notified = 1;
     }
-    
-    $sql_data_array = array(
-      'orders_id' => $oID,
-      'orders_status_id' => $status,
-      'date_added' => 'now()',
-      'customer_notified' => $customer_notified,
-      'comments' => $comments,
-      'comments_sent' => ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0)
-    );
-    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
-    $order_updated = true;
   }
 ?>
