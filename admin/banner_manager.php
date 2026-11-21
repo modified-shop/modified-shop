@@ -427,7 +427,8 @@
                                                       AND banners_group != 'slider'
                                                  ORDER BY banners_group");
             while ($groups = xtc_db_fetch_array($groups_query)) {
-              $groups_array[] = array('id' => $groups['banners_group'], 'text' => strtoupper($groups['banners_group']));
+              // the group is the name the shop looks the banner up by, it is stored as typed and encoded here
+              $groups_array[] = array('id' => $groups['banners_group'], 'text' => encode_htmlspecialchars(strtoupper($groups['banners_group'])));
             }
             
             if ($form_action == 'insert') {
@@ -665,7 +666,7 @@
                           </td>
                           <td class="dataTableContent txta-c"><?php echo $banners['banners_sort']; ?></td>
                           <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
-                          <td class="dataTableContent txta-c"><?php echo $banners['banners_group']; ?></td>
+                          <td class="dataTableContent txta-c"><?php echo encode_htmlspecialchars($banners['banners_group']); ?></td>
                           <td class="dataTableContent txta-r"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
                           <td class="dataTableContent txta-c">
                             <?php                                      

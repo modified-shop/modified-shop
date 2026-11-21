@@ -15,6 +15,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_INC.'clean_html_output.inc.php');
  
   class ot_tax {
 
@@ -64,7 +65,9 @@
 
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
             $order->info['allow_tax'] = 1; //customer
-            $this->output[] = array('title' => $key . ':',
+            // the key is also the lookup for the tax rate, so it is cleaned only for the title;
+            // 254: the title column of the order totals takes 255 characters
+            $this->output[] = array('title' => clean_html_output($key, 254) . ':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -74,7 +77,7 @@
               ) 
           {
             $order->info['allow_tax'] = 2; //merchant
-            $this->output[] = array('title' => $key .':',
+            $this->output[] = array('title' => clean_html_output($key, 254) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -85,7 +88,7 @@
               ) 
           {
             $order->info['allow_tax'] = 3; //merchant EU, shipping to store country
-            $this->output[] = array('title' => $key .':',
+            $this->output[] = array('title' => clean_html_output($key, 254) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }

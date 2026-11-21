@@ -533,7 +533,7 @@ class xtcImport {
         if ($this->FileSheme['p_disc'] == 'Y')
             $products_array = array_merge($products_array, array ('products_discount_allowed' => (float)$dataArray['p_disc']));
         if ($this->FileSheme['p_ean'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_ean' => xtc_db_prepare_input($dataArray['p_ean'])));
+            $products_array = array_merge($products_array, array ('products_ean' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_ean']))));
         if ($this->FileSheme['p_man'] == 'Y')
             $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_man']))));
         if ($this->FileSheme['p_tax'] == 'Y')

@@ -34,6 +34,7 @@
   
   // include needed function
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+  require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
 
   // set languages
   $languages = xtc_get_languages();
@@ -306,7 +307,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id']) . '\'">' . "\n";
                   }
                 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a><span style="vertical-align: 3px;">' . parse_multi_language_value($zones['geo_zone_name'], $_SESSION['language_code']) . '</span>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a><span style="vertical-align: 3px;">' . parse_multi_language_html($zones['geo_zone_name'], $_SESSION['language_code']) . '</span>'; ?></td>
                 <td class="dataTableContent txta-r"><?php if (isset($zInfo) && is_object($zInfo) && $zones['geo_zone_id'] == $zInfo->geo_zone_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
                 <?php
@@ -419,13 +420,13 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
 
                     $contents = array('form' => xtc_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=deleteconfirm_zone'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_ZONE_INTRO);
-                    $contents[] = array('text' => '<br /><b>' . parse_multi_language_value($zInfo->geo_zone_name, $_SESSION['language_code']) . '</b>');
+                    $contents[] = array('text' => '<br /><b>' . parse_multi_language_html($zInfo->geo_zone_name, $_SESSION['language_code']) . '</b>');
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   default:
                     if (isset($zInfo) && is_object($zInfo)) {
-                      $heading[] = array('text' => '<b>' . parse_multi_language_value($zInfo->geo_zone_name, $_SESSION['language_code']) . '</b>');
+                      $heading[] = array('text' => '<b>' . parse_multi_language_html($zInfo->geo_zone_name, $_SESSION['language_code']) . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=edit_zone') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=delete_zone') . '">' . BUTTON_DELETE . '</a>' . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '">' . BUTTON_DETAILS . '</a>');
                       $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_ZONES . ' ' . $zInfo->num_zones);
@@ -433,7 +434,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                       if ($zInfo->geo_zone_tax == '1') $contents[] = array('text' => TEXT_INFO_ZONE_TAX_DEFAULT);
                       $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($zInfo->date_added));
                       if (xtc_not_null($zInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($zInfo->last_modified));
-                      $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . parse_multi_language_value($zInfo->geo_zone_description, $_SESSION['language_code']));
+                      $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . parse_multi_language_html($zInfo->geo_zone_description, $_SESSION['language_code']));
                     }
                     break;
                 }

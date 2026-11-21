@@ -358,7 +358,8 @@ class newsletter {
         
               $smarty->assign('SEND_COUPON', 'true');
               $smarty->assign('COUPON_DESC', $coupon_desc['coupon_description']);
-              $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+              // the plain text mail decodes the entities again
+              $smarty->assign('COUPON_CODE', encode_htmlspecialchars($coupon['coupon_code'], ENT_NOQUOTES));
             }
           }
         }
