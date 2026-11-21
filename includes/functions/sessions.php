@@ -311,7 +311,21 @@
       return true;
     }
 
-    return (xtc_session_recreate() === true);
+    if (xtc_session_recreate() !== true) {
+      return false;
+    }
+
+    // the new session has to take what follows: it is open and, in the database, holds its lock.
+    // Without the lock nothing of this request is saved
+    global $modified_session_handler;
+    if (session_status() !== PHP_SESSION_ACTIVE
+        || (STORE_SESSIONS == 'mysql' && (!is_object($modified_session_handler) || $modified_session_handler->holds_lock() !== true))
+        )
+    {
+      return false;
+    }
+
+    return true;
   }
 
   function xtc_session_renew_error() {

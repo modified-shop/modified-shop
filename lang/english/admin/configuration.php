@@ -472,7 +472,7 @@ define('SESSION_CHECK_USER_AGENT_DESC' , 'Validate the client\'s browser user ag
 define('SESSION_CHECK_IP_ADDRESS_TITLE' , 'Check IP Address');
 define('SESSION_CHECK_IP_ADDRESS_DESC' , 'Validate the client\'s IP address on every page request. (Default &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_RECREATE_TITLE' , 'Recreate Session');
-define('SESSION_RECREATE_DESC' , 'Recreate the session to generate a new session ID when a customer changes the email address or the password. A login and a new account always get a new session ID. (Default &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_RECREATE_DESC' , 'Recreate the session to generate a new session ID when a customer changes the email address or the password. Every sign-in gets a new session ID whatever this setting says, also the sign-in right after a registration. A registration that still waits for its confirmation by e-mail signs nobody in. Shops with different domains for HTTP and HTTPS keep the session ID at sign-in. (Default &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_DELETE_OLD_COOKIES_TITLE' , 'Delete Session Cookie');
 define('SESSION_DELETE_OLD_COOKIES_DESC' , 'Should old session cookies be deleted? After updating from shop version <= 2.0.1.0 it is recommended to enable this option. (Default &quot;false&quot;)'.SESSION_WARNING);
 
