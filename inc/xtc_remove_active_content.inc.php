@@ -316,8 +316,11 @@
       return $text;
     }
     $short = (($charset == 'UTF-8' && function_exists('mb_substr')) ? mb_substr($text, 0, $max_length, 'UTF-8') : substr($text, 0, $max_length));
-    if (preg_match('/&[#a-z0-9]*$/i', $short, $tail) && preg_match('/^[#a-z0-9]*;/i', substr($text, strlen($short)))) {
-      $short = substr($short, 0, -strlen($tail[0]));
+    if (preg_match('/&[#a-z0-9]*$/i', $short, $tail)) {
+      $reference = xtc_remove_active_content_reference($tail[0].substr($text, strlen($short), 40));
+      if ($reference !== false && $reference[0] > strlen($tail[0])) {
+        $short = substr($short, 0, -strlen($tail[0]));
+      }
     }
 
     return rtrim($short, '<');
@@ -340,9 +343,76 @@
   }
 
 
-  // a text between two tags as a page shows it; the cleaner writes every line break as \n
+  // a text between two tags with its entities read; the cleaner writes every line break as \n
   function xtc_remove_active_content_decode($text, $doctype = ENT_HTML5) {
     return html_entity_decode(str_replace(array("\r\n", "\r"), "\n", $text), ENT_QUOTES | $doctype, 'UTF-8');
+  }
+
+
+  /**
+   * xtc_remove_active_content_reference()
+   *
+   * the character a browser reads at an & in a text: a number and the oldest names count without their semicolon
+   *
+   * @param string $text text from the & on
+   * @return mixed length in the text and the character, false when the & is the character itself
+   */
+  function xtc_remove_active_content_reference($text) {
+    static $names = null;
+    static $moved = array(0x80 => 0x20AC, 0x82 => 0x201A, 0x83 => 0x192, 0x84 => 0x201E, 0x85 => 0x2026, 0x86 => 0x2020, 0x87 => 0x2021, 0x88 => 0x2C6, 0x89 => 0x2030, 0x8A => 0x160, 0x8B => 0x2039, 0x8C => 0x152, 0x8E => 0x17D, 0x91 => 0x2018, 0x92 => 0x2019, 0x93 => 0x201C, 0x94 => 0x201D, 0x95 => 0x2022, 0x96 => 0x2013, 0x97 => 0x2014, 0x98 => 0x2DC, 0x99 => 0x2122, 0x9A => 0x161, 0x9B => 0x203A, 0x9C => 0x153, 0x9E => 0x17E, 0x9F => 0x178);
+
+    if (preg_match('/^&#(?:[xX]([0-9a-fA-F]+)|([0-9]+));?/', $text, $match)) {
+      $digits = ltrim(((isset($match[2])) ? $match[2] : $match[1]), '0');
+      $code = ((strlen($digits) > 7) ? 0 : ((isset($match[2])) ? (int)$digits : hexdec($digits)));
+      if ($code == 0 || $code > 0x10FFFF || ($code >= 0xD800 && $code <= 0xDFFF)) {
+        $code = 0xFFFD;
+      } elseif (isset($moved[$code])) {
+        $code = $moved[$code];
+      }
+      if ($code < 0x80) {
+        $character = chr($code);
+      } elseif ($code < 0x800) {
+        $character = chr(0xC0 | ($code >> 6)).chr(0x80 | ($code & 0x3F));
+      } elseif ($code < 0x10000) {
+        $character = chr(0xE0 | ($code >> 12)).chr(0x80 | (($code >> 6) & 0x3F)).chr(0x80 | ($code & 0x3F));
+      } else {
+        $character = chr(0xF0 | ($code >> 18)).chr(0x80 | (($code >> 12) & 0x3F)).chr(0x80 | (($code >> 6) & 0x3F)).chr(0x80 | ($code & 0x3F));
+      }
+
+      return array(strlen($match[0]), $character);
+    }
+    if (!preg_match('/^&([a-zA-Z0-9]+)(;?)/', $text, $match)) {
+      return false;
+    }
+    if ($match[2] == ';') {
+      $character = html_entity_decode($match[0], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      if ($character !== $match[0]) {
+        return array(strlen($match[0]), $character);
+      }
+    }
+    if ($names === null) {
+      $names = array_flip(explode(' ', 'AElig AMP Aacute Acirc Agrave Aring Atilde Auml COPY Ccedil ETH Eacute Ecirc Egrave Euml GT Iacute Icirc Igrave Iuml LT Ntilde Oacute Ocirc Ograve Oslash Otilde Ouml QUOT REG THORN Uacute Ucirc Ugrave Uuml Yacute aacute acirc acute aelig agrave amp aring atilde auml brvbar ccedil cedil cent copy curren deg divide eacute ecirc egrave eth euml frac12 frac14 frac34 gt iacute icirc iexcl igrave iquest iuml laquo lt macr micro middot nbsp not ntilde oacute ocirc ograve ordf ordm oslash otilde ouml para plusmn pound quot raquo reg sect shy sup1 sup2 sup3 szlig thorn times uacute ucirc ugrave uml uuml yacute yen yuml'));
+    }
+    // the longest name first
+    for ($size = min(6, strlen($match[1])); $size > 1; $size--) {
+      $name = substr($match[1], 0, $size);
+      if (isset($names[$name])) {
+        return array($size + 1, html_entity_decode('&'.$name.';', ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+      }
+    }
+
+    return false;
+  }
+
+
+  // a text between two tags as a browser shows it
+  function xtc_remove_active_content_shown($text) {
+    $shown = preg_replace_callback('/&[#a-zA-Z0-9]+;?/', function ($match) {
+      $reference = xtc_remove_active_content_reference($match[0]);
+      return (($reference === false) ? $match[0] : $reference[1].substr($match[0], $reference[0]));
+    }, str_replace(array("\r\n", "\r"), "\n", $text));
+
+    return ((is_string($shown)) ? $shown : $text);
   }
 
 
@@ -383,8 +453,11 @@
     // the end of the text is enough, no entity is longer
     if (preg_match('/&[#a-z0-9]*$/i', substr($left, -64), $tail)) {
       $head = substr($right, 0, 40);
-      if (xtc_remove_active_content_decode($tail[0].$head) !== xtc_remove_active_content_decode($tail[0]).xtc_remove_active_content_decode($head)) {
-        return substr($left, 0, -strlen($tail[0])).'&amp;'.substr($tail[0], 1);
+      if (xtc_remove_active_content_shown($tail[0].$head) !== xtc_remove_active_content_shown($tail[0]).xtc_remove_active_content_shown($head)) {
+        // a character the & already stands for ends here, else the & is the character itself
+        $reference = xtc_remove_active_content_reference($tail[0]);
+        $tail[1] = (($reference === false) ? '&amp;'.substr($tail[0], 1) : substr($tail[0], 0, $reference[0]).';'.substr($tail[0], $reference[0]));
+        return substr($left, 0, -strlen($tail[0])).$tail[1];
       }
     }
 
