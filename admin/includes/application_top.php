@@ -272,6 +272,12 @@ if (CSRF_TOKEN_SYSTEM == 'true') {
   require_once(DIR_FS_INC . 'csrf_token.inc.php');
 }
 
+// an action that changes data needs its posted form on the pages named in the rule
+require_once(DIR_FS_INC . 'admin_action_rule.inc.php');
+if (admin_action_rule($PHP_SELF) !== true) {
+  $messageStack->add((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'error');
+}
+
 // split-page-results
 require(DIR_WS_CLASSES . 'split_page_results.php');
 
