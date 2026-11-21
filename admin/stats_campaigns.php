@@ -105,6 +105,24 @@ if (isset($_GET['endY']) && (xtc_not_null($_GET['endY'])) ) {
 }
 $endDate = mktime(0, 0, 0, $eMon, $eDay + 1, $eYear);
 
+// the filter of a stored link stays also when its status has no name in the language of the admin,
+// the menu then shows it with the name of another language or with its number
+$status_filter = ((isset($_GET['status']) && is_string($_GET['status']) && ctype_digit($_GET['status'])) ? (int)$_GET['status'] : 0);
+if ($status_filter > 0 && !isset($orders_status_array[$status_filter])) {
+  $status_name_query = xtc_db_query("SELECT orders_status_name
+                                      FROM ".TABLE_ORDERS_STATUS."
+                                     WHERE orders_status_id = '".$status_filter."'
+                                  ORDER BY (orders_status_name = ''), language_id
+                                     LIMIT 1");
+  if (xtc_db_num_rows($status_name_query) > 0) {
+    $status_name = xtc_db_fetch_array($status_name_query);
+    $orders_status_array[$status_filter] = (($status_name['orders_status_name'] != '') ? $status_name['orders_status_name'] : $status_filter);
+    $orders_statuses[] = array('id' => $status_filter, 'text' => $orders_status_array[$status_filter]);
+  } else {
+    $status_filter = 0;
+  }
+}
+
 $campaign_array = array(
   'report' => $srView,
   'startD' => $sDay,
@@ -114,7 +132,7 @@ $campaign_array = array(
   'endM' => $eMon,
   'endY' => $eYear,
   // the menus of the form show these checked values as well, the status as the number of a status that exists
-  'status' => ((isset($_GET['status']) && is_string($_GET['status']) && ctype_digit($_GET['status']) && isset($orders_status_array[(int)$_GET['status']])) ? (int)$_GET['status'] : 0),
+  'status' => $status_filter,
   'campaign' => ((isset($_GET['campaign']) && is_string($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
 );
 $campaign = new campaigns($campaign_array);

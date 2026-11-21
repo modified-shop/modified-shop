@@ -520,11 +520,18 @@
       break;
 
     case 'convertdb':
-      // a run that was started before the start checked the combination goes on only with one it accepts
-      if ($convert['num_tables'] > 0
-          && ($convert['db_charset'] != 'utf8mb4' || $convert['db_engine'] == 'InnoDB')
-          )
-      {
+      if ($convert['num_tables'] > 0) {
+        // a run that was started before the start checked the combination does not go on with one it refuses.
+        // The progress view gets an answer it can show, with the way back to the form
+        if (isset($convert['db_charset'])
+            && $convert['db_charset'] == 'utf8mb4'
+            && (!isset($convert['db_engine']) || $convert['db_engine'] != 'InnoDB')
+            )
+        {
+          unset($_SESSION['convert']);
+          echo json_encode(array('error' => (defined('TEXT_INFO_DO_CONVERT_STOPPED') ? TEXT_INFO_DO_CONVERT_STOPPED : 'The conversion was stopped: UTF-8 MB4 needs the InnoDB engine. Start the conversion again.')));
+          exit();
+        }
         $info_text = TEXT_INFO_DO_CONVERT;
         xtc_set_time_limit(0);
         $nr = $convert['nr'];
