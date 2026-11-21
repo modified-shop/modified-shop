@@ -403,10 +403,10 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     $geo_zone_description = '';
                     for ($i=0, $n=count($languages); $i<$n; $i++) {
                       $geo_zone_name .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-                      $geo_zone_name .= xtc_draw_input_field('geo_zone_name[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($zInfo->geo_zone_name, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
+                      $geo_zone_name .= xtc_draw_input_field('geo_zone_name[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_html_value($zInfo->geo_zone_name, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
                     
                       $geo_zone_description .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-                      $geo_zone_description .= xtc_draw_input_field('geo_zone_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($zInfo->geo_zone_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
+                      $geo_zone_description .= xtc_draw_input_field('geo_zone_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_html_value($zInfo->geo_zone_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . $geo_zone_name);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . $geo_zone_description);

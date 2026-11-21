@@ -17,6 +17,7 @@
    
   // include needed function
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+  require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
 
   function xtc_get_tax_description($class_id, $country_id= -1, $zone_id= -1) {
     global $PHP_SELF;
@@ -61,7 +62,8 @@
       if (xtc_db_num_rows($tax_query,true)) {
         $tax_description = '';
         while ($tax = xtc_db_fetch_array($tax_query,true)) {
-          $tax_description .= parse_multi_language_value($tax['tax_description'], $_SESSION['language_code']) . ' + ';
+          // the description is printed as HTML, in the title of the order total
+          $tax_description .= parse_multi_language_html_value($tax['tax_description'], $_SESSION['language_code']) . ' + ';
         }
         $tax_description = substr($tax_description, 0, -3);
 

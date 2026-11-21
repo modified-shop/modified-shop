@@ -284,14 +284,16 @@
         )
     {
       $kept = $value;
+      $typed = true;
     } else {
       $kept = xtc_remove_active_content_end(xtc_remove_active_content_merge($value, $clean, $charset), $open);
+      $typed = false;
     }
 
     $max_length = (($max_length === true) ? xtc_remove_active_content_length($value, $charset) : (int)$max_length);
     if ($max_length > 0 && xtc_remove_active_content_length($kept, $charset) > $max_length) {
       // first every part in its shorter spelling, then rather without the tags than cut off by the column
-      $short = xtc_remove_active_content_end(xtc_remove_active_content_merge($value, $clean, $charset, true), $open);
+      $short = xtc_remove_active_content_end(xtc_remove_active_content_merge($value, $clean, $charset, true, $typed), $open);
       if (xtc_remove_active_content_length($short, $charset) > $max_length) {
         $text = xtc_remove_active_content_end(xtc_remove_active_content_text($kept, $clean, $charset), $open);
         if (xtc_remove_active_content_length($text, $charset) > $max_length) {
@@ -476,12 +478,13 @@
    * @param string $clean text of the cleaner
    * @param string $charset see xtc_remove_active_content_charset()
    * @param boolean $short of two spellings of a part the shorter one instead of the typed one
+   * @param boolean $as_typed the text stays as typed where it has room, so with less room it shows the same
    * @return string
    */
-  function xtc_remove_active_content_merge($value, $clean, $charset, $short = false) {
+  function xtc_remove_active_content_merge($value, $clean, $charset, $short = false, $as_typed = false) {
     if ($charset != 'UTF-8') {
       // every character of the charset has its place in UTF-8 and comes back as the same byte
-      $merged = xtc_remove_active_content_merge(xtc_remove_active_content_convert($value, 'UTF-8', $charset), xtc_remove_active_content_convert($clean, 'UTF-8', $charset), 'UTF-8', $short);
+      $merged = xtc_remove_active_content_merge(xtc_remove_active_content_convert($value, 'UTF-8', $charset), xtc_remove_active_content_convert($clean, 'UTF-8', $charset), 'UTF-8', $short, $as_typed);
       return xtc_remove_active_content_convert($merged, $charset, 'UTF-8');
     }
 
@@ -524,7 +527,7 @@
         if (is_array($texts)) {
           // a < the typed text leaves open would open a tag in front of the next one
           $text = preg_replace('/<(?=[a-z\/!?])/i', '&lt;', $texts[$i]);
-          if (is_string($text) && xtc_remove_active_content_same_text($text, $part)) {
+          if (is_string($text) && ($as_typed || xtc_remove_active_content_same_text($text, $part))) {
             $piece = $text;
           }
         }
@@ -559,7 +562,7 @@
           $piece = xtc_remove_active_content_plain($piece);
         }
         if (xtc_remove_active_content_length($part, 'UTF-8') < xtc_remove_active_content_length($piece, 'UTF-8')
-            && ($i % 2 != 0 || xtc_remove_active_content_decode($part) === xtc_remove_active_content_decode($piece))
+            && ($i % 2 != 0 || xtc_remove_active_content_shown($part) === xtc_remove_active_content_shown($piece))
             )
         {
           $piece = $part;
@@ -797,8 +800,8 @@
     }
 
     $text = xtc_remove_active_content_plain($texts[0]);
-    // as kept when the cleaner read the same text
-    if (!preg_match('/<[a-z\/!?]/i', $texts[1]) && xtc_remove_active_content_same_text($texts[1], $text)) {
+    // as kept, so the text shows without its tags what it shows with them
+    if (!preg_match('/<[a-z\/!?]/i', $texts[1])) {
       $text = $texts[1];
     }
 

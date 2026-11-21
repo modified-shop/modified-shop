@@ -208,10 +208,10 @@
                 $tax_class_description = '';
                 for ($i=0, $n=count($languages); $i<$n; $i++) {
                   $tax_class_title .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-                  $tax_class_title .= xtc_draw_input_field('tax_class_title[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($tcInfo->tax_class_title, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
+                  $tax_class_title .= xtc_draw_input_field('tax_class_title[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_html_value($tcInfo->tax_class_title, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
                 
                   $tax_class_description .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-                  $tax_class_description .= xtc_draw_input_field('tax_class_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($tcInfo->tax_class_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
+                  $tax_class_description .= xtc_draw_input_field('tax_class_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_html_value($tcInfo->tax_class_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px;"').'<br>';
                 }
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . $tax_class_title);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . $tax_class_description);

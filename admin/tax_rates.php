@@ -273,7 +273,7 @@
                   $description = '';
                   for ($i=0, $n=count($languages); $i<$n; $i++) {
                     $description .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-                    $description .= xtc_draw_input_field('tax_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($trInfo->tax_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px"').'<br>';
+                    $description .= xtc_draw_input_field('tax_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_html_value($trInfo->tax_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px"').'<br>';
                   }
                   $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $description);
                   
