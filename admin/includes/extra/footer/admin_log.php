@@ -184,22 +184,35 @@
                 }
               }
               if (MODULE_ADMIN_LOG_SHOW_DETAILS_FULL == 'false') {
-                // action and value of a posted status link are shown also when the entry before had no such field.
-                // All other fields are compared as before, a form can hold access data of a module
-                $log_link = array_intersect_key($log['text'], array('action' => 1, 'flag' => 1));
+                // only the manufacturers page has a posted status link among the logged pages: its action and value
+                // are shown also when the entry before had no such field. Every other page is compared as before,
+                // a form can hold access data of a module
+                $log_manufacturer = (basename($PHP_SELF) == 'manufacturers.php');
+                $log_link = (($log_manufacturer === true) ? array_intersect_key($log['text'], array('action' => 1, 'flag' => 1)) : array());
                 if ($lc == 0) {
                   $base = $log['text'];
                 } else {
                   $log_link = array_diff_key($log_link, $base);
+                  // the first form after a status link: only its status is compared, with the one the link set
+                  if ($log_manufacturer === true
+                      && isset($log['text']['manufacturers_status'], $base['flag'])
+                      && !isset($base['manufacturers_status'])
+                      && $log['text']['manufacturers_status'] != $base['flag']
+                      )
+                  {
+                    $log_link['manufacturers_status'] = $log['text']['manufacturers_status'];
+                  }
                 }
                 $base_new = array_merge($base, $log['text']);
                 $log_shown = array_merge(arrayRecursiveLogDiff($base, $base_new), $log_link);
                 // the status link of the manufacturers list and the form store one status under two names:
                 // the next entry is compared with the last status, whichever of the two set it
-                if (isset($log['text']['action'], $log['text']['flag'], $base_new['manufacturers_status']) && $log['text']['action'] == 'setflag') {
-                  $base_new['manufacturers_status'] = $log['text']['flag'];
-                } elseif (isset($log['text']['manufacturers_status'], $base_new['flag'])) {
-                  $base_new['flag'] = $log['text']['manufacturers_status'];
+                if ($log_manufacturer === true) {
+                  if (isset($log['text']['action'], $log['text']['flag'], $base_new['manufacturers_status']) && $log['text']['action'] == 'setflag') {
+                    $base_new['manufacturers_status'] = $log['text']['flag'];
+                  } elseif (isset($log['text']['manufacturers_status'], $base_new['flag'])) {
+                    $base_new['flag'] = $log['text']['manufacturers_status'];
+                  }
                 }
                 $log['text'] = $log_shown;
               }
