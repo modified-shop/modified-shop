@@ -212,12 +212,12 @@ switch ($category_depth) {
   
     //Fallback for products_sorting to products_name
     // the stored values go into ORDER BY: only a column name and a direction are taken
-    if (empty($sorting_data['products_sorting']) || !preg_match('/^([a-z0-9_]+\.)?[a-z0-9_]+$/i', $sorting_data['products_sorting'])) { 
+    if (empty($sorting_data['products_sorting']) || !preg_match('/^([a-z0-9_]+\.)?[a-z0-9_]+$/i', $sorting_data['products_sorting'])) {
       $sorting_data['products_sorting'] = 'pd.products_name';
     }
   
     //Fallback for products_sorting2 to ascending
-    if (empty($sorting_data['products_sorting2']) || !in_array(strtoupper($sorting_data['products_sorting2']), array('ASC', 'DESC'), true)) { 
+    if (empty($sorting_data['products_sorting2']) || !in_array(strtoupper($sorting_data['products_sorting2']), array('ASC', 'DESC'), true)) {
       $sorting_data['products_sorting2'] = 'ASC';
     }
     $sorting = ' ORDER BY '.$sorting_data['products_sorting'].' '.$sorting_data['products_sorting2'].' ';

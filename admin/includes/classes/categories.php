@@ -1260,7 +1260,7 @@ class categories {
       'products_startpage' => $status,
       'products_last_modified' => 'now()'
     );
-    xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");                       
+    xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");
   }
 
 
