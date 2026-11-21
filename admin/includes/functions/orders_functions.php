@@ -1490,6 +1490,13 @@
       }
     }
 
+    // the titles of the tax lines the order has
+    $tax_titles = array();
+    $tax_titles_query = xtc_db_query("SELECT title FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
+    while ($tax_titles_row = xtc_db_fetch_array($tax_titles_query)) {
+      $tax_titles[] = $tax_titles_row['title'];
+    }
+
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
 
     $tax_info = '';
@@ -1503,6 +1510,7 @@
     }
 
     require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
+    require_once(DIR_FS_INC.'xtc_get_tax_description.inc.php');
     $ust_query = xtc_db_query("SELECT tax_rate, SUM(tax) as tax_value_new
                                  FROM ".TABLE_ORDERS_RECALCULATE."
                                 WHERE orders_id = '".(int)$oID."'
@@ -1516,9 +1524,27 @@
                                        WHERE tax_rate = '".$ust['tax_rate']."'");
       $ust_desc = xtc_db_fetch_array($ust_desc_query);
 
+      // rates with the same description have one text, whichever of them is read first, as at checkout
+      $ust_text = ((isset($ust_desc['tax_description'])) ? $ust_desc['tax_description'] : '');
+      $description = parse_multi_language_value($ust_text, $lang['code']);
+      $description_html = parse_multi_language_html_value($ust_text, $lang['code']);
+      while ($ust_other = xtc_db_fetch_array($ust_desc_query)) {
+        if (parse_multi_language_value($ust_other['tax_description'], $lang['code']) === $description) {
+          $description_html = xtc_merge_tax_description_html($description, $description_html, parse_multi_language_html_value($ust_other['tax_description'], $lang['code']));
+        }
+      }
+
       // the title column takes 255 characters
-      $title = parse_multi_language_html($ust_desc['tax_description'], $lang['code'], false, 254 - clean_html_output_length($tax_info));
+      $title = clean_html_output($description_html, 254 - clean_html_output_length($tax_info));
       $title = $tax_info . $title.':';
+
+      // a line the order has keeps the text it got at checkout, where only the spelling of an & differs
+      foreach ($tax_titles as $tax_title) {
+        if (str_replace('&amp;', '&', $tax_title) === str_replace('&amp;', '&', $title)) {
+          $title = $tax_title;
+          break;
+        }
+      }
 
       if ($ust['tax_value_new']) {
         $text = $xtPrice->xtcFormat($ust['tax_value_new'], true);
