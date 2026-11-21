@@ -16,6 +16,7 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once(DIR_FS_INC.'clean_html_output.inc.php');
+  require_once(DIR_FS_INC.'xtc_get_tax_description.inc.php');
  
   class ot_tax {
 
@@ -67,7 +68,7 @@
             $order->info['allow_tax'] = 1; //customer
             // the key is also the lookup for the tax rate, so it is cleaned only for the title;
             // 254: the title column of the order totals takes 255 characters
-            $this->output[] = array('title' => clean_html_output($key, 254) . ':',
+            $this->output[] = array('title' => clean_html_output(xtc_get_tax_description_html($key), 254) . ':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -77,7 +78,7 @@
               ) 
           {
             $order->info['allow_tax'] = 2; //merchant
-            $this->output[] = array('title' => clean_html_output($key, 254) .':',
+            $this->output[] = array('title' => clean_html_output(xtc_get_tax_description_html($key), 254) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -88,7 +89,7 @@
               ) 
           {
             $order->info['allow_tax'] = 3; //merchant EU, shipping to store country
-            $this->output[] = array('title' => clean_html_output($key, 254) .':',
+            $this->output[] = array('title' => clean_html_output(xtc_get_tax_description_html($key), 254) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }

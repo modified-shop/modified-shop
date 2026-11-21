@@ -1032,7 +1032,7 @@ class shoppingCart {
     foreach ($this->tax as $key => $value) {
       if ($this->tax[$key]['value'] > 0) {
         // the description is also a lookup key, so it is cleaned only for the output
-        $output[] = clean_html_output($this->tax[$key]['desc']).': '.$xtPrice->xtcFormat($this->tax[$key]['value'], true);
+        $output[] = clean_html_output(xtc_get_tax_description_html($this->tax[$key]['desc'])).': '.$xtPrice->xtcFormat($this->tax[$key]['value'], true);
         $tax += $this->tax[$key]['value'];
       }
     }

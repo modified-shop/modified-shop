@@ -32,7 +32,7 @@
   /**
    * parse_multi_language_html_value()
    *
-   * the language value as HTML source, not cleaned, e.g. as a key or for the input field of a form:
+   * the language value as HTML source, not cleaned, e.g. for the input field of a form:
    * like parse_multi_language_value(), but an encoded & stays encoded where a page would read the & and
    * the text behind it as a character although no semicolon ends it, e.g. &amp;notices
    *
@@ -52,8 +52,8 @@
           if ($i % 2 != 0 && $decoded === '&') {
             $reference = xtc_remove_active_content_reference('&'.$behind);
             if ($reference !== false && substr($behind, $reference[0] - 2, 1) != ';') {
-              // decoded one time less
-              $parts[$i] = '&amp;'.substr($parts[$i], 1);
+              // comes back from the decoder as &amp;
+              $parts[$i] = '&amp;amp;';
             }
           }
           $behind = $decoded.$behind;
