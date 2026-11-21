@@ -386,12 +386,9 @@
       }
       $stored = true;
       if (xtc_db_num_rows($check_query) > 0) {
-        $stored = xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
-                                  SET configuration_value = '".xtc_db_input($signing_key)."',
-                                      sort_order = '-1'
-                                WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+        $stored = $this->storeSigningKey($signing_key, true);
       } elseif ($signing_key != '') {
-        $stored = xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', '".xtc_db_input($signing_key)."', '6', '-1', NOW())");
+        $stored = $this->storeSigningKey($signing_key, false);
       }
       if ($stored === false) {
         return false;
@@ -406,6 +403,40 @@
       }
 
       return $signing_key;
+    }
+
+
+    // the keys are bound to their statement instead of written into it: the query log, the SQL warning and the
+    // error mail show a statement of xtc_db_query() in full
+    protected function storeSigningKey($signing_key, $update) {
+      global $db_link;
+
+      if (!($db_link instanceof mysqli)) {
+        return false;
+      }
+      try {
+        if ($update === true) {
+          $statement = mysqli_prepare($db_link, "UPDATE ".TABLE_CONFIGURATION."
+                                                  SET configuration_value = ?,
+                                                      sort_order = '-1'
+                                                WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+        } else {
+          $statement = mysqli_prepare($db_link, "INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', ?, '6', '-1', NOW())");
+        }
+        if (!is_object($statement)) {
+          return false;
+        }
+        mysqli_stmt_bind_param($statement, 's', $signing_key);
+        $stored = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
+
+        return ($stored === true);
+      } catch (Throwable $ex) {
+        // the message of the database can name the value, it is not passed on
+        $this->LoggingManager->log('DEBUG', 'saveSigningKey', array('error' => 'signing keys not stored'));
+
+        return false;
+      }
     }
 
 
