@@ -97,7 +97,11 @@
     if ($html !== null) {
       if ($html !== $key) {
         // two rates can share a key, their text must not depend on which one comes first
-        $html_array[$key] = ((isset($html_array[$key])) ? xtc_merge_tax_description_html($key, $html_array[$key], $html) : $html);
+        $merged = ((isset($html_array[$key])) ? xtc_merge_tax_description_html($key, $html_array[$key], $html) : $html);
+        if ($merged === false) {
+          $merged = ((strcmp($html_array[$key], $html) >= 0) ? $html_array[$key] : $html);
+        }
+        $html_array[$key] = $merged;
       }
       return $html;
     }
@@ -122,7 +126,7 @@
    * @param string $key description
    * @param string $one text for a page, the description with some & written as &amp;
    * @param string $two the same for another rate
-   * @return string
+   * @return mixed text, false when one of the two is not the description with some & encoded
    */
   function xtc_merge_tax_description_html($key, $one, $two) {
     $merged = '';
@@ -145,8 +149,7 @@
       $b++;
     }
     if ($a != strlen($one) || $b != strlen($two)) {
-      // not the description with some & encoded: no merge, but still the same text for either order
-      return ((strcmp($one, $two) >= 0) ? $one : $two);
+      return false;
     }
 
     return $merged;

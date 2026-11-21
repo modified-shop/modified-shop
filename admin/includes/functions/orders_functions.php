@@ -1518,6 +1518,7 @@
                                   AND class = 'ot_tax'
                              GROUP BY tax_rate 
                              ORDER BY tax_rate DESC");
+    $tax_lines = array();
     while ($ust = xtc_db_fetch_array($ust_query)) {
       $ust_desc_query = xtc_db_query("SELECT tax_description 
                                         FROM ".TABLE_TAX_RATES." 
@@ -1530,20 +1531,37 @@
       $description_html = parse_multi_language_html_value($ust_text, $lang['code']);
       while ($ust_other = xtc_db_fetch_array($ust_desc_query)) {
         if (parse_multi_language_value($ust_other['tax_description'], $lang['code']) === $description) {
-          $description_html = xtc_merge_tax_description_html($description, $description_html, parse_multi_language_html_value($ust_other['tax_description'], $lang['code']));
+          $merged = xtc_merge_tax_description_html($description, $description_html, parse_multi_language_html_value($ust_other['tax_description'], $lang['code']));
+          $description_html = (($merged !== false) ? $merged : $description_html);
         }
       }
 
       // the title column takes 255 characters
-      $title = clean_html_output($description_html, 254 - clean_html_output_length($tax_info));
-      $title = $tax_info . $title.':';
+      $max_length = 254 - clean_html_output_length($tax_info);
+      $tax_lines[] = array('value' => $ust['tax_value_new'],
+                           'key' => $tax_info . clean_html_output($description, $max_length) . ':',
+                           'title' => $tax_info . clean_html_output($description_html, $max_length) . ':');
+    }
 
-      // a line the order has keeps the text it got at checkout, where only the spelling of an & differs
-      foreach ($tax_titles as $tax_title) {
-        if (str_replace('&amp;', '&', $tax_title) === str_replace('&amp;', '&', $title)) {
-          $title = $tax_title;
-          break;
+    foreach ($tax_lines as $tax_line) {
+      $title = $tax_line['title'];
+      $ust = array('tax_value_new' => $tax_line['value']);
+
+      // a line the order has keeps its title, if that title fits this description alone and no second one does
+      $kept = array();
+      foreach (array_unique($tax_titles) as $tax_title) {
+        $fits = array();
+        foreach ($tax_lines as $other) {
+          if (xtc_merge_tax_description_html($other['key'], $other['key'], $tax_title) === $tax_title) {
+            $fits[$other['key']] = true;
+          }
         }
+        if (count($fits) == 1 && isset($fits[$tax_line['key']])) {
+          $kept[] = $tax_title;
+        }
+      }
+      if (count($kept) == 1) {
+        $title = $kept[0];
       }
 
       if ($ust['tax_value_new']) {
