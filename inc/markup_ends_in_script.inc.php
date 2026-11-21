@@ -30,6 +30,10 @@
     $html_font = array('color', 'face', 'size');
     $html_content = array('svg' => array('foreignobject', 'desc', 'title'),
                           'math' => array('mi', 'mo', 'mn', 'ms', 'mtext', 'annotation-xml'));
+    // the elements of HTML that are open in such content, followed as long as each one is closed in its turn
+    $nested = array();
+    $void_elements = array('area', 'base', 'basefont', 'bgsound', 'br', 'col', 'embed', 'frame', 'hr', 'image', 'img', 'input', 'keygen',
+                           'link', 'meta', 'param', 'source', 'track', 'wbr');
     // inside a select element browsers differ in what they take as a tag, an open template in it keeps it open
     $select_open = false;
     $select_templates = 0;
@@ -105,7 +109,7 @@
               break;
             }
           }
-        } elseif (count($foreign) > 0 && substr($markup, $pos, 9) === '<![CDATA[') {
+        } elseif (count($foreign) > 0 && count($nested) == 0 && substr($markup, $pos, 9) === '<![CDATA[') {
           $end = strpos($markup, ']]>', $pos + 9);
           if ($end === false) {
             return ($foreign_scripts > 0);
@@ -159,21 +163,29 @@
         $html = in_array($foreign[$open], $html_content[$foreign_root]);
         $leaves = (($closing === true) ? ($name == 'p' || $name == 'br')
                                        : (in_array($name, $html_tags) || ($name == 'font' && count(array_intersect($tag[2], $html_font)) > 0)));
-        if ($leaves === true) {
-          // such a tag ends svg and math with all that is open in them, inside content of HTML it changes nothing
-          if ($html === true && $closing === false) {
+        // mglyph and malignmark stay MathML inside its elements for text
+        $mathml = ($closing === false && count($nested) == 0 && $foreign_root == 'math' && $foreign[$open] != 'annotation-xml' && ($name == 'mglyph' || $name == 'malignmark'));
+        if (count($nested) > 0 || ($html === true && $closing === false && $mathml === false)) {
+          // a tag of the HTML inside: it is read like the code around svg and math further down
+          if ($foreign_scripts > 0 || $foreign[$open] == 'annotation-xml' || ($closing === false && ($name == 'svg' || $name == 'math'))) {
             return $unsure($tag_start, $foreign_scripts > 0);
           }
+          if ($closing === true) {
+            if ($nested[count($nested) - 1] != $name) {
+              return $unsure($tag_start, $foreign_scripts > 0);
+            }
+            array_pop($nested);
+          } elseif (!in_array($name, $void_elements) && !in_array($name, $text_elements) && $name != 'plaintext') {
+            $nested[] = $name;
+          }
+        } elseif ($leaves === true) {
+          // such a tag ends svg and math with all that is open in them, as an end tag in content of HTML it changes nothing
           if ($html === true) {
             continue;
           }
           $foreign = array();
           $foreign_scripts = 0;
         } elseif ($closing === false) {
-          // mglyph and malignmark stay MathML inside its elements for text
-          if ($html === true && ($foreign_root != 'math' || $foreign[$open] == 'annotation-xml' || ($name != 'mglyph' && $name != 'malignmark'))) {
-            return $unsure($tag_start, $foreign_scripts > 0);
-          }
           if ($self_closing === false) {
             $foreign[] = $name;
             $foreign_scripts += (($name == 'script') ? 1 : 0);
@@ -218,7 +230,7 @@
         continue;
       }
       if ($name == 'plaintext') {
-        return false;
+        return ($foreign_scripts > 0);
       }
       if (!in_array($name, $text_elements)) {
         continue;
@@ -253,7 +265,7 @@
         }
       } else {
         if (!preg_match('/<\/'.$name.'(?=[\t\n\f\r \/>])/i', $markup, $match, PREG_OFFSET_CAPTURE, $pos)) {
-          return false;
+          return ($foreign_scripts > 0);
         }
         $end = $match[0][1] + strlen($match[0][0]);
       }
