@@ -115,6 +115,13 @@ if (is_array($request)
     // only the parcel this callback belongs to
     $_POST['tracking_id'] = array($orders['tracking_id']);
     
+    // without its lock this request writes nothing, another delivery may have taken the event in the meantime
+    if ($shipcloud->event_locked($orders['orders_id']) !== true) {
+      $shipcloud->release_event();
+      header('HTTP/1.1 503 Service Unavailable');
+      exit();
+    }
+
     // the event is counted with its history entry: without the entry nothing is counted and shipcloud delivers it again
     $history_stored = false;
     try {

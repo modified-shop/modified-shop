@@ -190,8 +190,7 @@ class shipcloud {
     // lock ends with its connection: a request that breaks off leaves nothing behind that would keep the next delivery out
     $locked = false;
     if (is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'shipcloud_lock_link', false))) {
-      // named locks are server wide, the name carries the database
-      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input('MODsc_'.md5(DB_DATABASE.'|'.(int)$orders_id))."', 10) AS event_lock", 'shipcloud_lock_link');
+      $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($this->event_lock_name($orders_id))."', 10) AS event_lock", 'shipcloud_lock_link');
       $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
       $locked = (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
     }
@@ -240,6 +239,26 @@ class shipcloud {
     }
 
     return true;
+  }
+
+
+  // named locks are server wide, the name carries the database
+  protected function event_lock_name($orders_id) {
+    return 'MODsc_'.md5(DB_DATABASE.'|'.(int)$orders_id);
+  }
+
+
+  // true while this request still holds the lock of claim_event(). The lock ends with its connection,
+  // after that another delivery can take the same event
+  public function event_locked($orders_id) {
+    try {
+      $lock_query = xtc_db_query("SELECT IS_USED_LOCK('".xtc_db_input($this->event_lock_name($orders_id))."') = CONNECTION_ID() AS event_lock", 'shipcloud_lock_link');
+      $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
+    } catch (Throwable $ex) {
+      return false;
+    }
+
+    return (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
   }
 
 
