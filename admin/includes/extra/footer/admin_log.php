@@ -193,7 +193,15 @@
                   $log_link = array_diff_key($log_link, $base);
                 }
                 $base_new = array_merge($base, $log['text']);
-                $log['text'] = array_merge(arrayRecursiveLogDiff($base, $base_new), $log_link);
+                $log_shown = array_merge(arrayRecursiveLogDiff($base, $base_new), $log_link);
+                // the status link of the manufacturers list and the form store one status under two names:
+                // the next entry is compared with the last status, whichever of the two set it
+                if (isset($log['text']['action'], $log['text']['flag'], $base_new['manufacturers_status']) && $log['text']['action'] == 'setflag') {
+                  $base_new['manufacturers_status'] = $log['text']['flag'];
+                } elseif (isset($log['text']['manufacturers_status'], $base_new['flag'])) {
+                  $base_new['flag'] = $log['text']['manufacturers_status'];
+                }
+                $log['text'] = $log_shown;
               }
               // the names of the fields are text of the request like their values
               $log['text'] = arrayRecursiveLogKeys($log['text']);
