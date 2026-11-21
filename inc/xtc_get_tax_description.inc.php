@@ -95,8 +95,9 @@
       return $key;
     }
     if ($html !== null) {
-      if ($html !== $key && !isset($html_array[$key])) {
-        $html_array[$key] = $html;
+      if ($html !== $key) {
+        // two rates can share a key, their text must not depend on which one comes first
+        $html_array[$key] = ((isset($html_array[$key])) ? xtc_merge_tax_description_html($key, $html_array[$key], $html) : $html);
       }
       return $html;
     }
@@ -110,4 +111,43 @@
     }
 
     return $key;
+  }
+
+  /**
+   * xtc_merge_tax_description_html()
+   *
+   * one text for a page from two texts that belong to the same description: an & that one of them
+   * keeps encoded stays encoded
+   *
+   * @param string $key description
+   * @param string $one text for a page, the description with some & written as &amp;
+   * @param string $two the same for another rate
+   * @return string
+   */
+  function xtc_merge_tax_description_html($key, $one, $two) {
+    $merged = '';
+    $a = 0;
+    $b = 0;
+    for ($i = 0, $n = strlen($key); $i < $n; $i++) {
+      $piece = $key[$i];
+      // an & in front of amp; is a decoded &amp; and encoded in no text
+      if ($piece == '&' && substr($key, $i, 5) != '&amp;') {
+        $kept_one = (substr($one, $a, 5) == '&amp;');
+        $kept_two = (substr($two, $b, 5) == '&amp;');
+        if ($kept_one || $kept_two) {
+          $piece = '&amp;';
+        }
+        $a += (($kept_one) ? 4 : 0);
+        $b += (($kept_two) ? 4 : 0);
+      }
+      $merged .= $piece;
+      $a++;
+      $b++;
+    }
+    if ($a != strlen($one) || $b != strlen($two)) {
+      // not the description with some & encoded: no merge, but still the same text for either order
+      return ((strcmp($one, $two) >= 0) ? $one : $two);
+    }
+
+    return $merged;
   }
