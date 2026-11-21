@@ -198,6 +198,10 @@ class shipcloud {
       $this->release_event();
       return null;
     }
+    // from here on the request works on the connection that holds the lock, until release_event():
+    // what is written for the event ends with that connection, a request that lost its lock writes nothing more
+    $GLOBALS['shipcloud_main_link'] = $GLOBALS['db_link'];
+    $GLOBALS['db_link'] = $GLOBALS['shipcloud_lock_link'];
 
     // an entry whose count was not stored is counted first, before anything new is written for the order
     if ($this->count_stored_events($orders_id) !== true) {
@@ -245,20 +249,6 @@ class shipcloud {
   // named locks are server wide, the name carries the database
   protected function event_lock_name($orders_id) {
     return 'MODsc_'.md5(DB_DATABASE.'|'.(int)$orders_id);
-  }
-
-
-  // true while this request still holds the lock of claim_event(). The lock ends with its connection,
-  // after that another delivery can take the same event
-  public function event_locked($orders_id) {
-    try {
-      $lock_query = xtc_db_query("SELECT IS_USED_LOCK('".xtc_db_input($this->event_lock_name($orders_id))."') = CONNECTION_ID() AS event_lock", 'shipcloud_lock_link');
-      $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
-    } catch (Throwable $ex) {
-      return false;
-    }
-
-    return (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
   }
 
 
@@ -325,6 +315,11 @@ class shipcloud {
                        SET pending_from = NULL
                      WHERE tracking_id = '".(int)$tracking_id."'
                        AND event_type = '".xtc_db_input(strtoupper($type))."'");
+    }
+    // back to the connection of the request
+    if (isset($GLOBALS['shipcloud_main_link']) && is_object($GLOBALS['shipcloud_main_link'])) {
+      $GLOBALS['db_link'] = $GLOBALS['shipcloud_main_link'];
+      unset($GLOBALS['shipcloud_main_link']);
     }
     xtc_db_close('shipcloud_lock_link');
   }
