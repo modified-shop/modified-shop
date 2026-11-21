@@ -178,6 +178,8 @@ class shipcloud {
                          )") === false
         )
     {
+      // shipcloud switches the webhook off after 15 failed deliveries, the log names what is missing
+      $this->LoggingManager->log('ERROR', 'callback', array('exception' => 'table '.TABLE_SHIPCLOUD_EVENTS.' is missing and could not be created, no event is taken'));
       return null;
     }
     if (xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, orders_id, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', '".(int)$orders_id."', NOW())") === false) {
