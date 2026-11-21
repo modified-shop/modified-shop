@@ -2786,7 +2786,14 @@
             if (!$basefiles && in_array($file, $ignore_files)) {
               continue;
             }
-            unlink($dir.$file);
+            if (is_link($dir.$file)) {
+              // Windows removes a link to a folder with rmdir()
+              if (!@unlink($dir.$file)) {
+                rmdir($dir.$file);
+              }
+            } else {
+              unlink($dir.$file);
+            }
           }
         }
       }
