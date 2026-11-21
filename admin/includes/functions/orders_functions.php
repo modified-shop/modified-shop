@@ -339,7 +339,7 @@
                                            code, 
                                            value 
                                       FROM ".TABLE_CURRENCIES." 
-                                     WHERE code = '".$data_array['old_currency']."'");
+                                     WHERE code = '".xtc_db_input(is_scalar($data_array['old_currency']) ? $data_array['old_currency'] : '')."'");
     $old_curr = xtc_db_fetch_array($old_curr_query);
 
     $sql_data_array = array(
@@ -1108,7 +1108,7 @@
     $check_total_query = xtc_db_query("SELECT orders_total_id 
                                          FROM ".TABLE_ORDERS_TOTAL." 
                                         WHERE orders_id = '".(int)$oID."' 
-                                          AND class = '".$data_array['ot_class']."'");
+                                          AND class = '".xtc_db_input(is_scalar($data_array['ot_class']) ? $data_array['ot_class'] : '')."'");
     if (xtc_db_num_rows($check_total_query) > 0) {
       $check_total = xtc_db_fetch_array($check_total_query);
 

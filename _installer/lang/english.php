@@ -94,6 +94,7 @@
   define('TEXT_DB_CONVERT_DESC', 'You can convert your database here.<div class="errormessage">The content is not converted. Only the collation and character set of the tables are changed.</div>');
   define('TEXT_INFO_DO_CONVERT', 'The database is being converted!');
   define('TEXT_INFO_DO_CONVERT_OK', 'The database was converted successfully!');
+  define('TEXT_INFO_DO_CONVERT_STOPPED', 'The conversion was stopped: UTF-8 MB4 needs the InnoDB engine. Please go back and start the conversion again.');
 
   define('TEXT_DB_RESTORE', 'Database restore');
   define('TEXT_DB_RESTORE_DESC', 'You can restore your database from an existing backup here.');

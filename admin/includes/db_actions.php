@@ -495,22 +495,43 @@
       $convert['offset'] = 0;
       $convert['table_ready'] = 0;
 
-      $convert['db_charset'] = $_POST['db_charset'];
+      // only the character sets and engines the conversion knows, they go into the statements as they are
+      $convert['db_charset'] = ((isset($_POST['db_charset']) && in_array($_POST['db_charset'], array('latin1', 'utf8', 'utf8mb4'), true)) ? $_POST['db_charset'] : '');
 
-      $collation = 'latin1_german1_ci';
+      $convert['db_collation'] = 'latin1_german1_ci';
       if ($convert['db_charset'] == 'utf8') {
         $convert['db_collation'] = 'utf8_german2_ci';
       }
       if ($convert['db_charset'] == 'utf8mb4') {
         $convert['db_collation'] = 'utf8mb4_german2_ci';
       }
-      $convert['db_engine'] = $_POST['db_engine'];
+      $convert['db_engine'] = ((isset($_POST['db_engine']) && in_array($_POST['db_engine'], array('MyISAM', 'InnoDB'), true)) ? $_POST['db_engine'] : '');
+      // utf8mb4 goes with InnoDB only, like in the form of the updater
+      if ($convert['db_charset'] == ''
+          || $convert['db_engine'] == ''
+          || ($convert['db_charset'] == 'utf8mb4' && $convert['db_engine'] != 'InnoDB')
+          )
+      {
+        $convert['num_tables'] = 0;
+        $convert['tables'] = array();
+      }
       
       $_SESSION['convert'] = isset($convert) ? $convert : '';
       break;
 
     case 'convertdb':
       if ($convert['num_tables'] > 0) {
+        // a run that was started before the start checked the combination does not go on with one it refuses.
+        // The progress view gets an answer it can show, with the way back to the form
+        if (isset($convert['db_charset'])
+            && $convert['db_charset'] == 'utf8mb4'
+            && (!isset($convert['db_engine']) || $convert['db_engine'] != 'InnoDB')
+            )
+        {
+          unset($_SESSION['convert']);
+          echo json_encode(array('error' => (defined('TEXT_INFO_DO_CONVERT_STOPPED') ? TEXT_INFO_DO_CONVERT_STOPPED : 'The conversion was stopped: UTF-8 MB4 needs the InnoDB engine. Start the conversion again.')));
+          exit();
+        }
         $info_text = TEXT_INFO_DO_CONVERT;
         xtc_set_time_limit(0);
         $nr = $convert['nr'];
