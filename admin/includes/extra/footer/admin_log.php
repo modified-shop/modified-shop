@@ -177,6 +177,10 @@
                 $log['text'] = arrayRecursiveLogDiff($base, $base_new);
               }
               $log = array_map_recursive('encode_htmlentities', $log);
+            } else {
+              // without the details the row is not encoded above
+              $log['customers_firstname'] = encode_htmlentities($log['customers_firstname']);
+              $log['customers_lastname'] = encode_htmlentities($log['customers_lastname']);
             }
             echo '<div class="log_row">
                     <div class="log_title cf">'.((MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') ? '<div class="log_arrow">&rsaquo;</div>' : '').date('d.m.Y H:i:s', strtotime($log['date_modified'])).'&nbsp;&nbsp;&nbsp;&nbsp;'.$log['customers_firstname'].' '.$log['customers_lastname'].'</div>
