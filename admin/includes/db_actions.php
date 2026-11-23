@@ -302,9 +302,13 @@
       }
 
       $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
-      $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
 
-      if (is_file($_GET['file'])) {
+      if (preg_match('/[^0-9a-zA-Z._-]/', $_GET['file'])) {
+        // a name with other characters is that file of the backup folder or none, never the file of the shortened name
+        $restore_folder = rtrim($restore['restore_dir'], '/');
+        $restore_stat = backup_entry_stat($_GET['file'], $restore_folder);
+        $restore['file'] = (($restore_stat !== false && $restore_stat['is_file']) ? backup_entry_path($_GET['file'], $restore_folder) : '');
+      } elseif (is_file($_GET['file'])) {
         $restore['file'] =  $_GET['file'];
       } else {
         $restore['file'] = DIR_FS_BACKUP . $restore['restore_dir'] . $_GET['file'];
@@ -316,7 +320,7 @@
       } else {
         $protdatei = $restore['file'] . '.log';
       }
-      if (RESTORE_TEST && is_file($protdatei) ) {
+      if (RESTORE_TEST && $restore['file'] != '' && is_file($protdatei) ) {
         unlink ($protdatei);
       }
       $extension = substr($_GET['file'], -3);
