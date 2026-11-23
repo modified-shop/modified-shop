@@ -12,39 +12,9 @@
   
   require('includes/application_top.php');
   require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+  require_once(DIR_WS_FUNCTIONS.'log_files.php');
   
-  $exts = array("log","log\.zip","log\.gz", "log\.[0-9]+");
-  
-  // true for a name as the list shows it: a plain file name with one of the extensions
-  function logs_file_name($file) {
-    global $exts;
-
-    if (!is_string($file)
-        || $file === ''
-        || basename($file) !== $file
-        || preg_match('/[\\\\\x00-\x1f\x7f]/', $file)
-        )
-    {
-      return false;
-    }
-    foreach ($exts as $value) {
-      if (xtc_CheckExt($file, $value)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // resolved path of a listed file that lies in the log directory itself, false when it leads elsewhere
-  function logs_file_path($file) {
-    $dir = realpath(DIR_FS_LOG);
-    if (!logs_file_name($file) || $dir === false) {
-      return false;
-    }
-    $path = realpath($dir . DIRECTORY_SEPARATOR . $file);
-
-    return (($path !== false && dirname($path) === $dir && is_file($path)) ? $path : false);
-  }
+  $exts = logs_file_extensions();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
@@ -82,8 +52,7 @@
         if (!admin_form_posted()) {
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
-        clear_dir(DIR_FS_CATALOG.'log/', false, array('xss_blacklist.log'));
-        $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
+        logs_delete_all();
         xtc_redirect(xtc_href_link(FILENAME_LOGS));
         break;
     }
