@@ -328,7 +328,11 @@
       return $value;
     }
 
-    if (is_string($value) && preg_match('/^(.*)<[a-z][a-z0-9._-]*$/is', $value, $parts)) {
+    // blanks behind it are cut later; names that change how a page reads what follows stay tags
+    if (is_string($value) && preg_match('/^(.*)<([a-z][a-z0-9._-]*)\s*$/is', $value, $parts)
+        && !in_array(strtolower($parts[2]), array('script', 'style', 'textarea', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'template', 'svg', 'math'))
+        )
+    {
       $changed = false;
       if (xtc_remove_active_content_keep($parts[1], $changed) === $parts[1] && $changed === false) {
         return $value;
