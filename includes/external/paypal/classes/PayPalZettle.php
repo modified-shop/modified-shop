@@ -51,11 +51,14 @@
     public $client_id;
     public $LoggingManager;
     public $zettle_version = '1.11';
+    // true when the last answer was a JSON list
+    public $response_list = false;
     
-    function __construct() {    
+    function __construct($timeout = 20, $redirects = true) {
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_zettle_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'zettle', 'debug');
 
-      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => 5, 'timeout' => 20));
+      // the time limit holds for one transfer, every redirect that is followed would start it again
+      $this->client = new \GuzzleHttp\Client(array('connect_timeout' => min(5, (int)$timeout), 'timeout' => (int)$timeout, 'allow_redirects' => ($redirects === true)));
 
       $this->client_id = self::CLIENT_ID;
       $this->api_key = defined('MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY') ? MODULE_CATEGORIES_ZETTLE_CATEGORIES_API_KEY : '';
@@ -306,6 +309,240 @@
       return $response;
     }
   
+
+    // the subscription list returns the keys Zettle signs its webhooks with: the keys of this shop,
+    // an empty text when Zettle has no subscription of this shop, false when the list did not arrive
+    function saveSigningKey() {
+      $subscriptions = $this->getSubscriptions();
+      $scheme = $this->get_subscription_scheme();
+
+      // without the list the stored keys stay as they are
+      if (!is_array($subscriptions)
+          || isset($subscriptions['error'])
+          || !isset($subscriptions['status'])
+          || (int)$subscriptions['status'] != 200
+          || $this->response_list !== true
+          )
+      {
+        return false;
+      }
+
+      $shop_keys = array();
+      foreach ($subscriptions as $key => $subscription) {
+        // the answer also carries headers, status and reason
+        if (!is_int($key)) {
+          continue;
+        }
+        // an entry that is no subscription: the list is not usable as a whole
+        if (!is_array($subscription)
+            || !isset($subscription['destination'])
+            || !is_string($subscription['destination'])
+            )
+        {
+          return false;
+        }
+        if ($subscription['destination'] != $scheme['destination']) {
+          continue;
+        }
+        // a subscription of this shop has to be complete
+        if (!isset($subscription['eventNames']) || !is_array($subscription['eventNames'])) {
+          return false;
+        }
+        // the name of an event is not signed: a subscription that also delivers other events could have one of
+        // them sent under a name the webhook handles. A list without names stands for all events
+        $shop_events = (count($subscription['eventNames']) > 0);
+        foreach ($subscription['eventNames'] as $event_name) {
+          // a name that is no text: the subscription is not complete
+          if (!is_string($event_name)) {
+            return false;
+          }
+          if (!in_array($event_name, $scheme['eventNames'], true)) {
+            $shop_events = false;
+          }
+        }
+        // every subscription that delivers to this shop signs with a key of its own
+        if ($shop_events === true) {
+          // a subscription of this shop without a key that can be stored: not usable either
+          if (!isset($subscription['signingKey'])
+              || !is_string($subscription['signingKey'])
+              || $subscription['signingKey'] == ''
+              || strpos($subscription['signingKey'], ',') !== false
+              )
+          {
+            return false;
+          }
+          $shop_keys[$subscription['signingKey']] = $subscription['signingKey'];
+        }
+      }
+      // a subscription that is gone or changed loses its key here
+      $signing_key = implode(',', $shop_keys);
+
+      $check_query = xtc_db_query("SELECT configuration_key
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+      // keys that are not stored are not read: the stored ones stay and the next attempt follows after 15 minutes
+      if ($check_query === false) {
+        return false;
+      }
+      $stored = true;
+      if (xtc_db_num_rows($check_query) > 0) {
+        $stored = $this->storeSigningKey($signing_key, true);
+      } elseif ($signing_key != '') {
+        $stored = $this->storeSigningKey($signing_key, false);
+      }
+      if ($stored === false) {
+        return false;
+      }
+
+      // the time the keys were read: a valid event has them read again after a day
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".time()."'
+                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_TIME'");
+      if (xtc_db_affected_rows() < 1) {
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_TIME', '".time()."', '6', '-1', NOW())");
+      }
+
+      return $signing_key;
+    }
+
+
+    // the keys are bound to their statement instead of written into it: the query log, the SQL warning and the
+    // error mail show a statement of xtc_db_query() in full
+    protected function storeSigningKey($signing_key, $update) {
+      global $db_link;
+
+      if (!($db_link instanceof mysqli)) {
+        return false;
+      }
+      try {
+        if ($update === true) {
+          $statement = mysqli_prepare($db_link, "UPDATE ".TABLE_CONFIGURATION."
+                                                  SET configuration_value = ?,
+                                                      sort_order = '-1'
+                                                WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY'");
+        } else {
+          $statement = mysqli_prepare($db_link, "INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY', ?, '6', '-1', NOW())");
+        }
+        if (!is_object($statement)) {
+          return false;
+        }
+        mysqli_stmt_bind_param($statement, 's', $signing_key);
+        $stored = mysqli_stmt_execute($statement);
+        mysqli_stmt_close($statement);
+
+        return ($stored === true);
+      } catch (Throwable $ex) {
+        // the message of the database can name the value, it is not passed on
+        $this->LoggingManager->log('DEBUG', 'saveSigningKey', array('error' => 'signing keys not stored'));
+
+        return false;
+      }
+    }
+
+
+    // the lookup is a request to Zettle. Calls to the webhook start one in 15 minutes: at once when no stored key
+    // fits, with a fitting key only when the keys were read more than a day ago. An attempt without an answer
+    // leaves that time as it is, so the next one follows after 15 minutes
+    static function signingKeyLookupAllowed($signed = false) {
+      $now = time();
+      $check_time = null;
+      $key_time = 0;
+      $check_query = xtc_db_query("SELECT configuration_key,
+                                          configuration_value
+                                     FROM ".TABLE_CONFIGURATION."
+                                    WHERE configuration_key IN ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_TIME')");
+      while ($check = xtc_db_fetch_array($check_query)) {
+        if ($check['configuration_key'] == 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK') {
+          $check_time = $check['configuration_value'];
+        } else {
+          $key_time = (int)$check['configuration_value'];
+        }
+      }
+      if ($signed === true && $key_time > ($now - 86400)) {
+        return false;
+      }
+
+      if ($check_time === null) {
+        // with the unique key of the table a second call at the same time adds nothing
+        xtc_db_query("INSERT IGNORE INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK', '".$now."', '6', '-1', NOW())");
+        return (xtc_db_affected_rows() > 0);
+      }
+      if ((int)$check_time > ($now - 900)) {
+        return false;
+      }
+
+      // of several calls at the same time only one changes the value
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = '".$now."'
+                     WHERE configuration_key = 'MODULE_CATEGORIES_ZETTLE_CATEGORIES_SIGNING_KEY_CHECK'
+                       AND configuration_value = '".xtc_db_input($check_time)."'");
+
+      return (xtc_db_affected_rows() > 0);
+    }
+
+
+    static function isValidSignature($request, $signature, $signing_key) {
+      if (!isset($request['timestamp'])
+          || !is_string($request['timestamp'])
+          || !isset($request['payload'])
+          || !is_string($request['payload'])
+          || !is_string($signature)
+          )
+      {
+        return false;
+      }
+
+      // the text exactly as it arrived, a changed timestamp or payload must not pass
+      foreach (explode(',', (string)$signing_key) as $key) {
+        if ($key != '' && hash_equals(hash_hmac('sha256', $request['timestamp'].'.'.$request['payload'], $key), strtolower($signature))) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+
+    // the event name is not part of the signed text: the payload has to have the form Zettle documents for this event
+    static function isEventPayload($event_name, $data) {
+      if (!is_string($event_name) || !is_array($data)) {
+        return false;
+      }
+
+      switch ($event_name) {
+        case 'InventoryBalanceChanged':
+          return (isset($data['balanceBefore'], $data['balanceAfter'])
+                  && is_array($data['balanceBefore'])
+                  && is_array($data['balanceAfter'])
+                  && !isset($data['productUuid'])
+                  );
+
+        case 'InventoryTrackingStarted':
+          return (isset($data['productUuid'], $data['created'])
+                  && is_string($data['productUuid'])
+                  && !isset($data['changeInformation'])
+                  && !isset($data['balanceBefore'])
+                  );
+
+        case 'InventoryTrackingStopped':
+          return (isset($data['productUuid'], $data['changeInformation'])
+                  && is_string($data['productUuid'])
+                  && !isset($data['created'])
+                  && !isset($data['balanceBefore'])
+                  );
+
+        case 'ProductDeleted':
+          return (isset($data['uuid'], $data['variants'])
+                  && is_string($data['uuid'])
+                  && is_array($data['variants'])
+                  && !isset($data['productUuid'])
+                  && !isset($data['balanceBefore'])
+                  );
+      }
+
+      return false;
+    }
+
 
     function deleteSubscriptions($uuid) {
       $headers = array(
@@ -573,14 +810,21 @@
           $status = $response->getStatusCode();
           $reason = $response->getReasonPhrase();
 
-          $response = $response->getBody()->getContents();
-          $response = json_decode($response, true);
+          $response_text = $response->getBody()->getContents();
+          $response = json_decode($response_text, true);
+          // an answer that is no JSON must not read as an empty list
+          $this->response_list = (is_array($response) && substr(ltrim($response_text), 0, 1) == '[');
+          // a text or a number as answer has no fields, status and headers are added to an empty answer
+          if (!is_array($response)) {
+            $response = array();
+          }
           $response['headers'] = $headers;
           $response['status'] = $status;
           $response['reason'] = $reason;
         }
         return $response;
       } catch (Exception $ex) {
+        $this->response_list = false;
         // connection failures come without a response
         $ex_response = (method_exists($ex, 'getResponse')) ? $ex->getResponse() : null;
 
