@@ -13,7 +13,18 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   if (defined('MODULE_ADMIN_LOG_STATUS') && MODULE_ADMIN_LOG_STATUS == 'true') {
-    if (isset($_POST) && count($_POST) > 0) {
+    // the posted status link of a manufacturer has no fields when the form token is switched off
+    if (isset($_POST)
+        && (count($_POST) > 0
+            || (isset($_SERVER['REQUEST_METHOD'])
+                && $_SERVER['REQUEST_METHOD'] == 'POST'
+                && basename($PHP_SELF) == 'manufacturers.php'
+                && isset($_GET['action'])
+                && $_GET['action'] === 'setflag'
+                )
+            )
+        )
+    {
       $sql_data_array = array();
   
       switch (basename($PHP_SELF)) {
@@ -136,7 +147,20 @@
       }
   
       if (count($sql_data_array) > 0) {
-        $text = base64_encode(serialize($_POST));
+        // the form token is no part of the change
+        $log_data = $_POST;
+        if (isset($_SESSION['CSRFName'])) {
+          unset($log_data[$_SESSION['CSRFName']]);
+        }
+        // a posted link carries its change in the address
+        if (count($log_data) < 1) {
+          foreach (array('action', 'flag') as $key) {
+            if (isset($_GET[$key]) && is_string($_GET[$key])) {
+              $log_data[$key] = $_GET[$key];
+            }
+          }
+        }
+        $text = base64_encode(serialize($log_data));
         
         if (isset($sql_data_array[0])) {
           foreach ($sql_data_array as $sql_data) {

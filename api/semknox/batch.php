@@ -16,6 +16,12 @@
       && MODULE_SEMKNOX_SYSTEM_STATUS == 'true'
       )
   {
+    // the URL is public: one batch at a time and one start in 15 minutes
+    require_once (DIR_FS_INC.'xtc_batch_start.inc.php');
+    if (xtc_batch_start('MODULE_SEMKNOX_SYSTEM_BATCH_START', 900) !== true) {
+      die();
+    }
+
     // set time limit
     require_once (DIR_FS_INC.'xtc_set_time_limit.inc.php');
     xtc_set_time_limit(0);
@@ -47,6 +53,10 @@
           )
       {
         $semknox_array[$language['id']] = new Semknox($language['id'], 30);
+        // asked again directly before every upload, after the products were read
+        $semknox_array[$language['id']]->write_guard = function () {
+          return xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START');
+        };
       }
     }    
     
@@ -65,15 +75,25 @@
         $products_array = array_chunk($products_id_array, 1000);
         
         foreach ($semknox_array as $semknox) {                  
+          // the run goes on only with its lock and a working connection, before every request to the provider
+          if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
+            die();
+          }
           $response = $semknox->initBatch();
           if ($response->status == 'success') {
             foreach ($products_array as $key => $products) {       
+              if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
+                die();
+              }
               $response = $semknox->uploadBatch($products);
               if ($response->status != 'success') {  
                 break 2;
               }
             }
             if ($response->status == 'success') {  
+              if (xtc_batch_running('MODULE_SEMKNOX_SYSTEM_BATCH_START') !== true) {
+                die();
+              }
               $semknox->startBatch();
             }
           }

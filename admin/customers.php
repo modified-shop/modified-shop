@@ -23,6 +23,7 @@
 
   require ('includes/application_top.php');
   require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+  require_once(DIR_FS_INC.'customers_account_locked.inc.php');
   
   require(DIR_WS_INCLUDES . 'get_states.php');
 
@@ -63,9 +64,10 @@
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
     // deleting needs the form with its token, not a link
-    if (admin_form_posted()) {
+    // only a memo of this account, and of an account with admin status only with the right for it
+    if (admin_form_posted() && !customers_account_locked($customers_id)) {
       $mID = xtc_db_prepare_input($_GET['mID']);
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."' AND customers_id = '".$customers_id."'");
     }
     xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action', 'special')).'cID='.$customers_id.'&action=edit'));
   }
@@ -74,9 +76,51 @@
     xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, ''));
   }
 
+  // these actions change data: they need their form or a posted link with the token
+  if (in_array($action, array('new_order_confirm', 'delete_confirm_adressbook', 'update_default_adressbook', 'statusconfirm', 'deleteconfirm'), true)
+      && !admin_form_posted()
+      )
+  {
+    $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'address_book_id', 'default'))));
+  }
+
+  // only whole numbers above zero, each one once
+  function customers_id_list($ids) {
+    $list = array();
+    foreach ((array)$ids as $id) {
+      if (is_scalar($id) && ctype_digit((string)$id) && (int)$id > 0) {
+        $list[(int)$id] = (int)$id;
+      }
+    }
+
+    return array_values($list);
+  }
+
+  if (in_array($action, array('edit', 'update', 'delete_confirm_adressbook', 'update_default_adressbook'), true)
+      && customers_account_locked($customers_id)
+      )
+  {
+    $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'saction', 'edit', 'address_book_id', 'default'))));
+  }
+
   if ($action) {
     switch ($action) {
       case 'new_order_confirm':
+        // shipping and payment module name a language file, here or when the order is edited:
+        // only what the menus of the form offer, an installed module or no payment
+        if (!isset($_POST['shipping'])
+            || !is_string($_POST['shipping'])
+            || !in_array($_POST['shipping'].'.php', explode(';', MODULE_SHIPPING_INSTALLED), true)
+            || !isset($_POST['payment'])
+            || !is_string($_POST['payment'])
+            || ($_POST['payment'] != 'no_payment' && !in_array($_POST['payment'].'.php', explode(';', MODULE_PAYMENT_INSTALLED), true))
+            )
+        {
+          xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
+        }
+
         // customers
         $customers1_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
         $customers1 = xtc_db_fetch_array($customers1_query);
@@ -225,9 +269,14 @@
         break;
 
       case 'delete_confirm_adressbook' :
+          // the default address stays, also one that became the default after the confirmation was shown
           xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK."
                               WHERE address_book_id = '".(int) $_GET['address_book_id']."'
-                                AND customers_id = '".$customers_id."'");
+                                AND customers_id = '".$customers_id."'
+                                AND NOT EXISTS (SELECT 1
+                                                  FROM ".TABLE_CUSTOMERS."
+                                                 WHERE customers_id = '".$customers_id."'
+                                                   AND customers_default_address_id = '".(int) $_GET['address_book_id']."')");
           xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete_confirm_adressbook')).'cID='.(int)$customers_id));
           break;
 
@@ -239,6 +288,10 @@
                                                WHERE address_book_id = '".(int) $_GET['default']."'
                                                  AND customers_id = '".$customers_id."'");
           $address_book_array = xtc_db_fetch_array($address_book_query);
+          // the address can be gone since the list was shown
+          if (!is_array($address_book_array)) {
+            xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'update_default_adressbook', 'default')).'cID='.$customers_id.'&action=address_book'));
+          }
 
           if (ACCOUNT_GENDER != 'true') {
             unset($address_book_array['customers_gender']);
@@ -255,12 +308,33 @@
           break;
 
       case 'statusconfirm' :    
-        if (!isset($_POST['multi_customers_confirm']) && (int)$customers_id > 0) {
+        // the bulk form with nothing selected must not fall back to the account of the URL
+        if (!isset($_POST['multi_customers_confirm']) && !isset($_POST['multi_customers_form']) && (int)$customers_id > 0) {
           $_POST['multi_customers_confirm'] = array($customers_id);
         }
         
-        if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
-          foreach ($_POST['multi_customers_confirm'] as $customers_id) {
+        // a missing status would read as 0, the admin status; only a group that exists is stored
+        if (isset($_POST['multi_customers_confirm'])
+            && is_array($_POST['multi_customers_confirm'])
+            && isset($_POST['customers_status'])
+            && is_scalar($_POST['customers_status'])
+            && ctype_digit((string)$_POST['customers_status'])
+            && xtc_db_num_rows(xtc_db_query("SELECT customers_status_id
+                                              FROM ".TABLE_CUSTOMERS_STATUS."
+                                             WHERE customers_status_id = '".(int)$_POST['customers_status']."'
+                                             LIMIT 1")) > 0
+            )
+        {
+          $locked = false;
+          foreach (customers_id_list($_POST['multi_customers_confirm']) as $customers_id) {
+            // also giving an account the admin status needs the right
+            if (customers_account_locked($customers_id, true)
+                || ((int)$_POST['customers_status'] == 0 && !customers_manage_admins())
+                )
+            {
+              $locked = true;
+              continue;
+            }
             $error = false;
             $check_status_query = xtc_db_query("SELECT customers_firstname,
                                                        customers_lastname,
@@ -312,6 +386,9 @@
               }        
             }
           }
+          if ($locked === true) {
+            $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
+          }
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
         break;
@@ -328,7 +405,7 @@
         if (ACCOUNT_COMPANY == 'true') $entry_company = xtc_db_prepare_input($_POST['entry_company']);
         if (ACCOUNT_STATE == 'true') $entry_state = xtc_db_prepare_input($_POST['entry_state']);
         $customers_default_address_id = xtc_db_prepare_input($_POST['customers_default_address_id']);
-        $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
+        $address_book_id = (isset($_POST['address_book_id']) ? (int)$_POST['address_book_id'] : 0);
                 
         if (!$saction) {
           $customers_cid = xtc_db_prepare_input($_POST['customers_cid']);
@@ -374,10 +451,18 @@
             $entry_memo_text_error = true;
           }
           if ($error === false) {
+            // stored like in the memo window, the display takes the added break out again
+            $memo_stored = nl2br($memo_text);
+            if (strlen($memo_stored) > 65535) {
+              // the breaks would push the text over the size of the column: it stays plain with LF as line end.
+              // A break tag typed at the end of a line gets a space behind it, the display would take it for an added one
+              $memo_plain = preg_replace('#<br />(?=\n)#', '<br /> ', preg_replace('/\r\n|\n\r|\r/', "\n", $memo_text));
+              $memo_stored = ((strlen($memo_plain) > 65535) ? $memo_text : $memo_plain);
+            }
             $sql_data_array = array ('customers_id' => $customers_id,
                                      'memo_date' => date("Y-m-d"),
                                      'memo_title' => $memo_title,
-                                     'memo_text' => $memo_text,
+                                     'memo_text' => $memo_stored,
                                      'poster_id' => (int)$_SESSION['customer_id']
                                     );
             xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
@@ -692,12 +777,18 @@
         break;
 
       case 'deleteconfirm' :
-        if (!isset($_POST['multi_customers_confirm']) && (int)$customers_id > 0) {
+        // the bulk form with nothing selected must not fall back to the account of the URL
+        if (!isset($_POST['multi_customers_confirm']) && !isset($_POST['multi_customers_form']) && (int)$customers_id > 0) {
           $_POST['multi_customers_confirm'] = array($customers_id);
         }
         
         if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
-          foreach ($_POST['multi_customers_confirm'] as $customers_id) {
+          $locked = false;
+          foreach (customers_id_list($_POST['multi_customers_confirm']) as $customers_id) {
+            if (customers_account_locked($customers_id, true)) {
+              $locked = true;
+              continue;
+            }
             if (isset($_POST['delete_reviews']) && $_POST['delete_reviews'] == 'on') {
               $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
               while ($reviews = xtc_db_fetch_array($reviews_query)) {
@@ -719,6 +810,9 @@
             xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
             xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".$customers_id."'");
             xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$customers_id."'");
+          }
+          if ($locked === true) {
+            $messageStack->add_session((defined('ERROR_CUSTOMERS_ADMIN_ACCOUNT') ? ERROR_CUSTOMERS_ADMIN_ACCOUNT : 'Accounts with admin status can only be changed by administrators with the right to manage admin rights.'), 'warning');
           }
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action'))));

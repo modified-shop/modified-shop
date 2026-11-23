@@ -29,6 +29,9 @@
 
   require('includes/application_top.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC.'admin_form_posted.inc.php');
+
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_GV_SENT_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -43,6 +46,11 @@
   
   switch ($action) {
     case 'deleteconfirm':
+      // deleting needs the posted link with the token, a plain link is not enough
+      if (!admin_form_posted()) {
+        $messageStack->add_session((defined('ERROR_ADMIN_ACTION_TOKEN') ? ERROR_ADMIN_ACTION_TOKEN : 'The form has expired. Reload the page and try again.'), 'warning');
+        xtc_redirect(xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('action', 'gid'))));
+      }
       // delete coupon from DB
       xtc_db_query("DELETE FROM ".TABLE_COUPONS." WHERE coupon_id = '".(int)$_GET['gid']."'");
       xtc_db_query("DELETE FROM ".TABLE_COUPONS_DESCRIPTION." WHERE coupon_id = '".(int)$_GET['gid']."'");
@@ -157,7 +165,7 @@
               <tr <?php echo $tr_attributes;?>>
                 <td class="dataTableContent"><?php echo encode_htmlspecialchars($gv_list['sent_firstname'] . ' ' . $gv_list['sent_lastname']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo (($gv_list['coupon_type'] == 'P' || $gv_list['coupon_type'] == 'T') ? number_format($gv_list['coupon_amount'], 2).'%' : $currencies->format($gv_list['coupon_amount'])); ?></td>
-                <td class="dataTableContent txta-c"><?php echo $gv_list['coupon_code']; ?></td>
+                <td class="dataTableContent txta-c"><?php echo encode_htmlspecialchars($gv_list['coupon_code']); ?></td>
                 <td class="dataTableContent txta-r"><?php echo xtc_date_short($gv_list['date_sent']); ?></td>
                 <td class="dataTableContent txta-r"><?php if (isset($gInfo) && is_object($gInfo) && $gv_list['unique_id'] == $gInfo->unique_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
@@ -179,7 +187,7 @@
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . (($gInfo->coupon_type == 'P' || $gInfo->coupon_type == 'T') ? number_format($gInfo->coupon_amount, 2).'%' : $currencies->format($gInfo->coupon_amount)).'</b>');
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur(); return postLink(this, event);" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,xtc_get_all_get_params(array('gid', 'action')).'action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 
                 default:
@@ -191,7 +199,7 @@
                   $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
                   $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . (($gInfo->coupon_type == 'P' || $gInfo->coupon_type == 'T') ? number_format($gInfo->coupon_amount, 2).'%' : $currencies->format($gInfo->coupon_amount)));
                   $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . xtc_date_short($gInfo->date_sent));
-                  $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
+                  $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . encode_htmlspecialchars($gInfo->coupon_code));
                   $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
                   if ($redeemed > 0) {
                     $redeem = xtc_db_fetch_array($redeem_query);

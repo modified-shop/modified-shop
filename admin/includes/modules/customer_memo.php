@@ -36,15 +36,15 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
           </tr>
           <tr>
             <td class="main" style="border:none; padding:2px;"><strong><?php echo TEXT_TITLE; ?></strong>:</td>
-            <td class="main" style="border:none; padding:2px;"><?php echo $memo_values['memo_title']; ?></td>
+            <td class="main" style="border:none; padding:2px;"><?php echo encode_htmlspecialchars($memo_values['memo_title']); ?></td>
           </tr>
           <tr>
             <td class="main" style="border:none; padding:2px;"><strong><?php echo TEXT_POSTER; ?></strong>:</td>
-            <td class="main" style="border:none; padding:2px;"><?php echo $poster_values['customers_lastname'] . ' ' . $poster_values['customers_firstname']; ?></td>
+            <td class="main" style="border:none; padding:2px;"><?php echo (is_array($poster_values) ? encode_htmlspecialchars($poster_values['customers_lastname'] . ' ' . $poster_values['customers_firstname']) : ''); ?></td>
           </tr>
           <tr>
             <td class="main" style="border:none; padding:2px; vertical-align:top;"><strong><?php echo ENTRY_MEMO; ?></strong>:</td>
-            <td class="main" style="border:none; padding:2px;"><?php echo $memo_values['memo_text']; ?></td>
+            <td class="main" style="border:none; padding:2px;"><?php echo nl2br(encode_htmlspecialchars(preg_replace('#<br />(?=\r\n|\n\r|\n|\r)#', '', $memo_values['memo_text']))); ?></td>
           </tr>
           <tr>        
             <td class="txta-r" colspan="2" style="border:none; padding:2px;"><a style="text-decoration:none;" href="<?php echo xtc_href_link(basename($PHP_SELF), 'cID=' . (int)$_GET['cID'] . '&action=edit&special=remove_memo&mID=' . $memo_values['memo_id']); ?>" class="button" onclick="return confirmPostLink('<?php echo DELETE_ENTRY; ?>', '', this)"><?php echo BUTTON_DELETE; ?></a></td>

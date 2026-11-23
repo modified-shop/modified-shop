@@ -18,8 +18,13 @@
   require_once (DIR_FS_INC.'write_customers_session.inc.php');
   require_once (DIR_FS_INC.'xtc_password_time_update.inc.php');
 
-  if (SESSION_RECREATE == 'True') {
-    xtc_session_recreate();
+  // a login always goes on under a new session id, without one it does not take place
+  if (xtc_session_renew() !== true) {
+    $messageStack->add('login', xtc_session_renew_error());
+    if (isset($_POST['login']) && $_POST['login'] == 'admin') {
+      xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
+    }
+    return;
   }
 
   // reset Login tries

@@ -199,7 +199,7 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- body_text //-->
     <td class="boxCenter" width="100%" valign="top">
       <div class="div_box mrg5">
-        <div class="pageHeading pdg2"><?php echo TEXT_ACCOUNTING.' '.$allow_edit['customers_lastname'].' '.$allow_edit['customers_firstname'] . ' ['. (int)$_GET['cID'] .']'; ?>
+        <div class="pageHeading pdg2"><?php echo TEXT_ACCOUNTING.' '.encode_htmlspecialchars($allow_edit['customers_lastname'].' '.$allow_edit['customers_firstname']) . ' ['. (int)$_GET['cID'] .']'; ?>
           <div class="main flt-r"><?php echo xtc_draw_checkbox_field('complete', false) . ' ' . BUTTON_SET; ?></div>
         </div>
         <?php if ($_GET['cID'] == '1') { ?>

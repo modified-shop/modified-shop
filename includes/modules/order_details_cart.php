@@ -39,6 +39,7 @@ require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
 require_once (DIR_FS_INC.'xtc_get_short_description.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price.inc.php');
 require_once (DIR_FS_INC.'check_stock_specials.inc.php');
+require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
 $module_content = array ();
 $any_out_of_stock = '';
@@ -79,7 +80,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     'PRODUCTS_QTY' => xtc_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="2"').
                       xtc_draw_hidden_field('products_id[]', $products[$i]['id']).
                       xtc_draw_hidden_field('old_qty[]', $products[$i]['quantity']),
-    'PRODUCTS_MODEL' => $products[$i]['model'],
+    'PRODUCTS_MODEL' => encode_model_number($products[$i]['model']),
     'PRODUCTS_SHIPPING_TIME' => $products[$i]['shipping_time'],
     'PRODUCTS_TAX' => number_format($products[$i]['tax'], TAX_DECIMAL_PLACES), 
     'PRODUCTS_IMAGE' => $image, 
@@ -119,7 +120,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
       $module_content[$i]['ATTRIBUTES'][$subindex] = array(
         'ID' => $attributes['products_attributes_id'],
-        'MODEL' => $attributes['attributes_model'],
+        'MODEL' => encode_model_number($attributes['attributes_model']),
         'EAN' => $attributes['attributes_ean'],
         'NAME' => $attributes['products_options_name'],
         'VALUE_NAME' => $attributes['products_options_values_name'].$attribute_stock_check

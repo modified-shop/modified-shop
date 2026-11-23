@@ -427,7 +427,8 @@
                                                       AND banners_group != 'slider'
                                                  ORDER BY banners_group");
             while ($groups = xtc_db_fetch_array($groups_query)) {
-              $groups_array[] = array('id' => $groups['banners_group'], 'text' => strtoupper($groups['banners_group']));
+              // the group is the name the shop looks the banner up by, it is stored as typed and encoded here
+              $groups_array[] = array('id' => $groups['banners_group'], 'text' => encode_htmlspecialchars(strtoupper($groups['banners_group'])));
             }
             
             if ($form_action == 'insert') {
@@ -665,14 +666,14 @@
                           </td>
                           <td class="dataTableContent txta-c"><?php echo $banners['banners_sort']; ?></td>
                           <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
-                          <td class="dataTableContent txta-c"><?php echo $banners['banners_group']; ?></td>
+                          <td class="dataTableContent txta-c"><?php echo encode_htmlspecialchars($banners['banners_group']); ?></td>
                           <td class="dataTableContent txta-r"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
                           <td class="dataTableContent txta-c">
                             <?php                                      
                               if ($banners['status'] == '1') {
-                                echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params(array('bID', 'action', 'flag')) . 'bID=' . $banners['banners_group_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                                echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12) . '&nbsp;&nbsp;<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params(array('bID', 'action', 'flag')) . 'bID=' . $banners['banners_group_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                               } else {
-                                echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params(array('bID', 'action', 'flag')) . 'bID=' . $banners['banners_group_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                                echo '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, xtc_get_all_get_params(array('bID', 'action', 'flag')) . 'bID=' . $banners['banners_group_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                               }
                             ?>
                           </td>

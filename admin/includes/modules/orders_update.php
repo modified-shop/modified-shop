@@ -12,13 +12,25 @@
    
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
+  // one checked number for the update, the mail and the history: a status that exists, anything else keeps the status
+  $status = ((is_scalar($status) && ctype_digit((string)$status)) ? (int)$status : (int)$order->info['orders_status_id']);
+  if ($status != (int)$order->info['orders_status_id']
+      && xtc_db_num_rows(xtc_db_query("SELECT orders_status_id
+                                        FROM ".TABLE_ORDERS_STATUS."
+                                       WHERE orders_status_id = '".$status."'
+                                       LIMIT 1")) < 1
+      )
+  {
+    $status = (int)$order->info['orders_status_id'];
+  }
+
   if ($order->info['orders_status_id'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
       // a comment alone leaves the status column alone, a change made in the meantime stays
       xtc_db_query("UPDATE ".TABLE_ORDERS."
-                       SET ".(($order->info['orders_status_id'] != $status) ? "orders_status = ".$status."," : '')."
+                       SET ".(($order->info['orders_status_id'] != $status) ? "orders_status = ".(int)$status."," : '')."
                            last_modified = now()
-                     WHERE orders_id = '".$oID."'");
+                     WHERE orders_id = '".(int)$oID."'");
     }
 
     $customer_notified = 0;
@@ -62,7 +74,19 @@
     
       $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
       $smarty->assign('NOTIFY_COMMENTS', nl2br(encode_htmlspecialchars($notify_comments, ENT_NOQUOTES)));
-      $smarty->assign('ORDER_STATUS', $orders_status_lang_array[$lang][$status]);
+      // the name in the language of the order, without one or with an empty one there that of another language
+      $order_status_name = '';
+      if (isset($orders_status_lang_array[$lang][$status]) && $orders_status_lang_array[$lang][$status] != '') {
+        $order_status_name = $orders_status_lang_array[$lang][$status];
+      } elseif (isset($orders_status_lang_array) && is_array($orders_status_lang_array)) {
+        foreach ($orders_status_lang_array as $status_names) {
+          if (isset($status_names[$status]) && $status_names[$status] != '') {
+            $order_status_name = $status_names[$status];
+            break;
+          }
+        }
+      }
+      $smarty->assign('ORDER_STATUS', $order_status_name);
       $smarty->assign('ORDER_STATUS_ID', $status);
 
       // assign language
@@ -104,7 +128,7 @@
     if ($order_updated !== true && !$email_preview && $order->info['orders_status_id'] != $status) {
       xtc_db_query("UPDATE ".TABLE_ORDERS."
                        SET orders_status = '".(int)$order->info['orders_status_id']."'
-                     WHERE orders_id = '".$oID."'
+                     WHERE orders_id = '".(int)$oID."'
                        AND orders_status = '".(int)$status."'");
     }
 

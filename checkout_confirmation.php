@@ -38,6 +38,7 @@ include ('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_collect_posts.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
+require_once (DIR_FS_INC . 'encode_model_number.inc.php');
 
 // create smarty elements
 $smarty = new Smarty();
@@ -232,7 +233,20 @@ if ($_SESSION['sendto'] != false) {
 }
 
 //new output array, set in includes/classes/order.php function cart
-$smarty->assign('PRODUCTS_ARRAY', $order->products);
+// the model number is text for the page; the order itself keeps the stored value
+$products_array = $order->products;
+foreach ($products_array as $key => $data) {
+  $attrib_models = array();
+  if (isset($data['attributes']) && is_array($data['attributes'])) {
+    foreach ($data['attributes'] as $attribute) {
+      $attrib_models[] = ((isset($attribute['model'])) ? $attribute['model'] : '');
+    }
+  }
+  if (isset($data['model'])) {
+    $products_array[$key]['model'] = encode_model_number($data['model'], $attrib_models);
+  }
+}
+$smarty->assign('PRODUCTS_ARRAY', $products_array);
 
 $smarty->assign('ORDER_TAX_GROUPS', sizeof($order->info['tax_groups']));
 

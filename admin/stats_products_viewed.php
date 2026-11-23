@@ -20,6 +20,7 @@ require('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
+require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_STATS_PRODUCTS_VIEWED_RESULTS';
@@ -128,7 +129,7 @@ require (DIR_WS_INCLUDES.'head.php');
               ?>                  
               <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_VIEWED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($category['categories_id']), 'NONSSL'); ?>'">
                 <td class="dataTableContent"><?php echo $rows; ?>.</td>
-                <td class="dataTableContent"><?php echo $products['products_model']; ?></td>
+                <td class="dataTableContent"><?php echo encode_model_number($products['products_model']); ?></td>
                 <td class="dataTableContent"><?php echo  $products['products_name'] . ' (' . $products['name'] . ')'; ?></td>
                 <td class="dataTableContent txta-c"><?php echo $products['products_viewed']; ?>&nbsp;</td>
               </tr>

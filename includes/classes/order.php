@@ -282,6 +282,7 @@
       global $xtPrice, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
+      require_once(DIR_FS_INC . 'encode_order_model_number.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_products_image.inc.php');
@@ -348,7 +349,8 @@
             'model' => $attrib_model,
           );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].': '.$attributes_data_values['products_options_values'];
-          $attributes_model .= $attr_model_delimiter.$attrib_model;
+          // the text mail decodes entities without quotes
+          $attributes_model .= $attr_model_delimiter.encode_model_number($attrib_model, array(), ENT_NOQUOTES);
           
           //new module support
           $attributes_array[$subindex] = $orderModules->order_data_attributes($attributes_array[$subindex],$attributes_data_values,$order_data_values,$oID,$order_lang_id);
@@ -371,6 +373,7 @@
         }
 
         // additional data
+        $order_data[$index]['PRODUCTS_MODEL'] = encode_order_model_number($order_data_values['products_model'], $order_data_values['orders_products_id'], ENT_NOQUOTES);
         $order_data[$index]['PRODUCTS_IMAGE'] = xtc_get_products_image($order_data_values['products_id']);
         $order_data[$index]['PRODUCTS_ATTRIBUTES'] = $attributes_data;
         $order_data[$index]['PRODUCTS_ATTRIBUTES_ARRAY'] = $attributes_array;

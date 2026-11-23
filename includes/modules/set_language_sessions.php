@@ -12,6 +12,27 @@
    
 $language_not_found = false;
 
+// the admin used another language for its last page, the session gets the language of the shop back;
+// read by its id, because directory and charset may have been changed in the admin since
+if (isset($_SESSION['language_shop'])) {
+  $language_shop_query = xtc_db_query("SELECT languages_id,
+                                              code,
+                                              directory,
+                                              language_charset
+                                         FROM ".TABLE_LANGUAGES."
+                                        WHERE languages_id = '".(int)$_SESSION['language_shop']."'");
+  if ($language_shop = xtc_db_fetch_array($language_shop_query)) {
+    $_SESSION['language'] = $language_shop['directory'];
+    $_SESSION['languages_id'] = $language_shop['languages_id'];
+    $_SESSION['language_charset'] = $language_shop['language_charset'];
+    $_SESSION['language_code'] = $language_shop['code'];
+  } else {
+    // deleted in the meantime, the language is chosen again below
+    unset($_SESSION['languages_id']);
+  }
+  unset($_SESSION['language_shop']);
+}
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_language_sessions/','php') as $file) require_once ($file);
 
 // an open session can still hold a language that has been deleted since

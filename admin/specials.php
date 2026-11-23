@@ -20,6 +20,7 @@
   
   // include needed functions
   require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
+  require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
   // include needed classes
   require_once (DIR_WS_CLASSES.'categories.php');
@@ -284,7 +285,7 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?>:</td>
-              <td class="dataTableConfig col-middle"><?php echo $sInfo->products_model;?></td>
+              <td class="dataTableConfig col-middle"><?php echo encode_model_number($sInfo->products_model);?></td>
               <td class="dataTableConfig col-right">&nbsp;</td>
             </tr>
             <?php
@@ -410,7 +411,7 @@
                        <?php echo xtc_draw_checkbox_field('multi_products[]', $specials['specials_id'], $is_checked); ?>
                       </td>
                       <td  class="dataTableContent"><?php echo $specials['products_name']; ?></td>
-                      <td  class="dataTableContent"><?php echo $specials['products_model']; ?></td>
+                      <td  class="dataTableContent"><?php echo encode_model_number($specials['products_model']); ?></td>
                       <td  class="dataTableContent txta-c"><?php echo $specials['products_quantity']; ?></td>
                       <td  class="dataTableContent txta-c"><?php echo $specials['specials_quantity']; ?></td>
                       <td  class="dataTableContent txta-r"><?php echo (isset($specials['start_date']) ? xtc_datetime_short($specials['start_date']): '&nbsp;'); ?></td>
@@ -427,9 +428,9 @@
                       <td  class="dataTableContent txta-c">
                         <?php
                         if ($specials['status'] == '1') {
-                          echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID', 'flag', 'id')).'action=setflag&flag=0&id=' . $specials['specials_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                          echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID', 'flag', 'id')).'action=setflag&flag=0&id=' . $specials['specials_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                         } else {
-                          echo '<a href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID', 'flag', 'id')).'action=setflag&flag=1&id=' . $specials['specials_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                          echo '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID', 'flag', 'id')).'action=setflag&flag=1&id=' . $specials['specials_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                         }
                         ?>
                         </td>

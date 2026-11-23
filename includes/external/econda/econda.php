@@ -78,7 +78,8 @@ $emos = new EMOS();
 $emos->prettyPrint();
 
 // Startseite >> Katalog >> Kategorie >> .. => Startseite/Katalog/Kategorie/..
-$emos->addContent($breadcrumb->econda());
+// the content is written into an attribute; it may hold the model number of the product
+$emos->addContent(htmlspecialchars($breadcrumb->econda(), ENT_QUOTES | ENT_HTML5, 'ISO-8859-1', false));
 
 // login erfolgreich
 if (isset($_SESSION['login_success']) && $_SESSION['login_success']) {

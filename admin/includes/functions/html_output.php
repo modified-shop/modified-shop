@@ -36,6 +36,8 @@
     }
     $image = '<img src="' . $src . '"';
     if ($alt != '') {
+      // names from the database, existing entities stay as they are
+      $alt = htmlspecialchars($alt, ENT_QUOTES | ENT_HTML5, get_default_encoding(''), false);
       $image .= ' alt="' . $alt . '" title="' . $alt . '"';
     }
     if ($width != '') {
@@ -287,8 +289,11 @@
     $selText = '';
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
-        $field .= '<option value="' .$val['id'] . '"';
-        $li .= '<li data-val="' .$val['id'] . '"';
+        // ids like banner groups or campaign ids are text from the database and come back as posted value,
+        // so every character is encoded, also the & of something that looks like an entity
+        $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
+        $field .= '<option value="' .$val_id . '"';
+        $li .= '<li data-val="' .$val_id . '"';
         if ((strlen($val['id']) > 0 
              && isset($GLOBALS[$name]) 
              && !is_object($GLOBALS[$name]) 

@@ -378,6 +378,7 @@ define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
 define('WARNING_ACTIVE_CONTENT_REMOVED', 'Note: Elements or attributes were removed from the saved texts, e.g. scripts, event attributes, inline SVG or invalid HTML.');
 define('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING', 'Error: The directory includes/external/htmlpurifier/ is missing. The texts were saved unfiltered.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Error: File not removed.');
+define('ERROR_DIRECTORY_NOT_REMOVEABLE', 'Error: Directory not removed.');
 
 define('DELETE_ENTRY','Delete entry?');
 define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a <a href="%s">Payment Method</a>!');
@@ -632,3 +633,4 @@ define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 // withdrawal form
 define('TABLE_HEADING_WITHDRAW', 'Withdrawal:');
 define('ERROR_ADMIN_ACTION_TOKEN', 'The form has expired. Reload the page and try again.');
+define('ERROR_CUSTOMERS_ADMIN_ACCOUNT', 'Accounts with admin status can only be created, changed or deleted by administrators with the right for the admin rights. The main account cannot be deleted and keeps its status.');

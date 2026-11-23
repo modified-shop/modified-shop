@@ -516,6 +516,8 @@ define('TEXT_COUPON_HELP_PRODUCTS', 'Artikel Einschr&auml;nkung');
 define('TEXT_COUPON_HELP_MANUFACTURERS', 'Hersteller Einschr&auml;nkung');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Ung&uuml;ltiger Gutscheinbetrag');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Ung&uuml;ltige E-Mail-Adresse');
+define('TEXT_SESSION_RENEW_ERROR', 'Der Vorgang konnte nicht abgeschlossen werden, weil noch eine andere Anfrage Ihrer Sitzung l&auml;uft. Bitte versuchen Sie es gleich noch einmal.');
+define('TEXT_GV_SEND_ALREADY_RUNNING', 'Ein anderer Vorgang in Ihrer Sitzung l&auml;uft noch, zum Beispiel ein Gutscheinversand. Bitte warten Sie einen Moment, pr&uuml;fen Sie Ihr Guthaben und versuchen Sie es dann erneut.');
 define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Der Coupon ist auf eine Auswahl an Artikeln beschr&auml;nkt.');
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Der Coupon ist auf eine Auswahl an Kategorien beschr&auml;nkt.');
 define('TEXT_COUPON_MANUFACTURERS_RESTRICT', 'Der Coupon ist auf eine Auswahl an Herstellern beschr&auml;nkt.');
