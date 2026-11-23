@@ -328,9 +328,11 @@
       return $value;
     }
 
-    // blanks behind it are cut later; names that change how a page reads what follows stay tags
-    if (is_string($value) && preg_match('/^(.*)<([a-z][a-z0-9._-]*)\s*$/is', $value, $parts)
-        && !in_array(strtolower($parts[2]), array('script', 'style', 'textarea', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'template', 'svg', 'math'))
+    // a tag name as a browser reads it, without = so that no parser finds an attribute value; blanks and characters outside ascii may follow
+    // names that change how a page reads what follows stay tags, compared by their leading letters
+    if (is_string($value) && preg_match('/^(.*)<([a-z][^\s<>\/=]*)[\s\x80-\xff]*$/is', $value, $parts)
+        && preg_match('/^[a-z0-9]+/i', $parts[2], $letters)
+        && !in_array(strtolower($letters[0]), array('script', 'style', 'textarea', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'template', 'svg', 'math'))
         )
     {
       $changed = false;
