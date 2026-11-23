@@ -38,12 +38,12 @@
     $group_ids='';
     if(isset($_POST['customers_groups'])) { 
       foreach($_POST['customers_groups'] as $b){
-        $group_ids .= 'c_'.$b."_group ,";
+        $group_ids .= 'c_'.(int)$b."_group ,";
       }
     }
     
     if (xtc_get_shop_conf('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS') !== false) {
-      xtc_db_query("UPDATE ". "shop_configuration" ." SET configuration_value= '" . $group_ids . "' WHERE configuration_key = 'SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS'");
+      xtc_db_query("UPDATE ". "shop_configuration" ." SET configuration_value= '" . xtc_db_input($group_ids) . "' WHERE configuration_key = 'SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS'");
     } else {
       $sql_data_array = array(
           'configuration_key' => 'SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS', 

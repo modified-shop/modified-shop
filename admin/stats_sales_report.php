@@ -107,13 +107,13 @@
   }
 
   // order status
-  $srStatus = (isset($_GET['status']) && preg_match("/^[0-9\-]+$/", $_GET['status'])) ? $_GET['status'] : ((defined('ORDER_STATUSES_FOR_SALES_STATISTICS') && ORDER_STATUSES_FOR_SALES_STATISTICS != '') ? '0' : '-1');
+  $srStatus = (isset($_GET['status']) && is_string($_GET['status']) && preg_match("/^[0-9\-]+$/", $_GET['status'])) ? $_GET['status'] : ((defined('ORDER_STATUSES_FOR_SALES_STATISTICS') && ORDER_STATUSES_FOR_SALES_STATISTICS != '') ? '0' : '-1');
   
   // customers status/group
-  $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
+  $srCgroup = (isset($_GET['cgroup']) && is_string($_GET['cgroup']) && preg_match("/^[0-9]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
   
   // paymenttype
-  if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
+  if (isset($_GET['payment']) && is_string($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
     $srPayment = $_GET['payment'];
   } else {
     $srPayment = '0';

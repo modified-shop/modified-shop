@@ -240,7 +240,8 @@ switch ($action) {
     if (!isset($_POST['status'])) {
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('action')).'action=edit'));
     }
-    $status = (int) $_POST['status'];
+    // the update checks the value, a cast here would turn a list into status 1
+    $status = $_POST['status'];
     $comments = xtc_db_prepare_input($_POST['comments']);
     $order_updated = false;
     include (DIR_WS_MODULES.'orders_update.php');
