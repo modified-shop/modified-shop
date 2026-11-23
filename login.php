@@ -150,11 +150,12 @@ if (isset($_GET['action'])
 		{
 			// the password is right, the login waits for the confirmation of the email address
 			// a later password change withdraws this permission; like a login, the permission gets a new session ID
-			if (SESSION_RECREATE == 'True') {
-				xtc_session_recreate();
+			if (xtc_session_renew() === true) {
+				$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
+				$_SESSION['email_verify_pending_time'] = (int)$check_customer['customers_password_time'];
+			} else {
+				$messageStack->add('login', xtc_session_renew_error());
 			}
-			$_SESSION['email_verify_pending'] = (int)$check_customer['customers_id'];
-			$_SESSION['email_verify_pending_time'] = (int)$check_customer['customers_password_time'];
 			if (isset($_POST['login']) && $_POST['login'] == 'admin') {
 			  $messageStack->add('login', ERROR_EMAIL_VERIFY_PENDING);
 			  xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
