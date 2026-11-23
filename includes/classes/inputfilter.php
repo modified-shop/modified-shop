@@ -83,6 +83,8 @@ class Inputfilter {
                                        'memo_text',
                                        'symbol_left',
                                        'symbol_right',
+                                       'products_model',
+                                       'products_manufacturers_model',
                                        'products_ean',
                                        );
 
@@ -259,7 +261,7 @@ class Inputfilter {
                           && in_array($content_key, $this->content_keys)
                           )
                       {
-                        $this->params[$key] = $this->removeActiveContent($value, in_array($key, $this->content_keys_keep), !in_array($key, $this->content_keys_text));
+                        $this->params[$key] = $this->removeActiveContent($value, in_array($content_key, $this->content_keys_keep), !in_array($content_key, $this->content_keys_text));
                       }
                     }
                   break;
