@@ -511,14 +511,18 @@ class xtcImport {
     function getModelProducts($model) {
         $model_raw = xtc_db_prepare_input($model);
         $model_clean = trim($this->cleanNumber($model_raw));
-        if ($model_clean === $model_raw) {
-            return array('model' => $model, 'ids' => $this->getModelIDs(array($model)));
-        }
         if ($model_clean == '') {
             return array('model' => '', 'ids' => array());
         }
-        // both spellings together must not name more than one product
-        $ids = $this->getModelIDs(array($model_clean, $model_raw));
+        $models = array($model_clean, $model_raw);
+        require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+        if (xtc_remove_active_content_available()) {
+            // a model saved before numbers were kept as typed carries the entities of the full cleaning
+            $removed = false;
+            $models[] = trim(xtc_remove_active_content($model_raw, $removed));
+        }
+        // all spellings together must not name more than one product
+        $ids = $this->getModelIDs(array_values(array_unique($models)));
 
         return ((count($ids) > 1) ? false : array('model' => $model_clean, 'ids' => $ids));
     }
