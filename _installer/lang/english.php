@@ -130,6 +130,7 @@
   define('TEXT_INFO_FINISH', 'FINISH!');
   define('TEXT_INFO_UPDATE', 'Datasets updated: ');
   define('TEXT_INFO_RESTORE', 'Tables restored: ');
+  define('TEXT_INFO_CONVERT', 'Tables converted: ');
   define('TEXT_INFO_BACKUP', 'Tables backed up: ');
   define('TEXT_INFO_LAST', 'Last edited: ');
   define('TEXT_INFO_CALLS', 'Page views: ');
