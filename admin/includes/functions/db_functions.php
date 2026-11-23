@@ -942,6 +942,8 @@ function backup_entry_header($fp, $compressed, &$damaged = false) {
             $last = true;
             break;
           }
+          // a started member that breaks may have held more of the head
+          $open = true;
         }
         $part = @inflate_add($context, $data);
         $used = (($part !== false) ? inflate_get_read_len($context) - $read : 0);
