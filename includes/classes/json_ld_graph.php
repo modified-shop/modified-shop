@@ -189,10 +189,10 @@
       }
 
       if (!empty($data['products_model'])) {
-        $node['sku'] = self::text($data['products_model']);
+        $node['sku'] = self::number($data['products_model']);
       }
       if (!empty($data['products_manufacturers_model'])) {
-        $node['mpn'] = self::text($data['products_manufacturers_model']);
+        $node['mpn'] = self::number($data['products_manufacturers_model']);
       }
       if (!empty($data['products_ean'])) {
         $node = array_merge($node, self::gtin($data['products_ean']));
@@ -416,10 +416,10 @@
         $node['image'] = self::url($entry['PRODUCTS_IMAGE']);
       }
       if (!empty($entry['PRODUCTS_MODEL'])) {
-        $node['sku'] = self::text($entry['PRODUCTS_MODEL']);
+        $node['sku'] = self::number($entry['PRODUCTS_MODEL']);
       }
       if (!empty($entry['PRODUCTS_MANUFACTURERS_MODEL'])) {
-        $node['mpn'] = self::text($entry['PRODUCTS_MANUFACTURERS_MODEL']);
+        $node['mpn'] = self::number($entry['PRODUCTS_MANUFACTURERS_MODEL']);
       }
       if (!empty($entry['PRODUCTS_EAN'])) {
         $node = array_merge($node, self::gtin($entry['PRODUCTS_EAN']));
@@ -578,7 +578,7 @@
      * @return array
      */
     static function gtin($ean) {
-      $ean = self::text($ean);
+      $ean = self::number($ean);
       if ($ean === '') {
         return array();
       }
@@ -743,6 +743,18 @@
       }
 
       return $parts[0].((count($query) > 0) ? '?'.implode('&', $query) : '');
+    }
+
+    /**
+     * Turns a number of the shop, such as a model number or an EAN, into the text its page shows
+     *
+     * A number is text, so a < in it starts no tag, see encode_model_number().
+     *
+     * @param string $number
+     * @return string
+     */
+    static function number($number) {
+      return self::text(str_replace('<', '&lt;', (string)$number));
     }
 
     /**
