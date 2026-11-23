@@ -514,17 +514,32 @@ class xtcImport {
         if ($model_clean == '') {
             return array('model' => '', 'ids' => array());
         }
-        $models = array($model_clean, $model_raw);
+        $models = array($model_raw);
         require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
-        if (xtc_remove_active_content_available()) {
+        if (!(defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true))
+            && xtc_remove_active_content_available()
+            )
+        {
             // a model saved before numbers were kept as typed carries the entities of the full cleaning
             $removed = false;
             $models[] = trim(xtc_remove_active_content($model_raw, $removed));
         }
-        // all spellings together must not name more than one product
-        $ids = $this->getModelIDs(array_values(array_unique($models)));
+        $models = array_values(array_diff(array_unique($models), array($model_clean, '')));
 
-        return ((count($ids) > 1) ? false : array('model' => $model_clean, 'ids' => $ids));
+        // products sharing the model are all updated, as before
+        $ids = $this->getModelIDs(array($model_clean));
+        if (count($models) > 0) {
+            // another spelling only for a single product that the model itself does not name
+            $ids_other = $this->getModelIDs($models);
+            if (count($ids_other) > 0) {
+                if (count($ids) > 0 || count($ids_other) > 1) {
+                    return false;
+                }
+                $ids = $ids_other;
+            }
+        }
+
+        return array('model' => $model_clean, 'ids' => $ids);
     }
 
     // up to two ids, enough to tell none, one and several apart
@@ -544,7 +559,8 @@ class xtcImport {
     function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false, $pID = 0) {
 
         //BOC strip potential slashes and type cast inputs
-        $products_array = array ('products_model' => xtc_db_prepare_input($dataArray['p_model']));
+        // getModelProducts() has prepared the model already, a second stripslashes() would remove a backslash
+        $products_array = array ('products_model' => (string)$dataArray['p_model']);
         if ($this->FileSheme['p_stock'] == 'Y')
             $products_array = array_merge($products_array, array ('products_quantity' => (int)$dataArray['p_stock']));
         if ($this->FileSheme['p_priceNoTax'] == 'Y')
