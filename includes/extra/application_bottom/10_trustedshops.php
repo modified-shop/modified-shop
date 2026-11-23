@@ -16,6 +16,7 @@
   {  
     // include needed defaults
     require_once(DIR_FS_EXTERNAL.'trustedshops/trustedshops.php');
+    require_once(DIR_FS_INC.'encode_order_model_number.inc.php');
 
     // trustedshops badge
     if (MODULE_TS_TRUSTBADGE_CODE != '' && MODULE_TS_TRUSTBADGE_VARIANT == 'custom') {
@@ -174,7 +175,7 @@
             <span class="tsCheckoutProductUrl"><?php echo xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$item['products_id'], 'NONSSL', false, false); ?></span>
             <span class="tsCheckoutProductImageUrl"><?php echo (($item['products_image'] != '') ? xtc_href_link(DIR_WS_INFO_IMAGES.$item['products_image'], '', 'NONSSL', false, false) : ''); ?></span>
             <span class="tsCheckoutProductName"><?php echo $item['products_name']; ?></span>
-            <span class="tsCheckoutProductSKU"><?php echo $item['products_model']; ?></span>
+            <span class="tsCheckoutProductSKU"><?php echo encode_order_model_number($item['products_model'], $item['orders_products_id']); ?></span>
             <span class="tsCheckoutProductGTIN"><?php echo $item['products_ean']; ?></span>
             <span class="tsCheckoutProductMPN"><?php echo $item['products_manufacturers_model']; ?></span>
             <span class="tsCheckoutProductBrand"><?php echo $item['manufacturers_name']; ?></span>

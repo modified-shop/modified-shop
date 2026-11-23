@@ -117,8 +117,9 @@
       $manufacturers_name = xtc_db_prepare_input($_POST['manufacturers_name']);
       $manufacturers_status = (int)$_POST['manufacturers_status'];
       $sort_order = xtc_db_prepare_input($_POST['sort_order']);
-      $products_sorting = xtc_db_prepare_input($_POST['products_sorting']);
-      $products_sorting2 = xtc_db_prepare_input($_POST['products_sorting2']);
+      // the shop puts both values into ORDER BY: a column name and a direction, nothing else
+      $products_sorting = ((isset($_POST['products_sorting']) && is_string($_POST['products_sorting']) && preg_match('/^([a-z0-9_]+\.)?[a-z0-9_]+$/i', $_POST['products_sorting'])) ? $_POST['products_sorting'] : '');
+      $products_sorting2 = ((isset($_POST['products_sorting2']) && is_string($_POST['products_sorting2']) && in_array(strtoupper($_POST['products_sorting2']), array('ASC', 'DESC'), true)) ? strtoupper($_POST['products_sorting2']) : '');
       $listing_template = xtc_db_prepare_input($_POST['listing_template']);
       $categories_template = xtc_db_prepare_input($_POST['categories_template']);
 
@@ -796,9 +797,9 @@ if (USE_WYSIWYG == 'true') {
                     <td class="dataTableContent txta-c">
                       <?php
                       if ($manufacturers['manufacturers_status'] == 1) {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID', 'flag')) . 'action=setflag&flag=0&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID', 'flag')) . 'action=setflag&flag=0&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID', 'flag')) . 'action=setflag&flag=1&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                        echo '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID', 'flag')) . 'action=setflag&flag=1&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>

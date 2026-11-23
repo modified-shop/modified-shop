@@ -11,6 +11,8 @@
    --------------------------------------------------------------*/
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
+  require_once(DIR_FS_INC.'encode_model_number.inc.php');
 ?>
 <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
 <div class="pageHeading flt-l"><?php echo HEADING_PRODUCTS_CONTENT; ?>
@@ -228,7 +230,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
             }
             ?>
               <td class="dataTableContent txta-c"><?php echo $content['products_id']; ?></td>
-              <td class="dataTableContent txta-c"><?php echo $content['products_model']; ?></td>
+              <td class="dataTableContent txta-c"><?php echo encode_model_number($content['products_model']); ?></td>
                 <?php
                 if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
                  <td class="dataTableContent txta-c">

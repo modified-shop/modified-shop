@@ -51,6 +51,7 @@
   // include needed functions
   require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
   require_once(DIR_FS_INC.'formatter_date.inc.php');
+  require_once(DIR_FS_INC.'encode_order_model_number.inc.php');
   
   // include needed classes
   require_once(DIR_WS_CLASSES . 'currencies.php');
@@ -107,13 +108,13 @@
   }
 
   // order status
-  $srStatus = (isset($_GET['status']) && preg_match("/^[0-9\-]+$/", $_GET['status'])) ? $_GET['status'] : ((defined('ORDER_STATUSES_FOR_SALES_STATISTICS') && ORDER_STATUSES_FOR_SALES_STATISTICS != '') ? '0' : '-1');
+  $srStatus = (isset($_GET['status']) && is_string($_GET['status']) && preg_match("/^[0-9\-]+$/", $_GET['status'])) ? $_GET['status'] : ((defined('ORDER_STATUSES_FOR_SALES_STATISTICS') && ORDER_STATUSES_FOR_SALES_STATISTICS != '') ? '0' : '-1');
   
   // customers status/group
-  $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
+  $srCgroup = (isset($_GET['cgroup']) && is_string($_GET['cgroup']) && preg_match("/^[0-9]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
   
   // paymenttype
-  if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
+  if (isset($_GET['payment']) && is_string($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
     $srPayment = $_GET['payment'];
   } else {
     $srPayment = '0';
@@ -456,7 +457,7 @@
                                 <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                                   <td class="dataTableContent">&nbsp;</td>
                                   <td class="dataTableContent txta-l">
-                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
+                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? encode_order_model_number($info[$i]['pmodel'], $info[$i]['orders_products_id']).' : ' : '').$info[$i]['pname']; ?></a>
                                     <?php
                                     if (is_array($info[$i]['attr'])) {
                                       foreach ($info[$i]['attr'] as $attr) {

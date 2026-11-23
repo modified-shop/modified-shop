@@ -12,6 +12,8 @@
 
   function get_wishlist_content() {
     global $main, $xtPrice, $product, $PHP_SELF;
+
+    require_once(DIR_FS_INC.'encode_model_number.inc.php');
     
     $module_data = array();
     $attributes_exists = false;
@@ -22,6 +24,9 @@
     for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
       foreach((array)$products[$i] as $key => $entry) {                  
         $module_data[$i]['PRODUCTS_'.strtoupper($key)] = $entry;
+      }
+      if (isset($module_data[$i]['PRODUCTS_MODEL'])) {
+        $module_data[$i]['PRODUCTS_MODEL'] = encode_model_number($module_data[$i]['PRODUCTS_MODEL']);
       }
 
       $del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&wishlist=true&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('wishlist_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
@@ -66,7 +71,7 @@
         foreach ($products[$i]['attributes'] as $option => $value) {
           $attributes = $main->getAttributes($products[$i]['id'], $option, $value);
           $module_data[$i]['ATTRIBUTES'][$subindex] = array('ID' => $attributes['products_attributes_id'],
-                                                            'MODEL' => $attributes['attributes_model'],
+                                                            'MODEL' => encode_model_number($attributes['attributes_model']),
                                                             'EAN' => $attributes['attributes_ean'],
                                                             'NAME' => $attributes['products_options_name'],
                                                             'VALUE_NAME' => $attributes['products_options_values_name']

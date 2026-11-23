@@ -37,6 +37,7 @@ $scModules = new shoppingCartModules();
 require_once (DIR_FS_INC.'xtc_create_random_value.inc.php');
 require_once (DIR_FS_INC.'xtc_get_prid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_description.inc.php');
+require_once (DIR_FS_INC.'clean_html_output.inc.php');
 
 class shoppingCart {
 
@@ -1030,7 +1031,8 @@ class shoppingCart {
     $output = array();
     foreach ($this->tax as $key => $value) {
       if ($this->tax[$key]['value'] > 0) {
-        $output[] = $this->tax[$key]['desc'].': '.$xtPrice->xtcFormat($this->tax[$key]['value'], true);
+        // the description is also a lookup key, so it is cleaned only for the output
+        $output[] = clean_html_output(xtc_get_tax_description_html($this->tax[$key]['desc'])).': '.$xtPrice->xtcFormat($this->tax[$key]['value'], true);
         $tax += $this->tax[$key]['value'];
       }
     }

@@ -105,6 +105,24 @@ if (isset($_GET['endY']) && (xtc_not_null($_GET['endY'])) ) {
 }
 $endDate = mktime(0, 0, 0, $eMon, $eDay + 1, $eYear);
 
+// the filter of a stored link stays also when its status has no name in the language of the admin,
+// the menu then shows it with the name of another language or with its number
+$status_filter = ((isset($_GET['status']) && is_string($_GET['status']) && ctype_digit($_GET['status'])) ? (int)$_GET['status'] : 0);
+if ($status_filter > 0 && !isset($orders_status_array[$status_filter])) {
+  $status_name_query = xtc_db_query("SELECT orders_status_name
+                                      FROM ".TABLE_ORDERS_STATUS."
+                                     WHERE orders_status_id = '".$status_filter."'
+                                  ORDER BY (orders_status_name = ''), language_id
+                                     LIMIT 1");
+  if (xtc_db_num_rows($status_name_query) > 0) {
+    $status_name = xtc_db_fetch_array($status_name_query);
+    $orders_status_array[$status_filter] = (($status_name['orders_status_name'] != '') ? $status_name['orders_status_name'] : $status_filter);
+    $orders_statuses[] = array('id' => $status_filter, 'text' => $orders_status_array[$status_filter]);
+  } else {
+    $status_filter = 0;
+  }
+}
+
 $campaign_array = array(
   'report' => $srView,
   'startD' => $sDay,
@@ -113,8 +131,9 @@ $campaign_array = array(
   'endD' => $eDay,
   'endM' => $eMon,
   'endY' => $eYear,
-  'status' => ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0),
-  'campaign' => ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
+  // the menus of the form show these checked values as well, the status as the number of a status that exists
+  'status' => $status_filter,
+  'campaign' => ((isset($_GET['campaign']) && is_string($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
 );
 $campaign = new campaigns($campaign_array);
 
@@ -191,7 +210,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="menuBoxHeading">
                           <?php 
                             echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>';
-                            echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0)); 
+                            echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), $campaign_array['status']);
                           ?> 
                         </td>
                       </tr>
@@ -207,7 +226,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="menuBoxHeading">
                           <?php 
                             echo '<p class="pdg2 mrg0"><b>'.REPORT_CAMPAIGN_FILTER.'</b></p>';
-                            echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0)); 
+                            echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), $campaign_array['campaign']);
                           ?> 
                         </td>
                       </tr>
@@ -242,7 +261,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   for ($n = 0; $n < count($campaign->result); $n ++) {
                   ?>
                     <tr class="dataTableRow"> 
-                      <td class="main" colspan="7" style="border-bottom: 2px solid;"><br /><?php echo $campaign->result[$n]['text'].' '.TEXT_REFERER .' ('.$campaign->result[$n]['id'].')'; ?></td>
+                      <td class="main" colspan="7" style="border-bottom: 2px solid;"><br /><?php echo $campaign->result[$n]['text'].' '.TEXT_REFERER .' ('.encode_htmlspecialchars($campaign->result[$n]['id']).')'; ?></td>
                     </tr>
                     <?php
                     // show values

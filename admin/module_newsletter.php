@@ -33,6 +33,7 @@
       $id = xtc_db_prepare_input((int)$_POST['ID']);
       $customers_status = xtc_get_customers_statuses();
 
+      // the title is also the mail subject: stored as typed, encoded where the admin prints it
       $title = xtc_db_prepare_input($_POST['title']);
       if ($title == '') $title = 'no title';
       $cc = xtc_db_prepare_input($_POST['cc']);
@@ -335,7 +336,7 @@
                   ?>
                     <tr>
                       <td class="dataTableContent"><?php echo $news_data[$i]['date']; ?></td>
-                      <td class="dataTableContent"><?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?>&nbsp;<a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'ID='.$news_data[$i]['id']); ?>"><b><?php echo $news_data[$i]['title']; ?></b></a></td>
+                      <td class="dataTableContent"><?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?>&nbsp;<a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'ID='.$news_data[$i]['id']); ?>"><b><?php echo encode_htmlspecialchars($news_data[$i]['title']); ?></b></a></td>
                       <td class="dataTableContent txta-c">
                         <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=edit&ID='.$news_data[$i]['id']); ?>">
                         <?php echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','').'</a>&nbsp;'; ?>
@@ -363,7 +364,7 @@
                                                               WHERE newsletter_id = '".(int)$_GET['ID']."'");
                           $newsletters_data = xtc_db_fetch_array($newsletters_query);
 
-                          echo TEXT_TITLE.$newsletters_data['title'].'<br />';
+                          echo TEXT_TITLE.encode_htmlspecialchars($newsletters_data['title']).'<br />';
 
                           $customers_status = xtc_get_customers_statuses();
                           for ($j=0,$k=count($customers_status); $j<$k; $j++) {
@@ -422,7 +423,7 @@
                       if ($news_data[$i]['id'] != '') {
                       ?>
                         <tr>
-                          <td class="dataTableContent" style="border-bottom: 1px solid; border-color: #f1f1f1;"><?php echo $news_data[$i]['date'].'    '; ?><b><?php echo $news_data[$i]['title']; ?></b></td>
+                          <td class="dataTableContent" style="border-bottom: 1px solid; border-color: #f1f1f1;"><?php echo $news_data[$i]['date'].'    '; ?><b><?php echo encode_htmlspecialchars($news_data[$i]['title']); ?></b></td>
                           <td class="dataTableContent txta-c" style="border-bottom: 1px solid; border-color: #f1f1f1;">
                             <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=edit&ID='.$news_data[$i]['id']); ?>">
                             <?php echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','').'</a>&nbsp;'; ?>

@@ -42,6 +42,10 @@
     $pInfo = new objectInfo($product);
   } elseif ($_POST) {
     $pInfo = new objectInfo($_POST);
+    // the id of the form goes into several queries of this form and its modules
+    if (isset($pInfo->products_id)) {
+      $pInfo->products_id = (int)$pInfo->products_id;
+    }
     $products_name = $_POST['products_name'];
     $products_description = $_POST['products_description'];
     $products_short_description = $_POST['products_short_description'];
@@ -66,7 +70,7 @@
 
   $prod_quantity_query = xtc_db_query("SELECT products_quantity 
                                          FROM ".TABLE_PRODUCTS." 
-                                        WHERE products_id = '".$pInfo->products_id."'");
+                                        WHERE products_id = '".(isset($pInfo->products_id) ? (int)$pInfo->products_id : 0)."'");
   $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
 
   $manufacturers_array = array(array('id' => '', 'text' => TEXT_NONE));
@@ -100,7 +104,7 @@
                                              AND tr.tax_zone_id = ".$geo_zones['geo_zone_id']."
                                  ORDER BY tc.sort_order, tc.tax_class_id");
   while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
-    $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
+    $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_html($tax_class['tax_class_title'], $_SESSION['language_code']));
   }
 
   $shipping_statuses = xtc_get_shipping_status();

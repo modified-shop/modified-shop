@@ -242,6 +242,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_check_data/','php') as $file) require ($file);
 
+  // the guest is logged in under a new session id, without one the account is not created
+  if ($error == false && xtc_session_renew() !== true) {
+    $error = true;
+    $messageStack->add('create_account', xtc_session_renew_error());
+  }
+
   if ($error == false) {
     $customers_password_time = time();
     
@@ -330,10 +336,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     );
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
-    if (SESSION_RECREATE == 'True') {
-      xtc_session_recreate();
-    }
-    
     // write customers session
     write_customers_session((int)$_SESSION['customer_id']);
   

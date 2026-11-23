@@ -15,7 +15,7 @@ class Inputfilter {
     private $active_content_removed = false;
     private $active_content_unfiltered = false;
 
-    // admin fields that the storefront prints as HTML
+    // admin fields that the storefront or the admin prints as HTML
     private $content_keys = array('products_name',
                                   'products_heading_title',
                                   'products_description',
@@ -52,14 +52,51 @@ class Inputfilter {
                                   'shipping_status_name',
                                   'orders_status_name',
                                   'cross_sell_group_name',
+                                  'customers_status_name',
+                                  'coupon_name',
+                                  'banners_title',
+                                  'tax_description',
+                                  'tax_class_title',
+                                  'tax_class_description',
+                                  'geo_zone_name',
+                                  'geo_zone_description',
+                                  'campaigns_name',
+                                  'memo_title',
+                                  'memo_text',
+                                  'symbol_left',
+                                  'symbol_right',
+                                  'products_ean',
                                   );
+
+    // short names and labels with narrow columns: a value that loses nothing is stored as typed,
+    // the cleaner would write &amp; for & and the text would no longer fit
+    private $content_keys_keep = array('customers_status_name',
+                                       'coupon_name',
+                                       'banners_title',
+                                       'tax_description',
+                                       'tax_class_title',
+                                       'tax_class_description',
+                                       'geo_zone_name',
+                                       'geo_zone_description',
+                                       'campaigns_name',
+                                       'memo_title',
+                                       'memo_text',
+                                       'symbol_left',
+                                       'symbol_right',
+                                       'products_ean',
+                                       );
+
+    // of the short list, the text columns: they take the text of the cleaner whatever its length
+    private $content_keys_text = array('memo_title',
+                                       'memo_text',
+                                       );
 
     public function __construct()
     {
         $this->params = array();
     }
 
-    public function removeActiveContent($value)
+    public function removeActiveContent($value, $keep = false, $fit = true)
     {
         require_once(DIR_FS_CATALOG.'inc/xtc_remove_active_content.inc.php');
 
@@ -70,7 +107,9 @@ class Inputfilter {
         }
 
         $removed = false;
-        $value = xtc_remove_active_content($value, $removed);
+        // $keep: what the cleaner only spells its own way stays as typed, see xtc_remove_active_content_keep();
+        // $fit: the value does not get longer than typed, so what fits its column still fits
+        $value = (($keep === true) ? xtc_remove_active_content_keep($value, $removed, $fit) : xtc_remove_active_content($value, $removed));
         if ($removed === true) {
             $this->active_content_removed = true;
         }
@@ -220,7 +259,7 @@ class Inputfilter {
                           && in_array($content_key, $this->content_keys)
                           )
                       {
-                        $this->params[$key] = $this->removeActiveContent($value);
+                        $this->params[$key] = $this->removeActiveContent($value, in_array($key, $this->content_keys_keep), !in_array($key, $this->content_keys_text));
                       }
                     }
                   break;

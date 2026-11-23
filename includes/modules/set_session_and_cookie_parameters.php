@@ -35,11 +35,18 @@ if (STORE_SESSIONS == 'mysql') {
     if (!is_string($_GET[xtc_session_name()])) {
       redirect_invalid_session();
     }
-    $check_query = xtc_db_query("SELECT sesskey
-                                   FROM ".TABLE_SESSIONS."
-                                  WHERE sesskey = '".xtc_db_input(xtc_session_hash(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()])))."'");
-    if (xtc_db_num_rows($check_query) < 1) {
-      redirect_invalid_session();
+    // next to a session cookie the ID of the URL is not used, an old one must not turn a POST into a redirect.
+    // With separate domains for the shop and its SSL part it is used, see below
+    if (!isset($_COOKIE[xtc_session_name()])
+        || (SESSION_FORCE_COOKIE_USE != 'True' && ENABLE_SSL === true && $http_domain != $https_domain)
+        )
+    {
+      $check_query = xtc_db_query("SELECT sesskey
+                                     FROM ".TABLE_SESSIONS."
+                                    WHERE sesskey = '".xtc_db_input(xtc_session_hash(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()])))."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        redirect_invalid_session();
+      }
     }
   }
   // delete expired cookie
@@ -78,14 +85,39 @@ if (is_array($current_domain_delete)
 set_session_cookie(0, $session_cookie_path, $session_cookie_domain, $session_cookie_secure, $session_cookie_httponly, $session_cookie_samesite);
 
 // set the session ID if it exists
-if (SESSION_FORCE_COOKIE_USE != 'True') {
-  if (isset($_POST[xtc_session_name()])) {
-    xtc_session_id($_POST[xtc_session_name()]);
+// an ID from the request never replaces the session cookie of the browser.
+// A page can take it for itself with SESSION_ID_FROM_REQUEST while cookies stay required for its links and forms
+$session_id_from_request = false;
+// with separate domains for the shop and its SSL part the links hand the session over, as before:
+// the ID of the request also counts beside a cookie of that domain and stays there as its cookie
+$session_handover = (SESSION_FORCE_COOKIE_USE != 'True' && ENABLE_SSL === true && $http_domain != $https_domain);
+if ((SESSION_FORCE_COOKIE_USE != 'True' || defined('SESSION_ID_FROM_REQUEST'))
+    && (!isset($_COOKIE[xtc_session_name()]) || $session_handover === true)
+    )
+{
+  // only a value that can be a session ID, an empty or broken one starts a normal session
+  $session_request_id = '';
+  if (isset($_POST[xtc_session_name()]) && is_string($_POST[xtc_session_name()]) && preg_match('/^[0-9a-zA-Z]+$/', $_POST[xtc_session_name()])) {
+    $session_request_id = $_POST[xtc_session_name()];
   }
-  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()])) {
-    if (!isset($_COOKIE[xtc_session_name()]) || $_GET[xtc_session_name()] != $_COOKIE[xtc_session_name()]) {
-      xtc_session_id($_GET[xtc_session_name()]);
+  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()]) && is_string($_GET[xtc_session_name()]) && preg_match('/^[0-9a-zA-Z]+$/', $_GET[xtc_session_name()])) {
+    $session_request_id = $_GET[xtc_session_name()];
+  }
+  if ($session_request_id != '' && $session_handover === true) {
+    if (!isset($_COOKIE[xtc_session_name()]) || $session_request_id !== $_COOKIE[xtc_session_name()]) {
+      xtc_session_id($session_request_id);
+      $session_id_from_request = true;
     }
+  }
+  // it is not handed back as a cookie, a link must not bind a browser to a session;
+  // where PHP keeps sending the cookie the ID is not taken at all
+  elseif ($session_request_id != ''
+          && @ini_set('session.use_cookies', '0') !== false
+          && ini_get('session.use_cookies') != '1'
+          )
+  {
+    xtc_session_id($session_request_id);
+    $session_id_from_request = true;
   }
 }
 

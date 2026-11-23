@@ -38,8 +38,21 @@
   $ls_languages = xtc_get_languages();  
   $languages_array = array();
   if (count($ls_languages) > 1) {
+    $ls_ids = array();
     foreach ($ls_languages as $key => $value) {
+      // only a language with an admin translation can be the language of the admin
+      if (!is_file(DIR_FS_LANGUAGES . $value['directory'] . '/admin/' . $value['directory'] . '.php')
+          || !is_file(DIR_FS_LANGUAGES . $value['directory'] . '/admin/buttons.php')
+          )
+      {
+        continue;
+      }
+      $ls_ids[] = $value['id'];
       $languages_array[] = '<a '.$confirm_change.' href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
+    }
+    // a single link stays unless it leads to the language in use; by id, two languages can share a directory
+    if (count($languages_array) == 1 && $ls_ids[0] == $_SESSION['languages_id']) {
+      $languages_array = array();
     }
   }
   $languages_string = implode('&nbsp;', $languages_array);

@@ -102,6 +102,7 @@
         } else {
           $this->PayPalZettle->setSubscriptions();
         }
+        $this->PayPalZettle->saveSigningKey();
       }              
     }
 

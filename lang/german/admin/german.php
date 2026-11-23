@@ -378,6 +378,7 @@ define('WARNING_NO_FILE_UPLOADED', 'Warnung: Es wurde keine Datei hochgeladen.')
 define('WARNING_ACTIVE_CONTENT_REMOVED', 'Hinweis: Aus den gespeicherten Texten wurden Elemente oder Attribute entfernt, z. B. Scripte, Event-Attribute, Inline-SVG oder unzul&auml;ssiges HTML.');
 define('ERROR_ACTIVE_CONTENT_LIBRARY_MISSING', 'Fehler: Das Verzeichnis includes/external/htmlpurifier/ fehlt. Die Texte wurden ungefiltert gespeichert.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Fehler: Datei konnte nicht entfernt werden.');
+define('ERROR_DIRECTORY_NOT_REMOVEABLE', 'Fehler: Verzeichnis konnte nicht entfernt werden.');
 
 define('DELETE_ENTRY','Eintrag l&ouml;schen?');
 define('TEXT_PAYMENT_ERROR','<b>WARNUNG:</b> Bitte aktivieren Sie ein <a href="%s">Zahlungsmodul</a>!');
@@ -631,3 +632,4 @@ define('TEXT_IMAGE_NONEXISTENT', 'Bild existiert nicht');
 // withdrawal form
 define('TABLE_HEADING_WITHDRAW', 'Widerruf:');
 define('ERROR_ADMIN_ACTION_TOKEN', 'Das Formular ist abgelaufen. Bitte laden Sie die Seite neu und versuchen Sie es erneut.');
+define('ERROR_CUSTOMERS_ADMIN_ACCOUNT', 'Konten mit Admin-Status k&ouml;nnen nur Administratoren mit dem Recht f&uuml;r die Admin-Rechte anlegen, &auml;ndern oder l&ouml;schen. Das Hauptkonto kann nicht gel&ouml;scht werden und beh&auml;lt seinen Status.');

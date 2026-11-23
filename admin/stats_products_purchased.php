@@ -20,6 +20,7 @@ require('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
+require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_STATS_PRODUCTS_PURCHASED_RESULTS';
@@ -203,7 +204,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                   ?>
                     <td class="dataTableContent"><?php echo $rows; ?>.</td>
-                    <td class="dataTableContent"><?php echo $products['products_model']; ?>&nbsp;</td>
+                    <td class="dataTableContent"><?php echo encode_model_number($products['products_model']); ?>&nbsp;</td>
                     <td class="dataTableContent"><?php echo $products['products_name']; ?></td>                      
                     <td class="dataTableContent" align="center"><?php echo $products['products_ordered']; ?>&nbsp;</td>
                     <td class="dataTableContent" align="center"><?php echo $products['products_quantity']; ?>&nbsp;</td>

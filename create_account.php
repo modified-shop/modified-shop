@@ -557,6 +557,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/account/create_account_check_data/','php') as $file) require ($file);
 
+  // the new account is logged in under a new session id, without one it is not created
+  if ($error == false && $email_verify != 'required' && xtc_session_renew() !== true) {
+    $error = true;
+    $messageStack->add('create_account', xtc_session_renew_error());
+  }
+
   if ($error == false) {
     $customers_password_time = time();
     
@@ -674,10 +680,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
       if ($auto_login === true) {
-        if (SESSION_RECREATE == 'True') {
-          xtc_session_recreate();
-        }
-
         // write customers session
         write_customers_session((int)$new_customer_id);
       }
@@ -806,7 +808,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         
               $smarty->assign('SEND_COUPON', 'true');
               $smarty->assign('COUPON_DESC', $coupon['coupon_description']);
-              $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+              // the plain text mail decodes the entities again
+              $smarty->assign('COUPON_CODE', encode_htmlspecialchars($coupon['coupon_code'], ENT_NOQUOTES));
               $send_mail = true;
             }
           }

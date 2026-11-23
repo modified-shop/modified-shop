@@ -15,6 +15,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_INC.'clean_html_output.inc.php');
+  require_once(DIR_FS_INC.'xtc_get_tax_description.inc.php');
  
   class ot_tax {
 
@@ -53,6 +55,8 @@
 
       foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
+          // the text for a page belongs to the key as it is, so it is taken before the prefix changes
+          $title = xtc_get_tax_description_html($key);
           if (defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS')
               && MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true'
               && strpos(basename($PHP_SELF), 'checkout') !== false
@@ -60,11 +64,14 @@
               )
           {
             $key = str_replace(TAX_ADD_TAX, TAX_NO_TAX, $key);
+            $title = str_replace(TAX_ADD_TAX, TAX_NO_TAX, $title);
           }
 
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
             $order->info['allow_tax'] = 1; //customer
-            $this->output[] = array('title' => $key . ':',
+            // the key is also the lookup for the tax rate, so it is cleaned only for the title;
+            // 254: the title column of the order totals takes 255 characters
+            $this->output[] = array('title' => clean_html_output($title, 254) . ':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -74,7 +81,7 @@
               ) 
           {
             $order->info['allow_tax'] = 2; //merchant
-            $this->output[] = array('title' => $key .':',
+            $this->output[] = array('title' => clean_html_output($title, 254) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
@@ -85,7 +92,7 @@
               ) 
           {
             $order->info['allow_tax'] = 3; //merchant EU, shipping to store country
-            $this->output[] = array('title' => $key .':',
+            $this->output[] = array('title' => clean_html_output($title, 254) .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }

@@ -31,10 +31,20 @@
       && MODULE_CATEGORIES_ZETTLE_CATEGORIES_STATUS == 'true'
       )
   {
+    // the URL is public: one run at a time and one start in a minute
+    require_once(DIR_FS_INC.'xtc_batch_start.inc.php');
+    if (xtc_batch_start('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START', 60) !== true) {
+      die();
+    }
+
     $lng = new language(MODULE_CATEGORIES_ZETTLE_CATEGORIES_LANGUAGE);
     $language_id = $lng->language['languages_id'];
     
     $PayPalZettle = new PayPalZettle();
+    // every writing request of this run asks first whether the run still holds its lock
+    $PayPalZettle->write_guard = function () {
+      return xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START');
+    };
 
 
     // specials start and end by date without any write, the price still has to follow
@@ -83,6 +93,7 @@
         'products' => array()
       );
       $import_products = array();
+      $import_read = array();
       $existing_uuids = null;
       
       while ($products = xtc_db_fetch_array($products_query)) {
@@ -119,8 +130,10 @@
           $data['uuid'] = $products['products_uuid'];
         }
         $import_products[$products['zettle_id']] = $data['uuid'];
+        // the uuid as it was read, a row that got another one since then is not reserved
+        $import_read[$products['zettle_id']] = $products['products_uuid'];
   
-        $products_array['products'][] = $data;
+        $products_array['products'][$products['zettle_id']] = $data;
       }
       
       if (count($import_products) < 1) {
@@ -129,12 +142,30 @@
 
       // reserved before the request, a lost answer must not create the products twice
       foreach ($import_products as $zettle_id => $products_uuid) {
-        xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
-                         SET products_uuid = '".xtc_db_input($products_uuid)."',
-                             bulk = IF(bulk < 0, bulk - 1, -1)
-                       WHERE zettle_id = '".(int)$zettle_id."'");
+        // without its reservation a product is not sent, a later run would give it another uuid
+        if (xtc_db_query("UPDATE ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
+                             SET products_uuid = '".xtc_db_input($products_uuid)."',
+                                 bulk = IF(bulk < 0, bulk - 1, -1)
+                           WHERE zettle_id = '".(int)$zettle_id."'
+                             AND products_uuid = '".xtc_db_input($import_read[$zettle_id])."'") === false)
+        {
+          die();
+        }
+        // a row that is gone or changed was not reserved: a webhook removes the products deleted at Zettle,
+        // the administration can have created the product there in the meantime
+        if (xtc_db_affected_rows() != 1) {
+          unset($import_products[$zettle_id], $products_array['products'][$zettle_id]);
+        }
       }
+      if (count($import_products) < 1) {
+        die();
+      }
+      $products_array['products'] = array_values($products_array['products']);
 
+      // without its lock another run can have reserved and sent the same products
+      if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
+        die();
+      }
       $response = $PayPalZettle->setImport($products_array);
       
       if (isset($response['uuid'])) {
@@ -207,6 +238,10 @@
                                      LIMIT 50");
     if (xtc_db_num_rows($products_query) > 0) {
       while ($products = xtc_db_fetch_array($products_query)) {
+        // the rows are read already, the run goes on only with its lock and a working connection
+        if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
+          die();
+        }
         $response = $PayPalZettle->deleteProduct($products['products_uuid']);
         if ($products['products_uuid'] == '' 
             || ($response['status'] > 200 && $response['status'] < 300)
@@ -247,6 +282,9 @@
         $products['products_price'] = $xtPrice->xtcGetPrice($products['products_id'], false, 1, $products['products_tax_class_id'], $products['products_price']);
         $products['products_price'] *= 100;
         
+        if (xtc_batch_running('MODULE_CATEGORIES_ZETTLE_CATEGORIES_CRON_START') !== true) {
+          die();
+        }
         $product_response = $PayPalZettle->updateProduct($products_uuid, $products);
         
         if ($products['stock'] == 1) {

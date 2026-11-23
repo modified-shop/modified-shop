@@ -38,6 +38,16 @@ function ajaxCall(dataStr) {
 function JStoPHPResponse(data) {
   var response = data ;
   if (debug) console.log('response:' + $.param(response));
+
+  // a run that cannot go on: its message and the way back
+  if ('error' in response) {
+    $('#info_wait').html('&nbsp;');
+    $('#info_text').html(response.error);
+    $('#process_info_wait').html('&nbsp;');
+    $('#button_back').html(button_back);
+    $('.processing_bar').hide();
+    return;
+  }
   
   var data_ok = '';
   

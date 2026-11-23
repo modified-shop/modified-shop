@@ -38,6 +38,7 @@
 
   // include needed functions
   require_once (DIR_FS_INC.'xtc_has_product_attributes.inc.php');
+  require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
   require_once (DIR_WS_CLASSES.'currencies.php');
   $currencies = new currencies();
@@ -260,7 +261,7 @@
             <td class="dataTableContent">&nbsp;<?php echo $products_status;?></td>
             <td class="dataTableContent">&nbsp;<?php echo '<a target="_blank" href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'edit_action', 'search', 'page', 'oID')) . 'pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', 'style="padding-right:8px;"'). '</a> '. $products['products_name'];?></td>
             <td class="dataTableContent">&nbsp;<?php echo xtc_product_thumb_image($products['products_image'], $products['products_name'], '','',$admin_thumbs_size);?></td>
-            <td class="dataTableContent">&nbsp;<?php echo $products['products_model'];?></td>
+            <td class="dataTableContent">&nbsp;<?php echo encode_model_number($products['products_model']);?></td>
             <td class="dataTableContent">&nbsp;<?php echo $products['products_ean'];?></td>
             <td class="dataTableContent">&nbsp;<?php echo xtc_date_short($products['products_date_available']);?></td>
             <td class="dataTableContent"><?php echo $products_price?></td>

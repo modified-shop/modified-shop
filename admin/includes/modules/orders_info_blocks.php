@@ -11,6 +11,8 @@
    --------------------------------------------------------------*/   
   
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+  require_once(DIR_FS_INC.'encode_order_model_number.inc.php');
   ?>
   
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
@@ -226,7 +228,7 @@
         }
         echo '            </td>'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top">';
-        echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';
+        echo ($order->products[$i]['model'] != '') ? encode_order_model_number($order->products[$i]['model'], $order->products[$i]['opid']) : '<br />';
         // attribute models
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         if ($attr_count > 0) {
@@ -235,7 +237,7 @@
             if ($model == '') {
               $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
             }
-            echo (($model != '') ? $attr_model_delimiter . $model : '<br />');
+            echo (($model != '') ? $attr_model_delimiter . encode_model_number($model) : '<br />');
           }
         }
         echo '&nbsp;</td>'.PHP_EOL;
@@ -355,7 +357,7 @@
               }
             }
             echo '  </td>'.PHP_EOL;
-            echo '  <td class="dataTableContent" valign="top">'.$orders_withdraw_products['products_model'].'</td>'.PHP_EOL;
+            echo '  <td class="dataTableContent" valign="top">'.encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id']).'</td>'.PHP_EOL;
             echo '  <td class="dataTableContent" valign="top">'.xtc_datetime_short($orders_withdraw_products['date_added']).'</td>'.PHP_EOL;
             echo '</tr>'.PHP_EOL;
           }
