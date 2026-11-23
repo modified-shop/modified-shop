@@ -299,7 +299,7 @@
                   }
 
                   if ($oInfo->mail_status == '0') {
-                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=remind') . '">' . BUTTON_REMIND . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur(); return postLink(this, event);" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=remind') . '">' . BUTTON_REMIND . '</a>');
                   }
                 }
                 break;

@@ -160,7 +160,8 @@
                                      FROM admin_log al
                                      JOIN ".TABLE_CUSTOMERS." c
                                           ON al.customers_id = c.customers_id
-                                    WHERE ".$where);
+                                    WHERE ".$where."
+                                 ORDER BY al.id");
   
         if (xtc_db_num_rows($log_query) > 0) {
           echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
@@ -169,13 +170,54 @@
           while ($log = xtc_db_fetch_array($log_query)) {
             if (MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') {
               $log['text'] = unserialize(base64_decode($log['text']));
+              // entries written before the form token was left out still carry it, under a name that changes:
+              // six signs, up to version 3.2.1 without the x in front
+              if (is_array($log['text'])) {
+                foreach ($log['text'] as $log_key => $log_value) {
+                  if (is_string($log_value)
+                      && preg_match('/^[0-9a-zA-Z]{6}$/', (string)$log_key)
+                      && preg_match('/^[0-9a-zA-Z]{32}$/', $log_value)
+                      )
+                  {
+                    unset($log['text'][$log_key]);
+                  }
+                }
+              }
               if (MODULE_ADMIN_LOG_SHOW_DETAILS_FULL == 'false') {
+                // only the manufacturers page has a posted status link among the logged pages: its action and value
+                // are shown also when the entry before had no such field. Every other page is compared as before,
+                // a form can hold access data of a module
+                $log_manufacturer = (basename($PHP_SELF) == 'manufacturers.php');
+                $log_link = (($log_manufacturer === true) ? array_intersect_key($log['text'], array('action' => 1, 'flag' => 1)) : array());
                 if ($lc == 0) {
                   $base = $log['text'];
+                } else {
+                  $log_link = array_diff_key($log_link, $base);
+                  // the first form after a status link: only its status is compared, with the one the link set
+                  if ($log_manufacturer === true
+                      && isset($log['text']['manufacturers_status'], $base['flag'])
+                      && !isset($base['manufacturers_status'])
+                      && $log['text']['manufacturers_status'] != $base['flag']
+                      )
+                  {
+                    $log_link['manufacturers_status'] = $log['text']['manufacturers_status'];
+                  }
                 }
                 $base_new = array_merge($base, $log['text']);
-                $log['text'] = arrayRecursiveLogDiff($base, $base_new);
+                $log_shown = array_merge(arrayRecursiveLogDiff($base, $base_new), $log_link);
+                // the status link of the manufacturers list and the form store one status under two names:
+                // the next entry is compared with the last status, whichever of the two set it
+                if ($log_manufacturer === true) {
+                  if (isset($log['text']['action'], $log['text']['flag'], $base_new['manufacturers_status']) && $log['text']['action'] == 'setflag') {
+                    $base_new['manufacturers_status'] = $log['text']['flag'];
+                  } elseif (isset($log['text']['manufacturers_status'], $base_new['flag'])) {
+                    $base_new['flag'] = $log['text']['manufacturers_status'];
+                  }
+                }
+                $log['text'] = $log_shown;
               }
+              // the names of the fields are text of the request like their values
+              $log['text'] = arrayRecursiveLogKeys($log['text']);
               $log = array_map_recursive('encode_htmlentities', $log);
             }
             echo '<div class="log_row">
@@ -217,6 +259,18 @@
       } else {
         $aReturn[$mKey] = $mValue;
       }
+    }
+
+    return $aReturn;
+  }
+
+  function arrayRecursiveLogKeys($aArray) {
+    if (!is_array($aArray)) {
+      return $aArray;
+    }
+    $aReturn = array();
+    foreach ($aArray as $mKey => $mValue) {
+      $aReturn[encode_htmlentities((string)$mKey, ENT_COMPAT | ENT_SUBSTITUTE)] = arrayRecursiveLogKeys($mValue);
     }
 
     return $aReturn;

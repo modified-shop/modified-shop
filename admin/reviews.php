@@ -159,9 +159,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="dataTableContent txta-c">
                       <?php
                       if ($reviews['reviews_status'] == '1') {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=0&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=0&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=1&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                        echo '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=1&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                       }
                       ?>
                     </td>

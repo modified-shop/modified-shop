@@ -309,7 +309,7 @@
               if (defined('DB_LAST_RESTORE')) {
               ?>
                 <div class="clear"></div>
-                <div class="smallText pdg2 flt-r"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></div>
+                <div class="smallText pdg2 flt-r"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a class="button" onclick="this.blur(); return postLink(this, event);" href="' . xtc_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></div>
 
               <?php
               }
