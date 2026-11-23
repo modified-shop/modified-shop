@@ -20,6 +20,7 @@
   
   // include needed functions
   require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
+  require_once (DIR_FS_INC.'encode_model_number.inc.php');
 
   // include needed classes
   require_once (DIR_WS_CLASSES.'categories.php');
@@ -284,7 +285,7 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?>:</td>
-              <td class="dataTableConfig col-middle"><?php echo $sInfo->products_model;?></td>
+              <td class="dataTableConfig col-middle"><?php echo encode_model_number($sInfo->products_model);?></td>
               <td class="dataTableConfig col-right">&nbsp;</td>
             </tr>
             <?php
@@ -410,7 +411,7 @@
                        <?php echo xtc_draw_checkbox_field('multi_products[]', $specials['specials_id'], $is_checked); ?>
                       </td>
                       <td  class="dataTableContent"><?php echo $specials['products_name']; ?></td>
-                      <td  class="dataTableContent"><?php echo $specials['products_model']; ?></td>
+                      <td  class="dataTableContent"><?php echo encode_model_number($specials['products_model']); ?></td>
                       <td  class="dataTableContent txta-c"><?php echo $specials['products_quantity']; ?></td>
                       <td  class="dataTableContent txta-c"><?php echo $specials['specials_quantity']; ?></td>
                       <td  class="dataTableContent txta-r"><?php echo (isset($specials['start_date']) ? xtc_datetime_short($specials['start_date']): '&nbsp;'); ?></td>

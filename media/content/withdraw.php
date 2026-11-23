@@ -32,6 +32,7 @@
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_add.inc.php');
     require_once (DIR_FS_INC.'xtc_withdraw_attempts_reset.inc.php');
     require_once (DIR_FS_INC.'xtc_withdraw_allowed.inc.php');
+    require_once (DIR_FS_INC.'encode_order_model_number.inc.php');
   
     // include needed classes
     require_once(DIR_WS_CLASSES.'modified_captcha.php');
@@ -592,7 +593,7 @@
         
               $orders_withdraw_products_array[] = array(
                 'PRODUCTS_NAME' => $orders_withdraw_products['products_name'],
-                'PRODUCTS_MODEL' => $orders_withdraw_products['products_model'],
+                'PRODUCTS_MODEL' => encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id'], ENT_NOQUOTES),
                 'PRODUCTS_PRICE' => $order_xtPrice->xtcFormat($orders_withdraw_products['products_price'], true),
                 'PRODUCTS_QUANTITY' => $orders_withdraw_products['products_quantity'],
                 'PRODUCTS_ATTRIBUTES' => $attributes_array,
@@ -717,7 +718,7 @@
     
           $orders_withdraw_products_array[] = array(
             'PRODUCTS_NAME' => $orders_withdraw_products['products_name'],
-            'PRODUCTS_MODEL' => $orders_withdraw_products['products_model'],
+            'PRODUCTS_MODEL' => encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id']),
             'PRODUCTS_PRICE' => $order_xtPrice->xtcFormat($orders_withdraw_products['products_price'], true),
             'PRODUCTS_QUANTITY' => $orders_withdraw_products['withdraw_quantity'],
             'PRODUCTS_ATTRIBUTES' => $attributes_array,
@@ -762,7 +763,7 @@
     
             $orders_withdraw_products_array[] = array(
               'PRODUCTS_NAME' => $orders_withdraw_products['products_name'],
-              'PRODUCTS_MODEL' => $orders_withdraw_products['products_model'],
+              'PRODUCTS_MODEL' => encode_order_model_number($orders_withdraw_products['products_model'], $orders_withdraw_products['orders_products_id']),
               'PRODUCTS_PRICE' => $order_xtPrice->xtcFormat($orders_withdraw_products['products_price'], true),
               'PRODUCTS_QUANTITY' => ((int)$orders_withdraw_products['products_quantity'] - (int)$orders_withdraw_products['withdraw_quantity']),
               'WITHDRAW_QUANTITY' => (int)$orders_withdraw_products['withdraw_quantity'],

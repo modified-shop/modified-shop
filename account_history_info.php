@@ -24,6 +24,7 @@ require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
+require_once (DIR_FS_INC.'encode_order_model_number.inc.php');
 
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
@@ -182,7 +183,7 @@ if (defined('MODULE_WITHDRAW_STATUS') && MODULE_WITHDRAW_STATUS == 'true') {
 
     $withdraw_products_array[] = array(
       'PRODUCTS_NAME' => $withdraw_products['products_name'],
-      'PRODUCTS_MODEL' => $withdraw_products['products_model'],
+      'PRODUCTS_MODEL' => encode_order_model_number($withdraw_products['products_model'], $withdraw_products['orders_products_id']),
       'PRODUCTS_QUANTITY' => $withdraw_products['products_quantity'],
       'PRODUCTS_ATTRIBUTES' => $attributes_array,
       'DATE_ADDED' => xtc_date_short($withdraw_products['date_added']),

@@ -264,6 +264,8 @@
    */
   function xtc_draw_products_pull_down($name, $parameters = '', $exclude = '', $add_price = true, $add_model = true) {
     global $xtPrice;
+
+    require_once(DIR_FS_INC.'encode_model_number.inc.php');
     
     if (empty($exclude)) {
       $exclude = array ();
@@ -292,7 +294,7 @@
           $products['products_price'] = xtc_round($products['products_price'] * ((100 + xtc_get_tax_rate($products['products_tax_class_id'])) / 100), PRICE_PRECISION);
         }
         $products_price = $add_price ? ' ('.trim($xtPrice->xtcFormat($products['products_price'],true)).')' : '';
-        $products_model = $add_model ? ' ['.TEXT_GLOBAL_PRODUCTS_MODEL.': '.$products['products_model'].']' : '';
+        $products_model = $add_model ? ' ['.TEXT_GLOBAL_PRODUCTS_MODEL.': '.encode_model_number($products['products_model']).']' : '';
         $select_string .= '<option value="'.$products['products_id'].'">'.$products['products_name'].$products_price.$products_model.'</option>';
       }
     }

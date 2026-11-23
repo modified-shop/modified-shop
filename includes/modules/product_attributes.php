@@ -23,6 +23,7 @@
    ---------------------------------------------------------------------------------------*/
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
+require_once(DIR_FS_INC.'encode_model_number.inc.php');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_top/','php') as $file) require ($file);
 
 if ($product->data['options_template'] == '' 
@@ -132,7 +133,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
           $products_options_data[$row]['DATA'][$col] = array(
             'ID' => $products_options['products_options_values_id'],
             'TEXT' => $products_options['products_options_values_name'],
-            'MODEL' => $products_options['attributes_model'],
+            'MODEL' => encode_model_number($products_options['attributes_model']),
             'PRICE' => '',
             'FULL_PRICE' => '',
             'PLAIN_PRICE' => '',
@@ -166,7 +167,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
           $products_options_data[$row]['DATA'][$col] = array(
             'ID' => $products_options['products_options_values_id'],
             'TEXT' => $products_options['products_options_values_name'],
-            'MODEL' => $products_options['attributes_model'],
+            'MODEL' => encode_model_number($products_options['attributes_model']),
             'PRICE' => $xtPrice->xtcFormat($price, true),
             'FULL_PRICE' => $xtPrice->xtcFormat($full, true),
             'PLAIN_PRICE' => $xtPrice->xtcFormat($price,false),

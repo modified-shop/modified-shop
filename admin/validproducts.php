@@ -28,6 +28,7 @@
 
 
 require('includes/application_top.php');
+require_once(DIR_FS_INC.'encode_model_number.inc.php');
 ?>
 <html>
   <head>
@@ -54,7 +55,7 @@ require('includes/application_top.php');
             echo '<tr class="dataTableRow">';
             echo '  <td class="dataTableContent">'.$products['products_id'].'</td>';
             echo '  <td class="dataTableContent">'.$products['products_name'].'</td>';
-            echo '  <td class="dataTableContent">'.$products['products_model'].'</td>';
+            echo '  <td class="dataTableContent">'.encode_model_number($products['products_model']).'</td>';
             echo '</tr>';
           }
         ?>

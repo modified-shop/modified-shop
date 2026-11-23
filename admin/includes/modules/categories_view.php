@@ -25,6 +25,8 @@
    --------------------------------------------------------------*/
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+  require_once(DIR_FS_INC.'encode_model_number.inc.php');
+
   require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/categories_specials.php');
 
   if (is_file('includes/modules/products_attributes_iframe.php')) {
@@ -678,7 +680,7 @@
                  if ($products['products_model'] !='' ) {
                    ?>
                    <td class="categories_view_data txta-c">
-                     <?php echo $products['products_model']; ?>
+                     <?php echo encode_model_number($products['products_model']); ?>
                    </td>
                    <?php
                  } else {

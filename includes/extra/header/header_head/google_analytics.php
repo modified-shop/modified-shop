@@ -476,7 +476,7 @@ function pushgTagEventAction() {";
     $index = defined('MODULE_GOOGLE_ANALYTICS_ITEM_ID') ? MODULE_GOOGLE_ANALYTICS_ITEM_ID : 'model';
     $item_data = "
       {
-        item_id: '".addslashes($item[$index])."',
+        item_id: '".str_replace(array('<', '>'), array('\\x3C', '\\x3E'), addslashes($item[$index]))."',
         item_name: '".addslashes($item['name'])."',
         price: ".numberFormatGoogleAnalytics($item['price']).",
         quantity: ".(($use_qty && isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
