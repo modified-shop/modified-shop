@@ -97,6 +97,11 @@
       
       $i = 0;
       $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$file, 'w');
+      // the campaign id is a value of the link, so it is encoded as URL parameter
+      $campaign_param = '';
+      if (!empty($_POST['campaign']) && is_string($_POST['campaign'])) {
+        $campaign_param = '&'.((strpos($_POST['campaign'], 'refID=') === 0) ? 'refID='.urlencode(substr($_POST['campaign'], 6)) : $_POST['campaign']);
+      }
       $row_hooks = auto_include(DIR_FS_ADMIN.'includes/extra/modules/export/products_export_data/','php');
       while ($export = xtc_db_fetch_array($export_query)) {
         $products_price = (($xtPrice->cStatus['customers_status_show_price'] != 0) ? $xtPrice->xtcGetPrice($export['products_id'], false, 1, $export['products_tax_class_id']) : 0);
@@ -109,7 +114,7 @@
           'name' => $this->cleanText($export['products_name']),
           'description' => $this->cleanText($export['products_description']),
           'categories' => $this->buildCAT($export['categories_id'], $lng->language['id']),
-          'link' => xtc_catalog_href_link('product_info.php', xtc_product_link($export['products_id'], $export['products_name']).'&language='.$lng->language['code'].((!empty($_POST['campaign'])) ? '&'.$_POST['campaign'] : ''), 'NONSSL', false),
+          'link' => xtc_catalog_href_link('product_info.php', xtc_product_link($export['products_id'], $export['products_name']).'&language='.$lng->language['code'].$campaign_param, 'NONSSL', false),
           'image' => (($export['products_image'] != '') ? xtc_catalog_href_link(ltrim(DIR_WS_CATALOG_POPUP_IMAGES, '/') . $export['products_image'], '', 'NONSSL', false) : ''),
           'shipping' => $export['shipping_status_name'],
           'price' => number_format($products_price, 2, '.', ''),

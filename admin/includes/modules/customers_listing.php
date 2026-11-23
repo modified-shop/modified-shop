@@ -580,7 +580,7 @@
                             $customers_log .= '<tr>
                                                  <td class="smallText">'.xtc_datetime_short($customers_log_info['customers_ip_date']).'</td>
                                                  <td class="smallText">'.$customers_log_info['customers_ip'].'</td>
-                                                 <td class="smallText">'.$customers_log_info['customers_advertiser'].'</td>
+                                                 <td class="smallText">'.encode_htmlspecialchars($customers_log_info['customers_advertiser']).'</td>
                                                </tr>';
                           }
                           $customers_log .= '</table>';

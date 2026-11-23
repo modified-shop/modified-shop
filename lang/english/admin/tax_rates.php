@@ -38,4 +38,5 @@ define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this tax rate?
 define('TEXT_INFO_HEADING_NEW_TAX_RATE', 'New Tax Rate');
 define('TEXT_INFO_HEADING_EDIT_TAX_RATE', 'Edit Tax Rate');
 define('TEXT_INFO_HEADING_DELETE_TAX_RATE', 'Delete Tax Rate');
+define('ERROR_TAX_DESCRIPTION_LENGTH', 'Error: The descriptions of all languages together may be at most %s characters long, HTML and language codes included. Nothing was saved.');
 ?>

@@ -60,7 +60,8 @@
     if (isset($_GET['cid']) && $_GET['cid'] != '') {
       $template = 'send_coupon';
       
-      $smarty->assign('COUPON_ID', $data['coupon_code']);
+      // the plain text mail decodes the entities again
+      $smarty->assign('COUPON_ID', encode_htmlspecialchars($data['coupon_code'], ENT_NOQUOTES));
       $smarty->assign('COUPON_AMOUNT', $data['coupon_amount']);
     } else {
       $template = 'send_gift';

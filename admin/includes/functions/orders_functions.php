@@ -1490,6 +1490,13 @@
       }
     }
 
+    // the titles of the tax lines the order has
+    $tax_titles = array();
+    $tax_titles_query = xtc_db_query("SELECT title FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
+    while ($tax_titles_row = xtc_db_fetch_array($tax_titles_query)) {
+      $tax_titles[] = $tax_titles_row['title'];
+    }
+
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)($oID)."' AND class = 'ot_tax'");
 
     $tax_info = '';
@@ -1502,6 +1509,8 @@
       $tax_info = TAX_ADD_TAX;
     }
 
+    require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
+    require_once(DIR_FS_INC.'xtc_get_tax_description.inc.php');
     $ust_query = xtc_db_query("SELECT tax_rate, SUM(tax) as tax_value_new
                                  FROM ".TABLE_ORDERS_RECALCULATE."
                                 WHERE orders_id = '".(int)$oID."'
@@ -1509,14 +1518,51 @@
                                   AND class = 'ot_tax'
                              GROUP BY tax_rate 
                              ORDER BY tax_rate DESC");
+    $tax_lines = array();
     while ($ust = xtc_db_fetch_array($ust_query)) {
       $ust_desc_query = xtc_db_query("SELECT tax_description 
                                         FROM ".TABLE_TAX_RATES." 
                                        WHERE tax_rate = '".$ust['tax_rate']."'");
       $ust_desc = xtc_db_fetch_array($ust_desc_query);
 
-      $title = parse_multi_language_value($ust_desc['tax_description'], $lang['code']);
-      $title = $tax_info . $title.':';
+      // rates with the same description have one text, whichever of them is read first, as at checkout
+      $ust_text = ((isset($ust_desc['tax_description'])) ? $ust_desc['tax_description'] : '');
+      $description = parse_multi_language_value($ust_text, $lang['code']);
+      $description_html = parse_multi_language_html_value($ust_text, $lang['code']);
+      while ($ust_other = xtc_db_fetch_array($ust_desc_query)) {
+        if (parse_multi_language_value($ust_other['tax_description'], $lang['code']) === $description) {
+          $merged = xtc_merge_tax_description_html($description, $description_html, parse_multi_language_html_value($ust_other['tax_description'], $lang['code']));
+          $description_html = (($merged !== false) ? $merged : $description_html);
+        }
+      }
+
+      // the title column takes 255 characters
+      $max_length = 254 - clean_html_output_length($tax_info);
+      $tax_lines[] = array('value' => $ust['tax_value_new'],
+                           'key' => $tax_info . clean_html_output($description, $max_length) . ':',
+                           'title' => $tax_info . clean_html_output($description_html, $max_length) . ':');
+    }
+
+    foreach ($tax_lines as $tax_line) {
+      $title = $tax_line['title'];
+      $ust = array('tax_value_new' => $tax_line['value']);
+
+      // a line the order has keeps its title, if that title fits this description alone and no second one does
+      $kept = array();
+      foreach (array_unique($tax_titles) as $tax_title) {
+        $fits = array();
+        foreach ($tax_lines as $other) {
+          if (xtc_merge_tax_description_html($other['key'], $other['key'], $tax_title) === $tax_title) {
+            $fits[$other['key']] = true;
+          }
+        }
+        if (count($fits) == 1 && isset($fits[$tax_line['key']])) {
+          $kept[] = $tax_title;
+        }
+      }
+      if (count($kept) == 1) {
+        $title = $kept[0];
+      }
 
       if ($ust['tax_value_new']) {
         $text = $xtPrice->xtcFormat($ust['tax_value_new'], true);

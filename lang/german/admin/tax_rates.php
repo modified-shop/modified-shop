@@ -38,4 +38,5 @@ define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diesen Steuersatz l&
 define('TEXT_INFO_HEADING_NEW_TAX_RATE', 'Neuer Steuersatz');
 define('TEXT_INFO_HEADING_EDIT_TAX_RATE', 'Steuersatz bearbeiten');
 define('TEXT_INFO_HEADING_DELETE_TAX_RATE', 'Steuersatz l&ouml;schen');
+define('ERROR_TAX_DESCRIPTION_LENGTH', 'Fehler: Die Beschreibungen aller Sprachen d&uuml;rfen zusammen h&ouml;chstens %s Zeichen lang sein, HTML und Sprachk&uuml;rzel mitgez&auml;hlt. Es wurde nichts gespeichert.');
 ?>
