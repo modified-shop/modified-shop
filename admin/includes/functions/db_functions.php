@@ -933,6 +933,16 @@ function backup_entry_header($fp, $compressed, &$damaged = false) {
       // every write of a backup appends a gzip member of its own
       $plain = '';
       while ($data !== '') {
+        if ($open === false) {
+          // behind a member only a gzip head starts the next one, anything else ends the data as for gzread()
+          if (strlen($data) < 2 && !feof($fp)) {
+            $data .= (string)fread($fp, 1);
+          }
+          if (substr($data, 0, 2) !== "\x1f\x8b") {
+            $last = true;
+            break;
+          }
+        }
         $part = @inflate_add($context, $data);
         $used = (($part !== false) ? inflate_get_read_len($context) - $read : 0);
         // what follows the last member is no gzip data, like null bytes at the end: the text read so far counts
