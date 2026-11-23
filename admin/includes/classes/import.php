@@ -520,17 +520,21 @@ class xtcImport {
             && xtc_remove_active_content_available()
             )
         {
-            // a model saved before numbers were kept as typed carries the entities of the full cleaning
+            // a model saved before numbers were kept as typed carries the entities of the full cleaning,
+            // but only where they read as the same number: the full cleaning made ID of ID<XL
             $removed = false;
-            $models[] = trim(xtc_remove_active_content($model_raw, $removed));
+            $model_entities = trim(xtc_remove_active_content($model_raw, $removed));
+            if (xtc_remove_active_content_same_text($model_clean, $model_entities)) {
+                $models[] = $model_entities;
+            }
         }
         $models = array_values(array_diff(array_unique($models), array($model_clean, '')));
 
         // products sharing the model are all updated, as before
         $ids = $this->getModelIDs(array($model_clean));
         if (count($models) > 0) {
-            // another spelling only for a single product that the model itself does not name
-            $ids_other = $this->getModelIDs($models);
+            // another spelling only for a single product that the model itself does not name, as the database compares
+            $ids_other = $this->getModelIDs($models, $model_clean);
             if (count($ids_other) > 0) {
                 if (count($ids) > 0 || count($ids_other) > 1) {
                     return false;
@@ -542,12 +546,13 @@ class xtcImport {
         return array('model' => $model_clean, 'ids' => $ids);
     }
 
-    // up to two ids, enough to tell none, one and several apart
-    function getModelIDs($models) {
+    // up to two ids, enough to tell none, one and several apart; not the products of the model $except
+    function getModelIDs($models, $except = null) {
         $ids = array();
         $model_query = xtc_db_query("SELECT products_id
                                        FROM ".TABLE_PRODUCTS."
                                       WHERE products_model IN ('".implode("', '", array_map('xtc_db_input', $models))."')
+                                            ".(($except !== null) ? "AND products_model <> '".xtc_db_input($except)."'" : '')."
                                       LIMIT 2");
         while ($model = xtc_db_fetch_array($model_query)) {
             $ids[] = (int)$model['products_id'];
