@@ -486,10 +486,31 @@ class xtcImport {
         return $value;
     }
 
+    // numbers such as the model number and the EAN as the admin forms store them: as typed, unless something is removed
+    function cleanNumber($value) {
+        if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true)) {
+            return $value;
+        }
+        require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+
+        if (!xtc_remove_active_content_available()) {
+            $this->contentUnfiltered = true;
+            return $value;
+        }
+
+        $removed = false;
+        $value = xtc_remove_active_content_number($value, $removed, true);
+        if ($removed === true) {
+            $this->contentRemoved = true;
+        }
+
+        return $value;
+    }
+
     // the cleaned model is the stored one; a product saved before the cleaning may still carry the model of the file
     function getModelProducts($model) {
         $model_raw = xtc_db_prepare_input($model);
-        $model_clean = trim($this->cleanContent($model_raw));
+        $model_clean = trim($this->cleanNumber($model_raw));
         if ($model_clean === $model_raw) {
             return array('model' => $model, 'ids' => $this->getModelIDs(array($model)));
         }
@@ -533,9 +554,9 @@ class xtcImport {
         if ($this->FileSheme['p_disc'] == 'Y')
             $products_array = array_merge($products_array, array ('products_discount_allowed' => (float)$dataArray['p_disc']));
         if ($this->FileSheme['p_ean'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_ean' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_ean']))));
+            $products_array = array_merge($products_array, array ('products_ean' => $this->cleanNumber(xtc_db_prepare_input($dataArray['p_ean']))));
         if ($this->FileSheme['p_man'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_man']))));
+            $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanNumber(xtc_db_prepare_input($dataArray['p_man']))));
         if ($this->FileSheme['p_tax'] == 'Y')
             $products_array = array_merge($products_array, array ('products_tax_class_id' => (int)$dataArray['p_tax']));
         if ($this->FileSheme['p_opttpl'] == 'Y')
