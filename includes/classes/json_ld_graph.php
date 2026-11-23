@@ -748,13 +748,23 @@
     /**
      * Turns a number of the shop, such as a model number or an EAN, into the text its page shows
      *
-     * A number is text, so a < in it starts no tag, see encode_model_number().
+     * A number is text, so a < in it starts no tag, and the page reads every entity of HTML5 that
+     * encode_model_number() leaves in it.
      *
      * @param string $number
      * @return string
      */
     static function number($number) {
-      return self::text(str_replace('<', '&lt;', (string)$number));
+      $number = (string)$number;
+      if ($number === '') {
+        return '';
+      }
+
+      // decoded in utf-8, so an entity the charset of the shop cannot hold is read as well
+      $number = html_entity_decode(self::utf8($number), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      $number = str_replace(array("\xc2\xa0", "\r", "\n", "\t"), ' ', $number);
+
+      return trim(preg_replace('/\s\s+/', ' ', $number));
     }
 
     /**
