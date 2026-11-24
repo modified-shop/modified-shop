@@ -2101,6 +2101,7 @@ class PayoneModified {
 		}  
   }
 
+  // the titles are HTML, PAYONE takes their text
   public function _getInvoicingTransaction_totals($totaldata) {
 		foreach($totaldata['data'] as $td) {
 		  switch ($td['CLASS']) {
@@ -2110,7 +2111,7 @@ class PayoneModified {
           $item->setId('SHIPMENT');
           $item->setPr(round($td['VALUE'], 2));
           $item->setNo(1);
-          $item->setDe(strip_tags($td['TITLE']));
+          $item->setDe(decode_htmlentities(strip_tags($td['TITLE']), ENT_QUOTES | ENT_HTML5));
           $item->setVa($this->_get_order_total_tax('MODULE_SHIPPING_', $this->order->info['shipping_class']));
           $this->invtrans->addItem($item);
           break;
@@ -2126,7 +2127,7 @@ class PayoneModified {
           }
           $item->setPr(round($td['VALUE'], 2));
           $item->setNo(1);
-          $item->setDe(strip_tags($td['TITLE']));
+          $item->setDe(decode_htmlentities(strip_tags($td['TITLE']), ENT_QUOTES | ENT_HTML5));
           $item->setVa(0);
           $this->invtrans->addItem($item);
           break;
@@ -2148,7 +2149,7 @@ class PayoneModified {
           }
           $item->setPr(round($td['VALUE'], 2));
           $item->setNo(1);
-          $item->setDe(strip_tags($td['TITLE']));
+          $item->setDe(decode_htmlentities(strip_tags($td['TITLE']), ENT_QUOTES | ENT_HTML5));
           $item->setVa($this->_get_order_total_tax('MODULE_ORDER_TOTAL_', $td['CLASS']));
           $this->invtrans->addItem($item);
           break;

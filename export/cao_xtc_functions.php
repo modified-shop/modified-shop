@@ -509,7 +509,7 @@ function SendOrders ()
       if ($totals['value'] < 0) $total_prefix = '-';
 
       $schema .= '<TOTAL>' . "\n" .
-                 '<TOTAL_TITLE>' . encode_htmlspecialchars(strip_tags($totals['title'])) . '</TOTAL_TITLE>' . "\n" .
+                 '<TOTAL_TITLE>' . encode_htmlspecialchars(decode_htmlentities(strip_tags($totals['title']), ENT_QUOTES | ENT_HTML5, CHARSET)) . '</TOTAL_TITLE>' . "\n" .
                  '<TOTAL_VALUE>' . encode_htmlspecialchars(abs($totals['value'])) . '</TOTAL_VALUE>' . "\n" .
                  '<TOTAL_CLASS>' . encode_htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
                  '<TOTAL_SORT_ORDER>' . encode_htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .
@@ -1049,8 +1049,8 @@ function SendShopConfig ()
     $tax_class = encode_request($tax_class);
     
     $schema = '<CLASS ID="' . $tax_class['tax_class_id'] . '">' . "\n" .
-             '<TITLE>' .         encode_htmlspecialchars($tax_class['tax_class_title']) .       '</TITLE>' . "\n" .
-             '<DESCRIPTION>' .   encode_htmlspecialchars($tax_class['tax_class_description']) . '</DESCRIPTION>' . "\n" .
+             '<TITLE>' .         encode_htmlspecialchars(decode_htmlentities(strip_tags($tax_class['tax_class_title']), ENT_QUOTES | ENT_HTML5, CHARSET)) .       '</TITLE>' . "\n" .
+             '<DESCRIPTION>' .   encode_htmlspecialchars(decode_htmlentities(strip_tags($tax_class['tax_class_description']), ENT_QUOTES | ENT_HTML5, CHARSET)) . '</DESCRIPTION>' . "\n" .
              '<LAST_MODIFIED>' . encode_htmlspecialchars($tax_class['last_modified']) .         '</LAST_MODIFIED>' . "\n" .
              '<DATE_ADDED>' .    encode_htmlspecialchars($tax_class['date_added']) .            '</DATE_ADDED>' . "\n" .
               '</CLASS>'. "\n";
@@ -1074,7 +1074,7 @@ function SendShopConfig ()
               '<CLASS_ID>' .      encode_htmlspecialchars($tax_rates['tax_class_id']) .    '</CLASS_ID>' . "\n" .
               '<PRIORITY>' .      encode_htmlspecialchars($tax_rates['tax_priority']) .    '</PRIORITY>' . "\n" .
               '<RATE>' .          encode_htmlspecialchars($tax_rates['tax_rate']) .        '</RATE>' . "\n" .
-              '<DESCRIPTION>' .   encode_htmlspecialchars($tax_rates['tax_description']) . '</DESCRIPTION>' . "\n" .
+              '<DESCRIPTION>' .   encode_htmlspecialchars(decode_htmlentities(strip_tags($tax_rates['tax_description']), ENT_QUOTES | ENT_HTML5, CHARSET)) . '</DESCRIPTION>' . "\n" .
               '<LAST_MODIFIED>' . encode_htmlspecialchars($tax_rates['last_modified']) .   '</LAST_MODIFIED>' . "\n" .
               '<DATE_ADDED>' .    encode_htmlspecialchars($tax_rates['date_added']) .      '</DATE_ADDED>' . "\n" .
               '</RATES>' . "\n";

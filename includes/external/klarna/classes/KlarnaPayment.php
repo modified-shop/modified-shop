@@ -898,7 +898,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
           $products_array[$i] = array(
             'type' => (($total['value'] > 0) ? 'surcharge' : 'discount'),
             'reference' => $total['code'],
-            'name' => encode_utf8(strip_tags($total['title']), $_SESSION['language_charset'], true),
+            // the title is HTML, Klarna takes its text; decoded in UTF-8, the charset of the shop may lack a character of an entity
+            'name' => html_entity_decode(encode_utf8(strip_tags($total['title']), $_SESSION['language_charset'], true), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
             'quantity' => 1,
             'unit_price' => $this->format_amount($amount),
             'tax_rate' => $this->format_amount(($tax != '') ? $tax : 0),
