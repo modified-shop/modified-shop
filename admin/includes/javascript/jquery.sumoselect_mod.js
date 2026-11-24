@@ -351,8 +351,10 @@
                     var character = e.key; //important for # ä ö ü
                     if (settings.consoleLog) console.log('character:'+ character);
                     if (!character) return;
-                    // a key without a sign, as shift or control, and a shortcut, as Ctrl+S or Cmd+S, are no letters of the search
-                    if (character.length !== 1 || e.ctrlKey || e.metaKey) return;
+                    // a key without a sign, as shift or control, and a shortcut, as Ctrl+S or Cmd+S, are no letters of the search;
+                    // AltGr also sets ctrlKey on Windows, its signs as @ are letters; jQuery does not pass getModifierState()
+                    var oe = e.originalEvent || e;
+                    if (character.length !== 1 || e.metaKey || (e.ctrlKey && !(oe.getModifierState && oe.getModifierState('AltGraph')))) return;
                     var select = O.select.find('select');
                     var label = O.optDiv.find('ul li label');
                     var before = O.E.val();
