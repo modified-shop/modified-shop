@@ -270,6 +270,21 @@
     }
   }
 
+  // key of the last option spelled like $find, else of the last option equal to it as a number;
+  // a browser showed the last of several marked options, so a repeated id keeps the later option,
+  // 05 selects 5 and the banner group 01 is not selected for 1
+  function xtc_get_pull_down_option_key($values, $find) {
+    $exact_key = $number_key = false;
+    foreach ($values as $key => $val) {
+      if ((string)$find === (string)$val['id']) {
+        $exact_key = $key;
+      } elseif ((string)$find == (string)$val['id']) {
+        $number_key = $key;
+      }
+    }
+    return (($exact_key !== false) ? $exact_key : $number_key);
+  }
+
   // Output a form pull down menu
   function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false, $addwrap = true) {
     $field = '<select name="' . $name . '"';
@@ -288,6 +303,20 @@
     $field .= '>' . PHP_EOL;
     $li = '';
     $selText = '';
+    // a global of the same name only selects the option it matches when the default selects none
+    $default_key = $global_key = false;
+    if (is_array($values)) {
+      $default_key = xtc_get_pull_down_option_key($values, $default);
+      if (isset($GLOBALS[$name])
+          && !is_object($GLOBALS[$name])
+          && !is_array($GLOBALS[$name])
+          && strlen((string)$GLOBALS[$name]) > 0
+          )
+      {
+        $global_key = xtc_get_pull_down_option_key($values, $GLOBALS[$name]);
+      }
+    }
+    $selected_key = ((((string)$default === '' || $default_key === false) && $global_key !== false) ? $global_key : $default_key);
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
         // ids like banner groups or campaign ids are text from the database and come back as posted value,
@@ -295,14 +324,7 @@
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
-        if ((strlen($val['id']) > 0 
-             && isset($GLOBALS[$name]) 
-             && !is_object($GLOBALS[$name]) 
-             && !is_array($GLOBALS[$name]) 
-             && (string)$GLOBALS[$name] == (string)$val['id']
-             ) || ((string)$default == (string)$val['id'])
-            )
-        {
+        if ($selected_key !== false && $key === $selected_key) {
           $field .= ' selected="selected"';
           $li .= ' class="selected"';
           $selText = $val['text'];
