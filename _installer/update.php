@@ -433,11 +433,26 @@
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
         $smarty->assign('FORM_END', '</form>');
 
+        defined('_VALID_XTC') or define('_VALID_XTC', true);
+        include_once (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
+        // an installer that is newer than the files of the shop has the checks of the entries only after the update
+        $backup_checks = function_exists('backup_entry_stat');
+
         $sql_data_array = array();
         $sql_files_array = array();
         $dir = opendir(DIR_FS_BACKUP);
         while($file = readdir($dir)) {
-          if (is_file($file) && strpos($file, '.sql') !== false || strpos($file, '.gz') !== false) {
+          if ($backup_checks === true) {
+            // only a file or folder of the backup directory itself is offered, as on the backup page of the administration
+            $entry_stat = backup_entry_stat($file);
+            if ($entry_stat === false || (!$entry_stat['is_file'] && !$entry_stat['is_dir'])) {
+              continue;
+            }
+            $backup_file = ($entry_stat['is_file'] && (substr($file, -4) == '.sql' || substr($file, -3) == '.gz'));
+          } else {
+            $backup_file = (is_file($file) && strpos($file, '.sql') !== false || strpos($file, '.gz') !== false);
+          }
+          if ($backup_file) {
             $sql_files_array[] = $file;
           } else {
             $schema = check_schema($file);
@@ -449,11 +464,20 @@
         rsort($sql_files_array);
         
         foreach ($sql_files_array as $file) {
+          if ($backup_checks === true) {
+            $entry_stat = backup_entry_stat($file);
+            if ($entry_stat === false) {
+              continue;
+            }
+            $mtime = $entry_stat['mtime'];
+          } else {
+            $mtime = filemtime(DIR_FS_BACKUP.$file);
+          }
           $sql_data_array[] = array(
             'NAME' => $file,
-            'MTIME' => filemtime(DIR_FS_BACKUP.$file),
+            'MTIME' => $mtime,
             'SIZE' => calculate_filesize($file).' bytes',
-            'DATE' => date('Y-m-d H:i:s', filemtime(DIR_FS_BACKUP.$file)),
+            'DATE' => date('Y-m-d H:i:s', $mtime),
             'CHECKBOX' => xtc_draw_radio_field('restore_file', $file, false, 'id="'.$file.'"'),
           );
         }
@@ -465,9 +489,6 @@
             || (isset($_GET['action']) && $_GET['action'] == 'restoredb')
             )
         {
-          define('_VALID_XTC', true);
-          include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
-          
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
           if (isset($_POST['action']) && $_POST['action'] == 'restorenow') {
             unset($_SESSION['restore']);
@@ -483,22 +504,47 @@
             $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
   
             $restore['restore_dir'] = '';
-            if (is_dir(DIR_FS_BACKUP.$_GET['file'])) {
+            $file_array = array('readable' => false);
+            if ($backup_checks === true) {
+              $entry_stat = backup_entry_stat(isset($_GET['file']) ? $_GET['file'] : '');
+              if ($entry_stat !== false && $entry_stat['is_dir']) {
+                $restore['restore_dir'] = $_GET['file'];
+                $schema = check_schema($_GET['file']);
+                if ($schema != '') {
+                  $file_array = getBackupData($schema, $_GET['file'].'/');
+                }
+              } elseif ($entry_stat !== false && $entry_stat['is_file']) {
+                $file_array = getBackupData($_GET['file']);
+              }
+
+              // the conversion is decided by what the backup says about itself: one that cannot be read is not restored
+              if ($file_array['readable'] !== true) {
+                if ($action == 'restoredb') {
+                  // a step without a running restore, as before
+                  die('Direct Access to this location is not allowed.');
+                }
+                $messageStack->add_session('update', TEXT_DB_RESTORE_FILE_ERROR, 'error');
+                xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore&installer_token='.installer_token(), $request_type));
+              }
+            } elseif (isset($_GET['file']) && is_dir(DIR_FS_BACKUP.$_GET['file'])) {
               $restore['restore_dir'] = $_GET['file'];
               $schema = check_schema($_GET['file']);
               if ($schema != '') {
                 $file_array = getBackupData($schema, $_GET['file'].'/');
               }
-            } else {
+            } elseif (isset($_GET['file'])) {
               $file_array = getBackupData($_GET['file']);
             }
   
-            if (!$check_utf8 && $file_array['charset'] == 'utf8') {
+            if (!$check_utf8 && isset($file_array['charset']) && $file_array['charset'] == 'utf8') {
               $_POST['utf8-convert'] = 'yes';
             }
             
-            $_POST['restore_type'] = 'all';
-            $_POST['restore_dir'] = $restore['restore_dir'];
+            // only a backup folder has files to choose from: for a single file the restore would take every file of the directory
+            if ($restore['restore_dir'] != '') {
+              $_POST['restore_type'] = 'all';
+              $_POST['restore_dir'] = $restore['restore_dir'];
+            }
           } else {
             $_GET['file'] = $_SESSION['restore']['restore_file'];
           }

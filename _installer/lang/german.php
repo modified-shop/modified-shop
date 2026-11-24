@@ -100,6 +100,7 @@
   define('TEXT_DB_RESTORE_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank aus einem vorhandenen Backup wiederherstellen.');
   define('TEXT_INFO_DO_RESTORE', 'Die Datenbank wird wiederhergestellt!');
   define('TEXT_INFO_DO_RESTORE_OK', 'Die Datenbank wurde erfolgreich wiederhergestellt!');
+  define('TEXT_DB_RESTORE_FILE_ERROR', 'Die ausgew&auml;hlte Sicherung kann nicht gelesen werden. Es wurde nichts wiederhergestellt.');
   
   define('TEXT_UPDATER_ORDER', 'Update Schritte');
   define('TEXT_DB_BACKUP_OPTIONS', 'Datenbank Optionen');

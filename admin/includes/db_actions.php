@@ -280,10 +280,14 @@
       }
 
       if (isset($_POST['restore_type']) && $_POST['restore_type'] == 'all') {
-        $dir = dir(DIR_FS_BACKUP.$restore['restore_dir']);
+        // only the files of the backup folder itself, none that a link leads to elsewhere
+        $restore_folder = rtrim($restore['restore_dir'], '/');
+        $dir = (($restore_folder == '' || backup_entry_path($restore_folder) !== false) ? dir(DIR_FS_BACKUP.$restore['restore_dir']) : false);
         $restore['restore_tables'] = array();
-        while ($file = $dir->read()) {
-          if (is_file(DIR_FS_BACKUP.$restore['restore_dir'].$file)
+        while ($dir !== false && $file = $dir->read()) {
+          $entry_stat = backup_entry_stat($file, $restore_folder);
+          if ($entry_stat !== false
+              && $entry_stat['is_file']
               && strpos($file, 'schema.sql') === false
               )
           {
@@ -298,13 +302,11 @@
       }
 
       $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
-      $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
 
-      if (is_file($_GET['file'])) {
-        $restore['file'] =  $_GET['file'];
-      } else {
-        $restore['file'] = DIR_FS_BACKUP . $restore['restore_dir'] . $_GET['file'];
-      }
+      // the checked file of the backup folder, never a file of the same name elsewhere or of a shortened name
+      $restore_folder = rtrim($restore['restore_dir'], '/');
+      $restore_stat = backup_entry_stat($_GET['file'], $restore_folder);
+      $restore['file'] = (($restore_stat !== false && $restore_stat['is_file']) ? backup_entry_path($_GET['file'], $restore_folder) : '');
 
       $extension = substr($restore['file'], -3);
       if ($extension == '.gz') {
@@ -312,7 +314,7 @@
       } else {
         $protdatei = $restore['file'] . '.log';
       }
-      if (RESTORE_TEST && is_file($protdatei) ) {
+      if (RESTORE_TEST && $restore['file'] != '' && is_file($protdatei) ) {
         unlink ($protdatei);
       }
       $extension = substr($_GET['file'], -3);
