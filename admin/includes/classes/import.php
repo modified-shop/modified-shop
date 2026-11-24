@@ -556,6 +556,16 @@ class xtcImport {
                 }
             }
         }
+        // a single backslash of the file is no escape, unlike the doubled one of ACME\\B: without it the number names
+        // another model, so only a product with the number as it stands in the file counts
+        if (count($ids) > 0
+            && trim((string)$model) !== $model_raw
+            && addslashes($model_raw) !== trim((string)$model)
+            && count(array_diff($ids, $this->getModelIDs(array((string)$model)))) > 0
+            )
+        {
+            return false;
+        }
 
         return array('model' => $model_store, 'ids' => $ids);
     }
