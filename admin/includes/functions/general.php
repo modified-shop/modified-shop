@@ -1131,9 +1131,11 @@
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
         // the option comes from the stored call, in the markup it is plain text
         $option = encode_htmlspecialchars($select_array[$i], ENT_QUOTES);
+        // a stored call hands over the value encoded
+        $checked = ((string)$key_value == (string)$option);
         $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$option.'"';
-        if ($key_value == $select_array[$i]) $string .= ' checked';
-        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($option).'">';
+        if ($checked) $string .= ' checked';
+        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($checked?'cfg_so_before ':'').'cfg_sov_'.strtolower($option).'">';
         $string .= xtc_multi_lang_values($select_array[$i]) . '</label>';
         if (NEW_SELECT_CHECKBOX != 'true') {
           $string .= '<br/>';
