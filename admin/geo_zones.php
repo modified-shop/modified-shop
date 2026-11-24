@@ -189,6 +189,18 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
 
     <?php echo xtc_js_zone_list('SelectedCountry', 'theForm', 'zone_id'); ?>
 
+      // SumoSelect keeps its own list, so rebuild it from the native options (as text, not as HTML)
+      var sumo = theForm.zone_id.sumo;
+      if (sumo) {
+        var $list = sumo.optDiv.children('ul.options').empty();
+        $(theForm.zone_id).children('option').each(function(i) {
+          var $li = $('<li></li>').attr('data-val', this.value).append($('<label></label>').text($(this).text()));
+          if (i == theForm.zone_id.selectedIndex) $li.addClass('selected');
+          sumo.onOptClick($li);
+          $list.append($li);
+        });
+        sumo.setText();
+      }
     }
   </script>
   <?php
