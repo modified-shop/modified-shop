@@ -299,8 +299,9 @@
         // ids like banner groups or campaign ids are text from the database and come back as posted value,
         // so every character is encoded, also the & of something that looks like an entity
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
-        // the text is printed as text: an entity it holds stays, as the &nbsp; of a category tree, a tag or a quote is encoded
-        $val_text = htmlspecialchars((string)$val['text'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, get_default_encoding(''), false);
+        // the text is printed as text: an entity it holds stays, as the &nbsp; of a category tree, a quote is encoded;
+        // the tags of a formatted name (<b>) are dropped, as the browser did inside an option, a < before no letter stays
+        $val_text = htmlspecialchars(preg_replace('#</?[a-z][^>]*>#i', '', (string)$val['text']), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, get_default_encoding(''), false);
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
         if ((strlen($val['id']) > 0 
