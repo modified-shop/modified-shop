@@ -66,26 +66,31 @@
   // javascript to dynamically update the states/provinces list when the country is changed
   // TABLES: zones
   function xtc_js_zone_list($country, $form, $field) {
+    // the names go into the script as text: decoded once as a page shows them, then encoded for JavaScript
+    $js_text = function ($value) {
+      $value = html_entity_decode((string)$value, ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
+      return json_encode(encode_utf8($value, get_default_encoding(''), true), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE);
+    };
     $countries_query = xtc_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
     $num_country = 1;
     $output_string = '';
     while ($countries = xtc_db_fetch_array($countries_query)) {
       if ($num_country == 1) {
-        $output_string .= '  if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
+        $output_string .= '  if (' . $country . ' == "' . (int)$countries['zone_country_id'] . '") {' . "\n";
       } else {
-        $output_string .= '  } else if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
+        $output_string .= '  } else if (' . $country . ' == "' . (int)$countries['zone_country_id'] . '") {' . "\n";
       }
       $states_query = xtc_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
       $num_state = 1;
      while ($states = xtc_db_fetch_array($states_query)) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(PLEASE_SELECT, ENT_COMPAT, strtoupper($_SESSION['language_charset']))  . '", "");' . "\n";
-        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states['zone_name'] . '", "' . $states['zone_id'] . '");' . "\n";
+        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option(' . $js_text(PLEASE_SELECT) . ', "");' . "\n";
+        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option(' . $js_text($states['zone_name']) . ', "' . (int)$states['zone_id'] . '");' . "\n";
         $num_state++;
       }
       $num_country++;
     }
     $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(TYPE_BELOW, ENT_COMPAT, strtoupper($_SESSION['language_charset'])). '", "");' . "\n" .
+                      '    ' . $form . '.' . $field . '.options[0] = new Option(' . $js_text(TYPE_BELOW) . ', "");' . "\n" .
                       '  }' . "\n";
     return $output_string;
   }
@@ -293,6 +298,8 @@
         // ids like banner groups or campaign ids are text from the database and come back as posted value,
         // so every character is encoded, also the & of something that looks like an entity
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
+        // the text is printed as text: an entity it holds stays, as the &nbsp; of a category tree, a tag or a quote is encoded
+        $val_text = htmlspecialchars((string)$val['text'], ENT_QUOTES | ENT_SUBSTITUTE, get_default_encoding(''), false);
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
         if ((strlen($val['id']) > 0 
@@ -305,10 +312,10 @@
         {
           $field .= ' selected="selected"';
           $li .= ' class="selected"';
-          $selText = $val['text'];
+          $selText = $val_text;
         }
-        $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
-        $li .= '>'. PHP_EOL .'<label>' . $val['text'] . '</label>'. PHP_EOL . '</li>' . PHP_EOL;
+        $field .= '>' . $val_text . '</option>' . PHP_EOL;
+        $li .= '>'. PHP_EOL .'<label>' . $val_text . '</label>'. PHP_EOL . '</li>' . PHP_EOL;
       }
     }
     $field .= '</select>'. PHP_EOL;
