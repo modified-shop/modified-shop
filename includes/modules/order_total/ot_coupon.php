@@ -124,7 +124,7 @@ class ot_coupon {
 
       $this->output[] = array(
         // the title is printed as HTML and stored with the order: the code is text in it,
-        // the readers of plain text (CAO, Klarna, PAYONE) decode it again; quotes stay, the plain text mail decodes without them
+        // the readers of plain text (CAO, Klarna) decode it again; quotes stay, the plain text mail decodes without them
         'title' => $this->title.' '.encode_htmlspecialchars((string)$this->coupon_code, ENT_NOQUOTES).':',
         'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount * (-1), true).'</b></span>',
         'value' => $od_amount * (-1)
