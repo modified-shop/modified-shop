@@ -70,8 +70,11 @@
               }
             }
             
+            // a radio group compares exactly, '01' and '1' are two options; other fields keep the loose comparison their checks expect
             if (isset($_POST[$configuration['configuration_key']]) 
-                && (string)$_POST[$configuration['configuration_key']] !== (string)$configuration['configuration_value']
+                && ((isset($_POST['cfg_radio'][$configuration['configuration_key']])) 
+                    ? (string)$_POST[$configuration['configuration_key']] !== (string)$configuration['configuration_value'] 
+                    : $_POST[$configuration['configuration_key']] != $configuration['configuration_value'])
                 )
             {
               //value_limits min
