@@ -608,6 +608,7 @@ define('TEXT_HOUR', 'Stunde');
 define('TEXT_HOURS', 'Stunden');
 
 define('DELETE_LOGS_SUCCESSFUL', 'Logfiles erfolgreich gel&ouml;scht.');
+define('DELETE_LOGS_INCOMPLETE', 'Nicht alles im Logverzeichnis wurde gel&ouml;scht. Ordner, Links auf Ordner und Links aus dem Verzeichnis heraus bleiben stehen. Noch vorhanden: %s');
 
 define('BOX_BLACKLIST_LOGS', 'Blacklist Logs');
 

@@ -2790,14 +2790,22 @@
     if ($handle = opendir($dir)) {
       while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != "..") {
-          if (is_dir($dir.$file)) {
+          // a link is removed itself like a file, the folder it leads to is not entered
+          if (is_dir($dir.$file) && !is_link($dir.$file)) {
             clear_dir($dir.$file, true);
             rmdir($dir.$file);
           } else {
             if (!$basefiles && in_array($file, $ignore_files)) {
               continue;
             }
-            unlink($dir.$file);
+            if (is_link($dir.$file)) {
+              // Windows removes a link to a folder with rmdir()
+              if (!@unlink($dir.$file)) {
+                rmdir($dir.$file);
+              }
+            } else {
+              unlink($dir.$file);
+            }
           }
         }
       }

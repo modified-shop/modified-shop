@@ -143,8 +143,9 @@
         break;
 
       case 'dellog':
-        clear_dir(DIR_FS_CATALOG.'log/', false, array('xss_blacklist.log'));
-        $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
+        // the same cleanup as the button of the log page
+        require_once(DIR_WS_FUNCTIONS.'log_files.php');
+        logs_delete_all();
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
     }
