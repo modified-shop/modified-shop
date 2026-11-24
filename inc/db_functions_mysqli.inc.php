@@ -235,7 +235,8 @@
   }
 
 
-  function xtc_db_query($query, $link='db_link') {
+  // $query_info, when passed: affected rows and insert id of this statement, read before the query log and its hooks run queries of their own
+  function xtc_db_query($query, $link='db_link', &$query_info = null) {
     global ${$link};
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
@@ -254,9 +255,11 @@
     try {
       $result = mysqli_query(${$link}, $query);
     } catch (Exception $ex) {
+      $query_info = array('affected_rows' => -1, 'insert_id' => 0);
       xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link}));
       return false;
     }
+    $xtc_db_query_info = ((func_num_args() > 2) ? (($result === false) ? array('affected_rows' => -1, 'insert_id' => 0) : array('affected_rows' => mysqli_affected_rows(${$link}), 'insert_id' => mysqli_insert_id(${$link}))) : null);
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = microtime(true); 
@@ -272,6 +275,10 @@
       
       require_once(DIR_FS_INC.'auto_include.inc.php');
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/db_query/','php') as $file) require ($file);
+    }
+    if ($xtc_db_query_info !== null) {
+      // set after the hooks, they run in this scope
+      $query_info = $xtc_db_query_info;
     }
 
     return $result;

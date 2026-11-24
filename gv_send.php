@@ -130,39 +130,35 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   // one statement takes the amount only while the balance covers it, so two transfers at the same time cannot both spend it
   $gv_debited = false;
   $gv_debit_failed = false;
+  $gv_booking_error = (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.');
   if ((float)$gv_debit > 0) {
-    $gv_debit_sql = "UPDATE ".TABLE_COUPON_GV_CUSTOMER."
-                        SET amount = amount - ".$gv_debit."
-                      WHERE customer_id = '".(int)$_SESSION['customer_id']."'
-                        AND amount >= ".$gv_debit;
-    // sent directly and counted at once: the query log, its hooks and the error mail run no query in between
-    try {
-      $gv_debited = (mysqli_query($db_link, $gv_debit_sql) === true && mysqli_affected_rows($db_link) == 1);
-    } catch (Exception $ex) {
+    // count of this statement, a query of the query log or of its hooks after it does not change it
+    $gv_debit_query = xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                                       SET amount = amount - ".$gv_debit."
+                                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'
+                                       AND amount >= ".$gv_debit, 'db_link', $gv_debit_info);
+    $gv_debit_failed = ($gv_debit_query === false);
+    $gv_debited = ($gv_debit_failed === false && is_array($gv_debit_info) && $gv_debit_info['affected_rows'] == 1);
+  }
+  if ($gv_debited === true) {
+    $gv_insert_query = xtc_db_query("INSERT INTO ".TABLE_COUPONS." (coupon_type, coupon_code, date_created, coupon_amount)
+                                     VALUES ('G', '".xtc_db_input($gv_code)."', now(), '".$gv_debit."')", 'db_link', $gv_insert_info);
+    $insert_id = (($gv_insert_query !== false && is_array($gv_insert_info)) ? (int)$gv_insert_info['insert_id'] : 0);
+    if ($insert_id < 1) {
+      // no voucher: the debit goes back, nothing is tracked, mailed or shown as sent
+      xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                       SET amount = amount + ".$gv_debit."
+                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+      $gv_debited = false;
       $gv_debit_failed = true;
-      xtc_db_error($gv_debit_sql, mysqli_errno($db_link), mysqli_error($db_link));
     }
   }
   if ($gv_debited !== true) {
     $error = true;
     // a refused statement is no matter of the amount, the balance is unchanged
-    $messageStack->add('gv_send', (($gv_debit_failed === true) ? (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.') : ERROR_ENTRY_AMOUNT_CHECK));
+    $messageStack->add('gv_send', (($gv_debit_failed === true) ? $gv_booking_error : ERROR_ENTRY_AMOUNT_CHECK));
     $_GET['action'] = 'send';
   } else {
-    $sql_data_array = array(
-      'coupon_type' => 'G',
-      'coupon_code' => $gv_code,
-      'date_created' => 'now()',
-      'coupon_amount' => $gv_debit
-    );
-    xtc_db_perform(TABLE_COUPONS, $sql_data_array);
-    // read back by its unique code, a query run by a hook after the insert changes xtc_db_insert_id()
-    $insert_query = xtc_db_query("SELECT coupon_id
-                                    FROM ".TABLE_COUPONS."
-                                   WHERE coupon_code = '".xtc_db_input($gv_code)."'");
-    $insert = xtc_db_fetch_array($insert_query);
-    $insert_id = (is_array($insert) ? (int)$insert['coupon_id'] : 0);
-
     $sql_data_array = array(
       'coupon_id' => $insert_id,
       'customer_id_sent' => $_SESSION['customer_id'],
