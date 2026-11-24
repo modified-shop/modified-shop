@@ -762,7 +762,12 @@
 
       // decoded in utf-8, so an entity the charset of the shop cannot hold is read as well
       $number = html_entity_decode(self::utf8($number), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-      $number = str_replace(array("\xc2\xa0", "\r", "\n", "\t"), ' ', $number);
+      // a no-break space stays one, as text() kept it in a single byte charset; in utf-8 it made a blank of it
+      $blanks = array("\r", "\n", "\t");
+      if (strtoupper(get_default_charset()) == 'UTF-8') {
+        $blanks[] = "\xc2\xa0";
+      }
+      $number = str_replace($blanks, ' ', $number);
 
       return trim(preg_replace('/\s\s+/', ' ', $number));
     }
