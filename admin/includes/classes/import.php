@@ -556,10 +556,10 @@ class xtcImport {
                 }
             }
         }
-        // a backslash that is not one of a pair as in ACME\\B is part of the number: without it the number names
-        // another model, so only a product with the number as it stands in the file counts
+        // a backslash is part of the number, also a pair: the export writes ACME\\B for the model ACME\\B, and
+        // without the backslash the number names another model, so only a product with the number as it stands in the file counts
         if (count($ids) > 0
-            && strpos(str_replace('\\\\', '', (string)$model), '\\') !== false
+            && strpos((string)$model, '\\') !== false
             && count(array_diff($ids, $this->getModelIDs(array((string)$model)))) > 0
             )
         {
