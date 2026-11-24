@@ -1128,12 +1128,16 @@
         $string .= '<span class="cfg_select_option">';
       }
       $name_lower = (($key) ? 'cfg_so_k_'.strtolower($key) : 'cfg_so_k');
+      $found = false;
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
         // the option comes from the stored call, in the markup it is plain text
         $option = encode_htmlspecialchars($select_array[$i], ENT_QUOTES);
+        // a stored call hands over the value encoded, strings keep '01' and '1' apart
+        $checked = ((string)$key_value === (string)$option);
+        $found = ($found || $checked);
         $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$option.'"';
-        if ($key_value == $select_array[$i]) $string .= ' checked';
-        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($option).'">';
+        if ($checked) $string .= ' checked';
+        $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($checked?'cfg_so_before ':'').'cfg_sov_'.strtolower($option).'">';
         $string .= xtc_multi_lang_values($select_array[$i]) . '</label>';
         if (NEW_SELECT_CHECKBOX != 'true') {
           $string .= '<br/>';
@@ -1141,6 +1145,11 @@
       }
       if (NEW_SELECT_CHECKBOX == 'true') {
         $string .= '</span>';
+      }
+      // a radio group without a chosen option sends nothing, the marker tells the page to keep the stored value
+      $string .= '<input type="hidden" name="cfg_radio['.(($key) ? $key : 'configuration_value').']" value="1">';
+      if (!$found && (string)$key_value !== '') {
+        $string .= '<div class="smallText" style="color:#b42318;">'.(defined('TEXT_CFG_RADIO_VALUE_UNLISTED') ? TEXT_CFG_RADIO_VALUE_UNLISTED : 'The stored value is not one of the options.').'</div>';
       }
     }
     return $string;
