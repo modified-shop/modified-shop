@@ -74,11 +74,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
                              WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
-  $customer_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']);
-  $gv_amount = xtc_input_validation($amount, 'amount');
-  
-  if ((float)$gv_amount <= 0
-      || (float)$gv_amount > (float)$customer_amount
+  // the amount as the currency of the session shows it, checked in the default currency as it will be booked
+  $gv_amount = number_format((float)xtc_input_validation($amount, 'amount'), (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places'], '.', '');
+  $gv_debit = number_format((float)$xtPrice->xtcRemoveCurr($gv_amount), 4, '.', '');
+
+  if ((float)$gv_debit <= 0
+      || !is_array($gv_result)
+      || (float)$gv_debit > (float)$gv_result['amount']
       )
   {
     $error = true;
@@ -121,18 +123,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $gv_code = create_coupon_code(10);
-  $gv_amount = xtc_input_validation($amount, 'amount');
+  $gv_amount = number_format((float)xtc_input_validation($amount, 'amount'), (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places'], '.', '');
   // the balance is kept in the default currency, like the amount of the voucher;
-  // one decimal string for both, a float would be written with fewer digits
-  $gv_debit = sprintf('%.4F', (float)$xtPrice->xtcRemoveCurr($gv_amount));
+  // one decimal string for both, rounded as round() does, a float would be written with fewer digits
+  $gv_debit = number_format((float)$xtPrice->xtcRemoveCurr($gv_amount), 4, '.', '');
   // one statement takes the amount only while the balance covers it, so two transfers at the same time cannot both spend it
+  $gv_debited = false;
   if ((float)$gv_debit > 0) {
-    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
-                     SET amount = amount - ".$gv_debit."
-                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'
-                     AND amount >= ".$gv_debit);
+    $gv_debit_query = xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                                       SET amount = amount - ".$gv_debit."
+                                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'
+                                       AND amount >= ".$gv_debit);
+    // its own result decides: after a failed statement the error mail can run other queries
+    $gv_debited = ($gv_debit_query !== false && xtc_db_affected_rows() == 1);
   }
-  if ((float)$gv_debit <= 0 || xtc_db_affected_rows() < 1) {
+  if ($gv_debited !== true) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
     $_GET['action'] = 'send';
