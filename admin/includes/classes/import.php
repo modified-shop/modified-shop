@@ -514,7 +514,9 @@ class xtcImport {
         if ($model_clean == '') {
             return array('model' => '', 'ids' => array());
         }
-        $models = array($model_raw);
+        // the model as it stands in the file too, as before: the preparation strips the backslash of an exported model
+        $models = array((string)$model, $model_raw);
+        $model_entities = '';
         require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
         if (!(defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true))
             && xtc_remove_active_content_available()
@@ -526,12 +528,15 @@ class xtcImport {
             $model_entities = trim(xtc_remove_active_content($model_raw, $removed));
             if (xtc_remove_active_content_same_text($model_clean, $model_entities)) {
                 $models[] = $model_entities;
+            } else {
+                $model_entities = '';
             }
         }
         $models = array_values(array_diff(array_unique($models), array($model_clean, '')));
 
         // products sharing the model are all updated, as before
         $ids = $this->getModelIDs(array($model_clean));
+        $model_store = $model_clean;
         if (count($models) > 0) {
             // another spelling only for a single product that the model itself does not name, as the database compares
             $ids_other = $this->getModelIDs($models, $model_clean);
@@ -540,10 +545,19 @@ class xtcImport {
                     return false;
                 }
                 $ids = $ids_other;
+                // a product with the spelling of the full cleaning keeps it where its page would show the model of the file
+                // differently, as before: next to a tag the full cleaning wrote &lpar; as &amp;lpar;
+                if ($model_entities !== ''
+                    && xtc_remove_active_content_decode($model_entities) !== xtc_remove_active_content_decode($model_clean)
+                    && $this->getModelIDs(array($model_entities), $model_clean) == $ids
+                    )
+                {
+                    $model_store = $model_entities;
+                }
             }
         }
 
-        return array('model' => $model_clean, 'ids' => $ids);
+        return array('model' => $model_store, 'ids' => $ids);
     }
 
     // up to two ids, enough to tell none, one and several apart; not the products of the model $except
