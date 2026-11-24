@@ -288,21 +288,21 @@
     $field .= '>' . PHP_EOL;
     $li = '';
     $selText = '';
-    // a global of the same name only selects an option when the default selects none
+    // a global of the same name only selects the option it matches when the default selects none;
+    // ids are compared as strings, so 01 and 1 stay two options
     $use_global = (isset($GLOBALS[$name])
                    && !is_object($GLOBALS[$name])
                    && !is_array($GLOBALS[$name])
                    && strlen((string)$GLOBALS[$name]) > 0
                    );
-    if ($use_global && (string)$default != '' && is_array($values)) {
+    $default_found = $global_found = false;
+    if (is_array($values)) {
       foreach ($values as $val) {
-        if ((string)$default == (string)$val['id']) {
-          $use_global = false;
-          break;
-        }
+        if ((string)$default === (string)$val['id']) $default_found = true;
+        if ($use_global && (string)$GLOBALS[$name] === (string)$val['id']) $global_found = true;
       }
     }
-    $selected = (($use_global) ? $GLOBALS[$name] : $default);
+    $selected = (((string)$default === '' || $default_found === false) && $global_found === true) ? $GLOBALS[$name] : $default;
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
         // ids like banner groups or campaign ids are text from the database and come back as posted value,
@@ -310,7 +310,7 @@
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
-        if ((string)$selected == (string)$val['id']) {
+        if ((string)$selected === (string)$val['id']) {
           $field .= ' selected="selected"';
           $li .= ' class="selected"';
           $selText = $val['text'];

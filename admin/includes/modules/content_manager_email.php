@@ -329,7 +329,8 @@ if (!$action || in_array($action, array('delete', 'list'))) {
 
   // add default value to array
   $default_array[]=array('id' => 'default','text' => TEXT_SELECT);
-  $default_value = 'default';
+  // after a failed save the posted file stays selected
+  $default_value = ((isset($error) && $error === true && isset($select_file)) ? $select_file : 'default');
   $content_files = array_merge($default_array,$content_files);
   // mask for product content      
   ?>
