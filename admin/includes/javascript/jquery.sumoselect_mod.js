@@ -361,15 +361,19 @@
                     settings.word += character;
                     if (settings.consoleLog) console.log('settings.word:'+ settings.word);
                     var foundMatch = false;
-                    // the choice changes only with a hit, letters without one leave it as it is
+                    // the choice changes only with a hit on an enabled option, letters without one leave it as it is
+                    var enabled = function(i){ return !O.E.children('option')[i].disabled && !label.eq(i).closest('li').hasClass('disabled'); };
                     var hit = false;
-                    label.each(function(){
-                        var value = $.trim($(this).html().replace(/&nbsp;/g,'')).substring(0, settings.word.length);
+                    label.each(function(index){
+                        if (!enabled(index)) return;
+                        var value = $.trim($(this).text().replace(/\u00a0/g,'')).substring(0, settings.word.length);
                         if (value && value.toLowerCase() == settings.word.toLowerCase()) hit = true;
                     });
                     label.each(function(index, value){
-                        var value = $(this).html();
-                        value = value.replace(/&nbsp;/g,'');
+                        if (!enabled(index)) return;
+                        // the visible text, so that &amp; and the like match the signs typed
+                        var value = $(this).text();
+                        value = value.replace(/\u00a0/g,'');
                         value = $.trim(value);
                         if (settings.consoleLog) console.log('value:'+value+'|');
                         value = value.substring(0,settings.word.length);
@@ -467,7 +471,6 @@
                             li.parent().find('li.selected').removeClass('selected'); //if not multiselect then remove all selections from this list
                             li.toggleClass('selected');
                             O.E.val(li.attr('data-val'));   //set the value of select element
-                            O.openVal = O.E.val();   // the click sends its change below, the closing must not send it again
                         }
 
                         //branch for combined change event.
@@ -476,7 +479,10 @@
                             O.E.trigger('change').trigger('click');
                         }
 
-                        if (!O.is_multi) O.hideOpts(); //if its not a multiselect then hide on single select.
+                        if (!O.is_multi) {
+                            O.openVal = O.E.val();   // the click sent its change, also after a handler rewrote the value; closing must not send another
+                            O.hideOpts(); //if its not a multiselect then hide on single select.
+                        }
                     });
                 },
 
