@@ -351,12 +351,20 @@
                     var character = e.key; //important for # ä ö ü
                     if (settings.consoleLog) console.log('character:'+ character);
                     if (!character) return;
+                    // a key without a sign, as shift or control, is no letter of the search
+                    if (character.length !== 1) return;
                     var select = O.select.find('select');
                     var label = O.optDiv.find('ul li label');
                     var before = O.E.val();
                     settings.word += character;
                     if (settings.consoleLog) console.log('settings.word:'+ settings.word);
                     var foundMatch = false;
+                    // the choice changes only with a hit, letters without one leave it as it is
+                    var hit = false;
+                    label.each(function(){
+                        var value = $.trim($(this).html().replace(/&nbsp;/g,'')).substring(0, settings.word.length);
+                        if (value && value.toLowerCase() == settings.word.toLowerCase()) hit = true;
+                    });
                     label.each(function(index, value){
                         var value = $(this).html();
                         value = value.replace(/&nbsp;/g,'');
@@ -369,7 +377,7 @@
                                 O.selectItem(index);
                                 $(this).closest('li').addClass('sel');
                                 foundMatch = true;
-                            }else{
+                            }else if (hit){
                                 $(this).closest('li').removeClass('sel');
                                 O.unSelectItem(index);
                             }
