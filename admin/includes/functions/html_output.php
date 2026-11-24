@@ -270,19 +270,19 @@
     }
   }
 
-  // key of the option spelled like $find, else of the last option equal to it as a number (the one
-  // a browser showed when all were marked), so 05 selects 5 and the banner group 01 is not selected for 1
+  // key of the last option spelled like $find, else of the last option equal to it as a number;
+  // a browser showed the last of several marked options, so a repeated id keeps the later option,
+  // 05 selects 5 and the banner group 01 is not selected for 1
   function xtc_get_pull_down_option_key($values, $find) {
-    $number_key = false;
+    $exact_key = $number_key = false;
     foreach ($values as $key => $val) {
       if ((string)$find === (string)$val['id']) {
-        return $key;
-      }
-      if ((string)$find == (string)$val['id']) {
+        $exact_key = $key;
+      } elseif ((string)$find == (string)$val['id']) {
         $number_key = $key;
       }
     }
-    return $number_key;
+    return (($exact_key !== false) ? $exact_key : $number_key);
   }
 
   // Output a form pull down menu
