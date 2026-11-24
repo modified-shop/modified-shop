@@ -47,6 +47,11 @@
           while ($configuration = xtc_db_fetch_array($configuration_query)) {
             $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
             
+            // a radio group without a chosen option sends nothing, its stored value stays
+            if (!isset($_POST[$configuration['configuration_key']]) && isset($_POST['cfg_radio'][$configuration['configuration_key']])) {
+              continue;
+            }
+
             if (!isset($_POST[$configuration['configuration_key']])) {
               $_POST[$configuration['configuration_key']] = '';
             }
@@ -66,7 +71,7 @@
             }
             
             if (isset($_POST[$configuration['configuration_key']]) 
-                && $_POST[$configuration['configuration_key']] != $configuration['configuration_value']
+                && (string)$_POST[$configuration['configuration_key']] !== (string)$configuration['configuration_value']
                 )
             {
               //value_limits min

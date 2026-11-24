@@ -516,6 +516,7 @@ define('TEXT_INFO_MODULE_RESTORE', 'Wollen Sie die gesicherten Einstellungen wie
 define('TEXT_INFO_MODULE_REMOVE', 'Wollen Sie das Modul deinstallieren?<br /><br /><b>ACHTUNG</b>: Alle Moduleinstellungen werden ebenfalls gel&ouml;scht!');
 define('TEXT_INFO_MODULE_BACKUP', 'Wollen Sie die Moduleinstellungen sichern?');
 define('TEXT_CFG_FUNCTION_UNKNOWN', 'Unbekannte Eingabefunktion, nicht ausgef&uuml;hrt:');
+define('TEXT_CFG_RADIO_VALUE_UNLISTED', 'Der gespeicherte Wert geh&ouml;rt nicht zur Auswahl.');
 define('MODULE_BACKUP_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich gesichert!');
 define('MODULE_RESTORE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich wiederhergestellt!');
 define('MODULE_UPDATE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich aktualisiert!');
