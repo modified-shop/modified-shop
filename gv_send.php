@@ -121,26 +121,26 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $gv_code = create_coupon_code(10);
-  $gv_query = xtc_db_query("SELECT amount 
-                              FROM ".TABLE_COUPON_GV_CUSTOMER." 
-                             WHERE customer_id='".(int)$_SESSION['customer_id']."'");
-  $gv_result = xtc_db_fetch_array($gv_query);
   $gv_amount = xtc_input_validation($amount, 'amount');
-  $new_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']) - (float)$gv_amount;
-  if ($new_amount < 0) {
+  // the balance is kept in the default currency, like the amount of the voucher
+  $gv_debit = round((float)$xtPrice->xtcRemoveCurr($gv_amount), 4);
+  // one statement takes the amount only while the balance covers it, so two transfers at the same time cannot both spend it
+  if ($gv_debit > 0) {
+    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                     SET amount = amount - ".sprintf('%.4F', $gv_debit)."
+                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'
+                     AND amount >= ".sprintf('%.4F', $gv_debit));
+  }
+  if ($gv_debit <= 0 || xtc_db_affected_rows() < 1) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
     $_GET['action'] = 'send';
   } else {
-    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
-                     SET amount = '".xtc_db_input($new_amount)."' 
-                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
-    
     $sql_data_array = array(
       'coupon_type' => 'G',
       'coupon_code' => $gv_code,
       'date_created' => 'now()',
-      'coupon_amount' => $xtPrice->xtcRemoveCurr($gv_amount)
+      'coupon_amount' => $gv_debit
     );
     xtc_db_perform(TABLE_COUPONS, $sql_data_array);
     $insert_id = xtc_db_insert_id();
