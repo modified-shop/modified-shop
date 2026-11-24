@@ -56,22 +56,12 @@
   function xtc_db_affected_rows($link='db_link') {
     global ${$link};
 
-    // the count of the last statement of xtc_db_query() on this link, a query run by a hook after it does not change it
-    if (isset($GLOBALS['xtc_db_query_last'][$link])) {
-      return $GLOBALS['xtc_db_query_last'][$link]['affected_rows'];
-    }
-
     return mysql_affected_rows(${$link});
   }
 
 
   function xtc_db_insert_id($link='db_link') {
     global ${$link};
-
-    // the id of the last statement of xtc_db_query() on this link, a query run by a hook after it does not change it
-    if (isset($GLOBALS['xtc_db_query_last'][$link])) {
-      return $GLOBALS['xtc_db_query_last'][$link]['insert_id'];
-    }
 
     return mysql_insert_id(${$link});
   }
@@ -237,7 +227,6 @@
     }
     
     $result = mysql_query($query, ${$link}) or xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link}));
-    $last = (($result === false) ? array('affected_rows' => -1, 'insert_id' => 0) : array('affected_rows' => mysql_affected_rows(${$link}), 'insert_id' => mysql_insert_id(${$link})));
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = array_sum(explode(" ",microtime())); 
@@ -254,7 +243,6 @@
       require_once(DIR_FS_INC.'auto_include.inc.php');
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/db_query/','php') as $file) require ($file);
     }
-    $GLOBALS['xtc_db_query_last'][$link] = $last;
 
     return $result;
   }
