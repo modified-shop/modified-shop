@@ -66,10 +66,11 @@
   // javascript to dynamically update the states/provinces list when the country is changed
   // TABLES: zones
   function xtc_js_zone_list($country, $form, $field) {
-    // the names go into the script as text: decoded once as a page shows them, then encoded for JavaScript
+    // the names go into the script as text: decoded once as a page shows them, then encoded for JavaScript;
+    // in UTF-8 first, a single byte charset cannot hold every character of an entity such as &rsquo;
     $js_text = function ($value) {
-      $value = html_entity_decode((string)$value, ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
-      return json_encode(encode_utf8($value, get_default_encoding(''), true), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE);
+      $value = html_entity_decode(encode_utf8((string)$value, get_default_encoding(''), true), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      return json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE);
     };
     $countries_query = xtc_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
     $num_country = 1;
@@ -299,7 +300,7 @@
         // so every character is encoded, also the & of something that looks like an entity
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
         // the text is printed as text: an entity it holds stays, as the &nbsp; of a category tree, a tag or a quote is encoded
-        $val_text = htmlspecialchars((string)$val['text'], ENT_QUOTES | ENT_SUBSTITUTE, get_default_encoding(''), false);
+        $val_text = htmlspecialchars((string)$val['text'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, get_default_encoding(''), false);
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
         if ((strlen($val['id']) > 0 
