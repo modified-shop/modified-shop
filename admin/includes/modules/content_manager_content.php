@@ -280,6 +280,26 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                                     AND content_group = '".(int)$_GET['cID']."'");
   $content_data = xtc_db_fetch_array($content_query);
 
+  // after a failed save the form shows the posted values instead of the stored ones
+  $content_failed_save = (isset($error) && $error === true && isset($content_title));
+  if ($content_failed_save === true) {
+    $content['content_name'] = $content_title;
+    $content['sort_order'] = $sort_order;
+    if (isset($content_language_id)) {
+      $content['languages_id'] = $content_language_id;
+    }
+    $content['group_ids'] = '';
+    if (isset($_POST['groups']) && is_array($_POST['groups'])) {
+      foreach ($_POST['groups'] as $posted_group) {
+        if (is_string($posted_group)) {
+          $content['group_ids'] .= 'c_'.$posted_group.'_group,';
+        }
+      }
+    }
+    $content['content_link'] = $content_link;
+    $content['file_comment'] = $file_comment;
+  }
+
   // get languages
   $languages_selected = $_SESSION['language_code'];
   $languages_id = (int)$_SESSION['languages_id'];
@@ -388,7 +408,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                     <?php
                       foreach ($customers_statuses_array as $customers_statuses) {
                         $checked = false;
-                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || (!isset($_GET['coID']) && $customers_statuses['id'] == 'all')) {
+                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || (!isset($_GET['coID']) && $content_failed_save !== true && $customers_statuses['id'] == 'all')) {
                           $checked = true;
                         }
                         echo xtc_draw_checkbox_field('groups[]', $customers_statuses['id'], $checked).' ' .$customers_statuses['text'].'<br />';
