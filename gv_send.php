@@ -135,17 +135,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                         SET amount = amount - ".$gv_debit."
                       WHERE customer_id = '".(int)$_SESSION['customer_id']."'
                         AND amount >= ".$gv_debit;
-    if ($db_link instanceof mysqli) {
-      // sent directly and counted at once: the query log, its hooks and the error mail run no query in between
-      try {
-        $gv_debited = (mysqli_query($db_link, $gv_debit_sql) === true && mysqli_affected_rows($db_link) == 1);
-      } catch (Exception $ex) {
-        $gv_debit_failed = true;
-        xtc_db_error($gv_debit_sql, mysqli_errno($db_link), mysqli_error($db_link));
-      }
-    } else {
-      $gv_debit_failed = (xtc_db_query($gv_debit_sql) === false);
-      $gv_debited = ($gv_debit_failed === false && xtc_db_affected_rows() == 1);
+    // sent directly and counted at once: the query log, its hooks and the error mail run no query in between
+    try {
+      $gv_debited = (mysqli_query($db_link, $gv_debit_sql) === true && mysqli_affected_rows($db_link) == 1);
+    } catch (Exception $ex) {
+      $gv_debit_failed = true;
+      xtc_db_error($gv_debit_sql, mysqli_errno($db_link), mysqli_error($db_link));
     }
   }
   if ($gv_debited !== true) {
