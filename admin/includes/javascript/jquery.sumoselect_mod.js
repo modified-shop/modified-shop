@@ -259,6 +259,8 @@
                     var O = this;
                     if (O.E.attr('disabled')) return; // if select is disabled then retrun
                     O.is_opened = true;
+                    // a choice by letters is closed with tab, esc or a click outside, it sends its change on closing
+                    if (!O.is_multi) O.openVal = O.E.val();
                     //O.backdrop.show();
                     O.optDiv.addClass('open');
 
@@ -292,6 +294,9 @@
                     O.is_opened = false;
                     O.optDiv.removeClass('open').find('ul li.sel').removeClass('sel');
                     $(document).off('click.sumo');
+                    var openVal = O.openVal;
+                    O.openVal = undefined;
+                    if (!O.is_multi && openVal !== undefined && O.E.val() !== openVal) O.E.trigger('change');
                 },
                 showSelectItem: function() {
                     var O = this;
@@ -348,6 +353,7 @@
                     if (!character) return;
                     var select = O.select.find('select');
                     var label = O.optDiv.find('ul li label');
+                    var before = O.E.val();
                     settings.word += character;
                     if (settings.consoleLog) console.log('settings.word:'+ settings.word);
                     var foundMatch = false;
@@ -370,6 +376,7 @@
                         }  
                     });
                     O.showSelectItem();
+                    if (!O.is_opened && !O.is_multi && O.E.val() !== before) O.E.trigger('change');
                     //timeout for multisigns
                     setTimeout(function(){
                        settings.word = '';
@@ -450,6 +457,7 @@
                             li.parent().find('li.selected').removeClass('selected'); //if not multiselect then remove all selections from this list
                             li.toggleClass('selected');
                             O.E.val(li.attr('data-val'));   //set the value of select element
+                            O.openVal = O.E.val();   // the click sends its change below, the closing must not send it again
                         }
 
                         //branch for combined change event.
