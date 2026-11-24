@@ -95,7 +95,9 @@
     foreach ($left as $entry) {
       $names[] = encode_htmlspecialchars($entry, ENT_COMPAT | ENT_SUBSTITUTE);
     }
-    $messageStack->add_session(sprintf(DELETE_LOGS_INCOMPLETE, implode(', ', $names)), 'error');
+    // an admin language that does not have the text yet gets the english one
+    $format = defined('DELETE_LOGS_INCOMPLETE') ? DELETE_LOGS_INCOMPLETE : 'Not everything in the log directory was deleted. Folders, links to folders and links out of the directory stay. Still there: %s';
+    $messageStack->add_session(sprintf($format, implode(', ', $names)), 'error');
 
     return false;
   }
