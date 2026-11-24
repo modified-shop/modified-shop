@@ -351,8 +351,8 @@
                     var character = e.key; //important for # ä ö ü
                     if (settings.consoleLog) console.log('character:'+ character);
                     if (!character) return;
-                    // a key without a sign, as shift or control, is no letter of the search
-                    if (character.length !== 1) return;
+                    // a key without a sign, as shift or control, and a shortcut, as Ctrl+S or Cmd+S, are no letters of the search
+                    if (character.length !== 1 || e.ctrlKey || e.metaKey) return;
                     var select = O.select.find('select');
                     var label = O.optDiv.find('ul li label');
                     var before = O.E.val();
