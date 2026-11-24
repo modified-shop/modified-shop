@@ -216,7 +216,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       <?php
         $order_total_query = xtc_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . $_GET['oID'] . "' and class = 'ot_shipping' ");
         $order_total = xtc_db_fetch_array($order_total_query);
-        echo xtc_draw_input_field('value', $order_total['value'], 'class="txta-r"');        
+        echo xtc_draw_input_field('value', ((isset($order_total['value'])) ? $order_total['value'] : ''), 'class="txta-r"', false, 'text', false);
       ?>
       </td>
       <td class="dataTableContent"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?></td>

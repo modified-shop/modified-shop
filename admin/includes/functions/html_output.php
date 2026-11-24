@@ -113,18 +113,19 @@
   // Output a form input field
   function xtc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" name="' . $name . '"';
-    if (isset($GLOBALS[$name]) 
-        && !is_object($GLOBALS[$name]) 
-        && !is_array($GLOBALS[$name]) 
-        && ($reinsert_value) 
-        ) 
-    {
-      $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
-    } elseif ((gettype($value) == 'double' && $value > 0) 
-              || (gettype($value) != 'double' && $value != '')
-              )
+    // a global of the same name only fills the field when no value is passed
+    if ((gettype($value) == 'double' && $value > 0)
+        || (gettype($value) != 'double' && $value != '')
+        )
     {
       $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
+    } elseif (isset($GLOBALS[$name])
+              && !is_object($GLOBALS[$name])
+              && !is_array($GLOBALS[$name])
+              && ($reinsert_value)
+              )
+    {
+      $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
     }
     if ($parameters != '') {
       $field .= ' ' . $parameters;
@@ -138,15 +139,15 @@
   // Output a form small input field
   function xtc_draw_small_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" size="3" name="' . $name . '"';
-    if (isset($GLOBALS[$name]) 
-        && !is_object($GLOBALS[$name]) 
-        && !is_array($GLOBALS[$name]) 
-        && ($reinsert_value) 
-        ) 
+    if ($value != '') {
+      $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
+    } elseif (isset($GLOBALS[$name])
+              && !is_object($GLOBALS[$name])
+              && !is_array($GLOBALS[$name])
+              && ($reinsert_value)
+              )
     {
       $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
-    } elseif ($value != '') {
-      $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
     }
     if ($parameters != '') {
       $field .= ' ' . $parameters;
