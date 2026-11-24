@@ -300,9 +300,9 @@
         // so every character is encoded, also the & of something that looks like an entity
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
         // the text is printed as text: an entity it holds stays, as the &nbsp; of a category tree, a quote is encoded;
-        // a formatted name reads as the browser showed it: comments and tags go, a line break or a block leaves a space
-        // between the words, a < before no letter stays
-        $val_text = preg_replace(array('#<!--.*?(-->|$)#s', '#</?(br|p|div|li|ul|ol|dl|dt|dd|tr|td|th|table|h[1-6]|hr|blockquote|pre)\b[^>]*>#i', '#</?[a-z][^>]*>#i'), array('', ' ', ''), (string)$val['text']);
+        // a formatted name reads as the browser showed it: comments and tags go, an inline tag without a trace,
+        // every other tag (a line break, a block) leaves a space between the words; a < before no letter stays
+        $val_text = preg_replace(array('#<!--.*?(-->|$)#s', '#</?(a|abbr|acronym|b|bdi|bdo|big|cite|code|data|del|dfn|em|font|i|ins|kbd|mark|q|s|samp|small|span|strike|strong|sub|sup|time|tt|u|var|wbr)\b[^>]*>#i', '#</?[a-z][^>]*>#i'), array('', '', ' '), (string)$val['text']);
         $val_text = htmlspecialchars($val_text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, get_default_encoding(''), false);
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
