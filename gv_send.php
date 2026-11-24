@@ -139,7 +139,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   }
   if ($gv_debited !== true) {
     $error = true;
-    $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
+    // a refused statement is no matter of the amount, the balance is unchanged
+    $messageStack->add('gv_send', ((isset($gv_debit_query) && $gv_debit_query === false) ? (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.') : ERROR_ENTRY_AMOUNT_CHECK));
     $_GET['action'] = 'send';
   } else {
     $sql_data_array = array(
@@ -167,8 +168,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$gv_code, 'NONSSL', false));
-    $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
-    $smarty->assign('AMOUNT', $xtPrice->xtcFormat($gv_amount, true));
+    // the value of the voucher in the currency of the session, as its redemption shows it
+    $gv_shown = $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($gv_debit), true);
+    $smarty->assign('AMMOUNT', $gv_shown);
+    $smarty->assign('AMOUNT', $gv_shown);
     $smarty->assign('GIFT_CODE', $gv_code);
     $smarty->assign('MESSAGE', encode_htmlspecialchars($message, ENT_NOQUOTES));
     $smarty->assign('NAME', encode_htmlspecialchars($to_name, ENT_NOQUOTES));
@@ -220,7 +223,9 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $gv_send_token = xtc_RandomString(32);
   $_SESSION['gv_send_tokens'] = array_slice(array_merge((isset($_SESSION['gv_send_tokens']) ? $_SESSION['gv_send_tokens'] : array()), array($gv_send_token)), -10);
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').xtc_draw_hidden_field('gv_send_token', $gv_send_token));
-  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((float)$gv_amount, true), $send_name));
+  // the value of the voucher in the currency of the session, as its redemption shows it
+  $gv_shown = $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($gv_debit), true);
+  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $gv_shown, $to_name, $to_email, $to_name, $gv_shown, $send_name));
   if ($message != '') {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $send_name));
     $smarty->assign('POST_MESSAGE', $message);
