@@ -189,10 +189,10 @@
       }
 
       if (!empty($data['products_model'])) {
-        $node['sku'] = self::text($data['products_model']);
+        $node['sku'] = self::number($data['products_model']);
       }
       if (!empty($data['products_manufacturers_model'])) {
-        $node['mpn'] = self::text($data['products_manufacturers_model']);
+        $node['mpn'] = self::number($data['products_manufacturers_model']);
       }
       if (!empty($data['products_ean'])) {
         $node = array_merge($node, self::gtin($data['products_ean']));
@@ -416,10 +416,10 @@
         $node['image'] = self::url($entry['PRODUCTS_IMAGE']);
       }
       if (!empty($entry['PRODUCTS_MODEL'])) {
-        $node['sku'] = self::text($entry['PRODUCTS_MODEL']);
+        $node['sku'] = self::number($entry['PRODUCTS_MODEL']);
       }
       if (!empty($entry['PRODUCTS_MANUFACTURERS_MODEL'])) {
-        $node['mpn'] = self::text($entry['PRODUCTS_MANUFACTURERS_MODEL']);
+        $node['mpn'] = self::number($entry['PRODUCTS_MANUFACTURERS_MODEL']);
       }
       if (!empty($entry['PRODUCTS_EAN'])) {
         $node = array_merge($node, self::gtin($entry['PRODUCTS_EAN']));
@@ -578,7 +578,7 @@
      * @return array
      */
     static function gtin($ean) {
-      $ean = self::text($ean);
+      $ean = self::number($ean);
       if ($ean === '') {
         return array();
       }
@@ -743,6 +743,33 @@
       }
 
       return $parts[0].((count($query) > 0) ? '?'.implode('&', $query) : '');
+    }
+
+    /**
+     * Turns a number of the shop, such as a model number or an EAN, into the text its page shows
+     *
+     * A number is text, so a < in it starts no tag, and the page reads every entity of HTML5 that
+     * encode_model_number() leaves in it.
+     *
+     * @param string $number
+     * @return string
+     */
+    static function number($number) {
+      $number = (string)$number;
+      if ($number === '') {
+        return '';
+      }
+
+      // decoded in utf-8, so an entity the charset of the shop cannot hold is read as well
+      $number = html_entity_decode(self::utf8($number), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      // a no-break space stays one, as text() kept it in a single byte charset; in utf-8 it made a blank of it
+      $blanks = array("\r", "\n", "\t");
+      if (strtoupper(get_default_charset()) == 'UTF-8') {
+        $blanks[] = "\xc2\xa0";
+      }
+      $number = str_replace($blanks, ' ', $number);
+
+      return trim(preg_replace('/\s\s+/', ' ', $number));
     }
 
     /**

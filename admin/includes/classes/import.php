@@ -486,28 +486,96 @@ class xtcImport {
         return $value;
     }
 
+    // numbers such as the model number and the EAN as the admin forms store them: as typed, unless something is removed
+    function cleanNumber($value) {
+        if (defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true)) {
+            return $value;
+        }
+        require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+
+        if (!xtc_remove_active_content_available()) {
+            $this->contentUnfiltered = true;
+            return $value;
+        }
+
+        $removed = false;
+        $value = xtc_remove_active_content_number($value, $removed, true);
+        if ($removed === true) {
+            $this->contentRemoved = true;
+        }
+
+        return $value;
+    }
+
     // the cleaned model is the stored one; a product saved before the cleaning may still carry the model of the file
     function getModelProducts($model) {
         $model_raw = xtc_db_prepare_input($model);
-        $model_clean = trim($this->cleanContent($model_raw));
-        if ($model_clean === $model_raw) {
-            return array('model' => $model, 'ids' => $this->getModelIDs(array($model)));
-        }
+        $model_clean = trim($this->cleanNumber($model_raw));
         if ($model_clean == '') {
             return array('model' => '', 'ids' => array());
         }
-        // both spellings together must not name more than one product
-        $ids = $this->getModelIDs(array($model_clean, $model_raw));
+        // the model as it stands in the file too, as before: the preparation strips the backslash of an exported model
+        $models = array((string)$model, $model_raw);
+        $model_entities = '';
+        require_once(DIR_FS_INC.'xtc_remove_active_content.inc.php');
+        if (!(defined('ADMIN_ALLOW_SCRIPT_CONTENT') && in_array(ADMIN_ALLOW_SCRIPT_CONTENT, array(true, 'true', 1, '1'), true))
+            && xtc_remove_active_content_available()
+            )
+        {
+            // a model saved before numbers were kept as typed carries the entities of the full cleaning,
+            // but only where they read as the same number: the full cleaning made ID of ID<XL
+            $removed = false;
+            $model_entities = trim(xtc_remove_active_content($model_raw, $removed));
+            if (xtc_remove_active_content_same_text($model_clean, $model_entities)) {
+                $models[] = $model_entities;
+            } else {
+                $model_entities = '';
+            }
+        }
+        $models = array_values(array_diff(array_unique($models), array($model_clean, '')));
 
-        return ((count($ids) > 1) ? false : array('model' => $model_clean, 'ids' => $ids));
+        // products sharing the model are all updated, as before
+        $ids = $this->getModelIDs(array($model_clean));
+        $model_store = $model_clean;
+        if (count($models) > 0) {
+            // another spelling only for a single product that the model itself does not name, as the database compares
+            $ids_other = $this->getModelIDs($models, $model_clean);
+            if (count($ids_other) > 0) {
+                if (count($ids) > 0 || count($ids_other) > 1) {
+                    return false;
+                }
+                $ids = $ids_other;
+                // a product with the spelling of the full cleaning keeps it where its page would show the model of the file
+                // differently, as before: next to a tag the full cleaning wrote &lpar; as &amp;lpar;
+                if ($model_entities !== ''
+                    && xtc_remove_active_content_decode($model_entities) !== xtc_remove_active_content_decode($model_clean)
+                    && $this->getModelIDs(array($model_entities), $model_clean) == $ids
+                    )
+                {
+                    $model_store = $model_entities;
+                }
+            }
+        }
+        // a backslash is part of the number, also a pair: the export writes ACME\\B for the model ACME\\B, and
+        // without the backslash the number names another model, so only a product with the number as it stands in the file counts
+        if (count($ids) > 0
+            && strpos((string)$model, '\\') !== false
+            && count(array_diff($ids, $this->getModelIDs(array((string)$model)))) > 0
+            )
+        {
+            return false;
+        }
+
+        return array('model' => $model_store, 'ids' => $ids);
     }
 
-    // up to two ids, enough to tell none, one and several apart
-    function getModelIDs($models) {
+    // up to two ids, enough to tell none, one and several apart; not the products of the model $except
+    function getModelIDs($models, $except = null) {
         $ids = array();
         $model_query = xtc_db_query("SELECT products_id
                                        FROM ".TABLE_PRODUCTS."
                                       WHERE products_model IN ('".implode("', '", array_map('xtc_db_input', $models))."')
+                                            ".(($except !== null) ? "AND products_model <> '".xtc_db_input($except)."'" : '')."
                                       LIMIT 2");
         while ($model = xtc_db_fetch_array($model_query)) {
             $ids[] = (int)$model['products_id'];
@@ -519,7 +587,8 @@ class xtcImport {
     function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false, $pID = 0) {
 
         //BOC strip potential slashes and type cast inputs
-        $products_array = array ('products_model' => xtc_db_prepare_input($dataArray['p_model']));
+        // getModelProducts() has prepared the model already, a second stripslashes() would remove a backslash
+        $products_array = array ('products_model' => (string)$dataArray['p_model']);
         if ($this->FileSheme['p_stock'] == 'Y')
             $products_array = array_merge($products_array, array ('products_quantity' => (int)$dataArray['p_stock']));
         if ($this->FileSheme['p_priceNoTax'] == 'Y')
@@ -533,9 +602,9 @@ class xtcImport {
         if ($this->FileSheme['p_disc'] == 'Y')
             $products_array = array_merge($products_array, array ('products_discount_allowed' => (float)$dataArray['p_disc']));
         if ($this->FileSheme['p_ean'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_ean' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_ean']))));
+            $products_array = array_merge($products_array, array ('products_ean' => $this->cleanNumber(xtc_db_prepare_input($dataArray['p_ean']))));
         if ($this->FileSheme['p_man'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanContent(xtc_db_prepare_input($dataArray['p_man']))));
+            $products_array = array_merge($products_array, array ('products_manufacturers_model' => $this->cleanNumber(xtc_db_prepare_input($dataArray['p_man']))));
         if ($this->FileSheme['p_tax'] == 'Y')
             $products_array = array_merge($products_array, array ('products_tax_class_id' => (int)$dataArray['p_tax']));
         if ($this->FileSheme['p_opttpl'] == 'Y')

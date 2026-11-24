@@ -154,8 +154,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // load all definitions from product class
   $productDataArray = $product->buildDataArray($product->data, 'info', false);
   foreach ($productDataArray as $key => $value) {
-    // the model number is text, also the one a product module has set
-    $info_smarty->assign($key, (($key == 'PRODUCTS_MODEL' && is_string($value)) ? encode_model_number($value) : $value));
+    // the numbers are text, also the ones a product module has set
+    $info_smarty->assign($key, ((in_array($key, array('PRODUCTS_MODEL', 'PRODUCTS_MANUFACTURERS_MODEL', 'PRODUCTS_EAN')) && is_string($value)) ? encode_model_number($value) : $value));
   }
   
   /*

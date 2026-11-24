@@ -141,6 +141,9 @@ require (DIR_WS_INCLUDES.'head.php');
   <?php 
 	if (!isset($_GET['iframe'])) {
 	  require(DIR_WS_INCLUDES . 'header.php'); 
+	} elseif (isset($messageStack) && is_object($messageStack) && $messageStack->size > 0) {
+	  // the header prints the notes, the iframe has none
+	  echo '<div class="fixed_messageStack">'.$messageStack->output().'</div>';
 	}
 	?>
   <!-- header_eof //-->
@@ -302,7 +305,7 @@ require (DIR_WS_INCLUDES.'head.php');
           
                         $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
                         $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?htmlspecialchars((string)$attr_array['attributes_model'], ENT_COMPAT, 'ISO-8859-1'):'') . '" size="15"></td>'. PHP_EOL;
-                        $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
+                        $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?htmlspecialchars((string)$attr_array['attributes_ean'], ENT_COMPAT, 'ISO-8859-1'):'') . '" size="15"></td>'. PHP_EOL;
                         $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
                     
                         //VPE

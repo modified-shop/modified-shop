@@ -309,6 +309,42 @@
   }
 
 
+  /**
+   * xtc_remove_active_content_number()
+   *
+   * like xtc_remove_active_content_keep(), for numbers such as model numbers and EANs, which the shop prints as text:
+   * a tag name at the very end without attributes, like the size in ID<XL, is part of the number
+   *
+   * @param mixed $value text or array of texts
+   * @param boolean $removed set to true when something was removed
+   * @param mixed $max_length see xtc_remove_active_content_keep()
+   * @return mixed
+   */
+  function xtc_remove_active_content_number($value, &$removed = false, $max_length = 0) {
+    if (is_array($value)) {
+      foreach ($value as $key => $val) {
+        $value[$key] = xtc_remove_active_content_number($val, $removed, $max_length);
+      }
+      return $value;
+    }
+
+    // a tag name as a browser reads it, without = so that no parser finds an attribute value; blanks and characters outside ascii may follow
+    // names that change how a page reads what follows stay tags, compared by their leading letters
+    if (is_string($value) && preg_match('/^(.*)<([a-z][^\s<>\/=]*)[\s\x80-\xff]*$/is', $value, $parts)
+        && preg_match('/^[a-z0-9]+/i', $parts[2], $letters)
+        && !in_array(strtolower($letters[0]), array('script', 'style', 'textarea', 'title', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript', 'plaintext', 'template', 'svg', 'math'))
+        )
+    {
+      $changed = false;
+      if (xtc_remove_active_content_keep($parts[1], $changed) === $parts[1] && $changed === false) {
+        return $value;
+      }
+    }
+
+    return xtc_remove_active_content_keep($value, $removed, $max_length);
+  }
+
+
   // the first characters of a text that is too long: not up to the middle of an entity, and no < whose next character is gone
   function xtc_remove_active_content_cut($text, $max_length, $charset = '') {
     if ($charset == '') {

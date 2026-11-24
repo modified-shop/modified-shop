@@ -176,8 +176,8 @@
             <span class="tsCheckoutProductImageUrl"><?php echo (($item['products_image'] != '') ? xtc_href_link(DIR_WS_INFO_IMAGES.$item['products_image'], '', 'NONSSL', false, false) : ''); ?></span>
             <span class="tsCheckoutProductName"><?php echo $item['products_name']; ?></span>
             <span class="tsCheckoutProductSKU"><?php echo encode_order_model_number($item['products_model'], $item['orders_products_id']); ?></span>
-            <span class="tsCheckoutProductGTIN"><?php echo $item['products_ean']; ?></span>
-            <span class="tsCheckoutProductMPN"><?php echo $item['products_manufacturers_model']; ?></span>
+            <span class="tsCheckoutProductGTIN"><?php echo encode_model_number($item['products_ean']); ?></span>
+            <span class="tsCheckoutProductMPN"><?php echo encode_model_number($item['products_manufacturers_model']); ?></span>
             <span class="tsCheckoutProductBrand"><?php echo $item['manufacturers_name']; ?></span>
           </span>
         <?php
