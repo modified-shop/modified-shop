@@ -148,6 +148,31 @@ function column_exists($table, $column)
 
 //--------------------------------------------------------------
 
+// title or description stored as HTML, as XML text
+function cao_xml_text($text)
+{
+  $utf8 = (strtoupper(CHARSET) == 'UTF-8');
+  $text = strip_tags((string)$text);
+  if (!$utf8) {
+    $text = mb_convert_encoding($text, 'UTF-8', CHARSET);
+  }
+  // decoded in UTF-8: the charset of the shop may lack a character of an entity
+  $text = decode_htmlentities($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  // XML 1.0 forbids most control characters, a reference like &#12; decodes to one
+  $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]|\xEF\xBF[\xBE\xBF]/', '', $text);
+  $text = encode_htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+  if (!$utf8) {
+    // a character the charset lacks becomes a numeric reference
+    $substitute = mb_substitute_character();
+    mb_substitute_character('entity');
+    $text = mb_convert_encoding($text, CHARSET, 'UTF-8');
+    mb_substitute_character($substitute);
+  }
+  return $text;
+}
+
+//--------------------------------------------------------------
+
 // id from the request as int, false when it is no plain number
 function cao_post_id($key, $default = false)
 {
@@ -509,7 +534,7 @@ function SendOrders ()
       if ($totals['value'] < 0) $total_prefix = '-';
 
       $schema .= '<TOTAL>' . "\n" .
-                 '<TOTAL_TITLE>' . encode_htmlspecialchars(decode_htmlentities(strip_tags($totals['title']), ENT_QUOTES | ENT_HTML5, CHARSET)) . '</TOTAL_TITLE>' . "\n" .
+                 '<TOTAL_TITLE>' . cao_xml_text($totals['title']) . '</TOTAL_TITLE>' . "\n" .
                  '<TOTAL_VALUE>' . encode_htmlspecialchars(abs($totals['value'])) . '</TOTAL_VALUE>' . "\n" .
                  '<TOTAL_CLASS>' . encode_htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
                  '<TOTAL_SORT_ORDER>' . encode_htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .
@@ -1049,8 +1074,8 @@ function SendShopConfig ()
     $tax_class = encode_request($tax_class);
     
     $schema = '<CLASS ID="' . $tax_class['tax_class_id'] . '">' . "\n" .
-             '<TITLE>' .         encode_htmlspecialchars(decode_htmlentities(strip_tags($tax_class['tax_class_title']), ENT_QUOTES | ENT_HTML5, CHARSET)) .       '</TITLE>' . "\n" .
-             '<DESCRIPTION>' .   encode_htmlspecialchars(decode_htmlentities(strip_tags($tax_class['tax_class_description']), ENT_QUOTES | ENT_HTML5, CHARSET)) . '</DESCRIPTION>' . "\n" .
+             '<TITLE>' .         cao_xml_text($tax_class['tax_class_title']) .       '</TITLE>' . "\n" .
+             '<DESCRIPTION>' .   cao_xml_text($tax_class['tax_class_description']) . '</DESCRIPTION>' . "\n" .
              '<LAST_MODIFIED>' . encode_htmlspecialchars($tax_class['last_modified']) .         '</LAST_MODIFIED>' . "\n" .
              '<DATE_ADDED>' .    encode_htmlspecialchars($tax_class['date_added']) .            '</DATE_ADDED>' . "\n" .
               '</CLASS>'. "\n";
@@ -1074,7 +1099,7 @@ function SendShopConfig ()
               '<CLASS_ID>' .      encode_htmlspecialchars($tax_rates['tax_class_id']) .    '</CLASS_ID>' . "\n" .
               '<PRIORITY>' .      encode_htmlspecialchars($tax_rates['tax_priority']) .    '</PRIORITY>' . "\n" .
               '<RATE>' .          encode_htmlspecialchars($tax_rates['tax_rate']) .        '</RATE>' . "\n" .
-              '<DESCRIPTION>' .   encode_htmlspecialchars(decode_htmlentities(strip_tags($tax_rates['tax_description']), ENT_QUOTES | ENT_HTML5, CHARSET)) . '</DESCRIPTION>' . "\n" .
+              '<DESCRIPTION>' .   cao_xml_text($tax_rates['tax_description']) . '</DESCRIPTION>' . "\n" .
               '<LAST_MODIFIED>' . encode_htmlspecialchars($tax_rates['last_modified']) .   '</LAST_MODIFIED>' . "\n" .
               '<DATE_ADDED>' .    encode_htmlspecialchars($tax_rates['date_added']) .      '</DATE_ADDED>' . "\n" .
               '</RATES>' . "\n";
