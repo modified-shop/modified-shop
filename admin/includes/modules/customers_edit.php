@@ -153,10 +153,11 @@
               <td class="dataTableConfig col-single-right<?php echo (($error == true && isset($entry_date_of_birth_error) && $entry_date_of_birth_error == true) ? ' col-error' : ''); ?>">
                  <?php
                 if ($error == true) {
+                  // after an error $cInfo holds the posted date, which xtc_date_short() cannot read
                   if ($entry_date_of_birth_error == true) {
-                    echo xtc_draw_input_field('customers_dob', xtc_date_short($cInfo->customers_dob)).'&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
+                    echo xtc_draw_input_field('customers_dob', $cInfo->customers_dob).'&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
                   } else {
-                    echo xtc_date_short($cInfo->customers_dob).xtc_draw_hidden_field('customers_dob', xtc_date_short($cInfo->customers_dob));
+                    echo encode_htmlspecialchars($cInfo->customers_dob).xtc_draw_hidden_field('customers_dob', $cInfo->customers_dob);
                   }
                 } else {
                   echo xtc_draw_input_field('customers_dob', xtc_date_short($cInfo->customers_dob), '', true);
