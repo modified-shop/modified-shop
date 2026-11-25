@@ -46,6 +46,8 @@
     
     var $ecCheckout;
     var $ecMerchant;
+    var $ecTransactionApi;
+    var $ecLogger;
     var $WebshopDetails;
     var $total_amount;
     var $authorized;
@@ -93,6 +95,7 @@
         new \Teambank\EasyCreditApiV3\Client($LoggingManager),
         $config
       );
+      $this->ecTransactionApi = $transactionApiInstance;
       
       $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_teambank_webshop_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', $class, strtolower($this->loglevel));
       $webshopApiInstance = new \Teambank\EasyCreditApiV3\Service\WebshopApi(
@@ -107,6 +110,7 @@
       );
 
       $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_teambank_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', $class, strtolower($this->loglevel));
+      $this->ecLogger = $LoggingManager;
       $this->ecCheckout = new \Teambank\EasyCreditApiV3\Integration\Checkout(
         $webshopApiInstance,
         $transactionApiInstance,
@@ -206,6 +210,10 @@
       try {
         $TransactionInformation = $this->ecCheckout->loadTransaction();
       } catch (Exception $e) {
+        // a repeated run has its order booked already, a redirect would orphan it
+        if (isset($_SESSION['tmp_oID'])) {
+          throw $e;
+        }
         $this->payment_error_redirect();
       }
       // a repeated run of an existing order finds its transaction authorized already
@@ -214,19 +222,42 @@
       return false;
     }
     
+    function authorize_order($orders_id, $remove = false) {
+      if ($this->preauthorized !== true) {
+        return;
+      }
+
+      // easyCredit shows the order id of the authorization as the order number
+      try {
+        $this->ecTransactionApi->apiPaymentV3TransactionTechnicalTransactionIdAuthorizationPostWithHttpInfo(
+          $_SESSION['easycredit']['storage']['token'],
+          new \Teambank\EasyCreditApiV3\Model\AuthorizationRequest(array('orderId' => (string)$orders_id))
+        );
+        $this->preauthorized = false;
+      } catch (\Throwable $e) {
+        $this->ecLogger->warning($e);
+
+        // only a refusal is certain, after a lost answer or a 409 before_send_order() sends it once more
+        $code = (($e instanceof \Teambank\EasyCreditApiV3\ApiException) ? (int)$e->getCode() : 0);
+        if ($code >= 400 && $code < 500 && $code != 409) {
+          $this->preauthorized = false;
+
+          if ($remove === true) {
+            // called before anything is booked, the order is only its row
+            require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+            xtc_remove_order((int)$orders_id);
+
+            $this->payment_error_redirect();
+          }
+        }
+      }
+    }
+    
     function before_send_order() {
       global $insert_id;
       
-      // easyCredit shows the order id of the authorization as the order number
-      if ($this->preauthorized === true
-          && $this->ecCheckout->authorize((string)$insert_id) !== true
-          )
-      {
-        require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-        xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-
-        $this->payment_error_redirect();
-      }
+      // a retry or a repeated run, the order is booked now and a failure is left to the polling
+      $this->authorize_order($insert_id);
 
       $this->authorized = false;
       // microseconds, the back-off grows by half a second per attempt

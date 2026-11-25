@@ -335,6 +335,9 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $_SESSION['tmp_oID'] = $insert_id;
   $order_created = true;
 
+  // the order has its id, but nothing is booked yet
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order_insert/','php') as $file) require ($file);
+
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
     $sql_data_array = array(
       'orders_id' => $insert_id,
