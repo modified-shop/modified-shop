@@ -34,14 +34,23 @@
                                       WHERE coupon_id = '" . (int)$coupon_id . "'");
     $coupon = xtc_db_fetch_array($coupon_query);
     
-    if (!is_array($coupon)) {
-      return;
-    }
+    $customer_gv_query = xtc_db_query("SELECT amount 
+                                         FROM " . TABLE_COUPON_GV_CUSTOMER . " 
+                                        WHERE customer_id = '" . (int)$customer_id . "'");
+    
+    if (xtc_db_num_rows($customer_gv_query) > 0) {
+      $customer_gv = xtc_db_fetch_array($customer_gv_query);
+      $new_gv_amount = $customer_gv['amount'] + $coupon['coupon_amount'];
 
-    // one statement adds to the row or creates it, so redemptions at the same time cannot overwrite each other
-    $gv_amount = number_format((float)$coupon['coupon_amount'], 4, '.', '');
-    xtc_db_query("INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) 
-                       VALUES ('" . (int)$customer_id . "', '" . $gv_amount . "') 
-         ON DUPLICATE KEY UPDATE amount = amount + " . $gv_amount);
+      $gv_query = xtc_db_query("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " 
+                                   SET amount = '" . $new_gv_amount . "' 
+                                 WHERE customer_id = '" . (int)$customer_id . "'");
+    } else {
+      $sql_data_array = array(
+         'customer_id' => (int)$customer_id,
+         'amount' => $coupon['coupon_amount']
+      );
+      xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
+    }
   }
 ?>

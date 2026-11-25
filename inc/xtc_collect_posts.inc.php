@@ -58,12 +58,9 @@
         if ($_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {                         
           $gv_amount = $gv_result['coupon_amount'];
           
-          // only the request that switches the code off redeems it, a second one at the same time gets no credit
-          xtc_db_query("UPDATE " . TABLE_COUPONS . " 
-                           SET coupon_active = 'N' 
-                         WHERE coupon_id = '" . (int)$gv_result['coupon_id'] . "'
-                           AND coupon_active = 'Y'", 'db_link', $gv_claim_info);
-          if (!is_array($gv_claim_info) || $gv_claim_info['success'] !== true || $gv_claim_info['affected_rows'] != 1) {
+          // only the request that switches the code off redeems it, in the same statement as the credit
+          require_once (DIR_FS_INC . 'xtc_gv_redeem_code.inc.php');
+          if (xtc_gv_redeem_code($_SESSION['customer_id'], $gv_result['coupon_id']) !== true) {
             $messageStack->add_session('coupon_message', ERROR_NO_INVALID_REDEEM_GV);
             xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
           }
@@ -76,7 +73,6 @@
           );
           xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);
           
-          xtc_gv_account_update($_SESSION['customer_id'], $gv_result['coupon_id']);
           $messageStack->add_session('coupon_message', sprintf(REDEEMED_AMOUNT, $xtPrice->xtcFormatCurrency($gv_amount)), 'success');
           
           if (strpos(basename($PHP_SELF), 'checkout') !== false) {
