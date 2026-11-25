@@ -206,23 +206,32 @@
     }
   
     function before_process() {
-      // a repeated run works with the transaction of its order, the session may hold a newer one
-      $bound = (isset($_SESSION['tmp_oID'])
-                && isset($_SESSION['easycredit_order']['orders_id'])
-                && $_SESSION['easycredit_order']['orders_id'] == (int)$_SESSION['tmp_oID']
+      // a repeated run works with the transaction of its order, the session may hold a newer one;
+      // only the module that started it can read it, easyCredit and easyInvoice have their own access
+      $binding = (isset($_SESSION['tmp_oID'])
+                  && isset($_SESSION['easycredit_order']['orders_id'])
+                  && $_SESSION['easycredit_order']['orders_id'] == (int)$_SESSION['tmp_oID']
+                  );
+      $bound = ($binding === true
+                && isset($_SESSION['easycredit_order']['code'])
+                && $_SESSION['easycredit_order']['code'] == $this->code
                 );
       $session_storage = ((isset($_SESSION['easycredit']['storage'])) ? $_SESSION['easycredit']['storage'] : array());
       if ($bound === true) {
+        // the session keeps the active transaction until a status read selects the one of the order
         $_SESSION['easycredit']['storage'] = $_SESSION['easycredit_order']['storage'];
+        $this->ecCheckout->restore();
+        $_SESSION['easycredit']['storage'] = $session_storage;
+      } else {
+        // the order does not exist yet, its id goes to easyCredit with the authorization
+        $this->ecCheckout->restore();
       }
-      // the order does not exist yet, its id goes to easyCredit with the authorization
-      $this->ecCheckout->restore();
 
       // a run that ended in the authorization left a bare order row, a repeated run cannot complete it;
       // a bound row was written by easyCredit or easyInvoice, whichever of them runs now
       $bare_order = false;
       if (isset($_SESSION['tmp_oID'])) {
-        $bare_order = $this->find_bare_order($_SESSION['tmp_oID'], '', $bound);
+        $bare_order = $this->find_bare_order($_SESSION['tmp_oID'], '', $binding);
       }
       // without the transaction of the row no status can end it
       if ($bare_order !== false && $bound !== true) {
@@ -234,7 +243,7 @@
       } catch (Exception $e) {
         if ($bare_order !== false && $e instanceof \Teambank\EasyCreditApiV3\Integration\InitializationException) {
           // OPEN, DECLINED or EXPIRED end the attempt and the bare row with it, a missing token says nothing
-          if (isset($_SESSION['easycredit']['storage']['token']) && $_SESSION['easycredit']['storage']['token'] != '') {
+          if (isset($_SESSION['easycredit_order']['storage']['token']) && $_SESSION['easycredit_order']['storage']['token'] != '') {
             $this->remove_bare_order($_SESSION['tmp_oID']);
           } else {
             $this->keep_bare_order($bare_order);
@@ -250,7 +259,6 @@
             )
         {
           unset($_SESSION['easycredit_order']);
-          $_SESSION['easycredit']['storage'] = $session_storage;
 
           return $this->before_process();
         }
@@ -262,6 +270,9 @@
       }
       if ($bare_order !== false) {
         $this->keep_bare_order($bare_order);
+      }
+      if ($bound === true) {
+        $_SESSION['easycredit']['storage'] = $_SESSION['easycredit_order']['storage'];
       }
       // a repeated run may find the transaction authorized already
       $this->preauthorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED);
@@ -280,6 +291,7 @@
       // a repeated run of this order needs its transaction, the payment page clears $_SESSION['easycredit']
       $_SESSION['easycredit_order'] = array(
         'orders_id' => (int)$orders_id,
+        'code' => $this->code,
         'storage' => ((isset($_SESSION['easycredit']['storage'])) ? $_SESSION['easycredit']['storage'] : array()),
       );
       if ($this->authorized === true) {
