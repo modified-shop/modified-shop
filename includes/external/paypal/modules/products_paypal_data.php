@@ -42,19 +42,32 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
     
     $plan_tax_array = array (array ('id' => '0', 'text' => TEXT_NONE));
     // the title holds one text per language, DE::...||EN::...; the part of the session language stays the stored HTML,
-    // as the whole title was printed before, so a reference like &#48; or &amp;#380; shows as it did
-    require_once(DIR_FS_INC.'split_multi_language_value.inc.php');
+    // as the whole title was printed before, so a reference like &#48; or &amp;#380; shows as it did.
+    // Split as split_multi_language_value() does, but a part 0 is a text of its own
+    $plan_tax_code = '[a-z]{2}(?:[-_][a-z]{2})?';
     $tax_class_query = xtc_db_query("SELECT tax_class_id, tax_class_title FROM ".TABLE_TAX_CLASS." ORDER BY tax_class_title");
     while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
       $plan_tax_text = $tax_class['tax_class_title'];
-      $plan_tax_langs = split_multi_language_value($plan_tax_text);
+      $plan_tax_langs = array();
+      if (preg_match('/(?:^|\|\|)\s*'.$plan_tax_code.'\s*::/i', $plan_tax_text)) {
+        foreach (preg_split('/\|\|(?=\s*'.$plan_tax_code.'\s*::)/i', $plan_tax_text) as $plan_tax_part) {
+          if (preg_match('/^\s*('.$plan_tax_code.')\s*::(.*)$/is', $plan_tax_part, $match) && trim($match[2]) !== '') {
+            $plan_tax_langs[strtolower($match[1])] = trim($match[2]);
+          }
+        }
+      }
       if (count($plan_tax_langs) > 0) {
-        foreach (array($_SESSION['language_code'], 'en', DEFAULT_LANGUAGE) as $plan_tax_lang) {
+        // the parts are kept in lower case, a code like de_AT of the session or the shop is looked up the same way
+        foreach (array(strtolower($_SESSION['language_code']), 'en', strtolower(DEFAULT_LANGUAGE)) as $plan_tax_lang) {
           if (isset($plan_tax_langs[$plan_tax_lang])) {
             break;
           }
         }
         $plan_tax_text = (isset($plan_tax_langs[$plan_tax_lang]) ? $plan_tax_langs[$plan_tax_lang] : reset($plan_tax_langs));
+      }
+      // the pull-down drops a text 0 as empty, its reference shows the same sign
+      if ((string)$plan_tax_text === '0') {
+        $plan_tax_text = '&#48;';
       }
       $plan_tax_array[] = array ('id' => number_format(xtc_get_tax_rate($tax_class['tax_class_id']), 2), 'text' => $plan_tax_text);
     }
