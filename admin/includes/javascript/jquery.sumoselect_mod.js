@@ -259,6 +259,8 @@
                     var O = this;
                     if (O.E.attr('disabled')) return; // if select is disabled then retrun
                     O.is_opened = true;
+                    // a choice by letters is closed with tab, esc or a click outside, it sends its change on closing
+                    if (!O.is_multi) O.openVal = O.E.val();
                     //O.backdrop.show();
                     O.optDiv.addClass('open');
 
@@ -292,6 +294,9 @@
                     O.is_opened = false;
                     O.optDiv.removeClass('open').find('ul li.sel').removeClass('sel');
                     $(document).off('click.sumo');
+                    var openVal = O.openVal;
+                    O.openVal = undefined;
+                    if (!O.is_multi && openVal !== undefined && O.E.val() !== openVal) O.E.trigger('change');
                 },
                 showSelectItem: function() {
                     var O = this;
@@ -346,14 +351,29 @@
                     var character = e.key; //important for # ä ö ü
                     if (settings.consoleLog) console.log('character:'+ character);
                     if (!character) return;
+                    // a key without a sign, as shift or control, and a shortcut, as Ctrl+S or Cmd+S, are no letters of the search;
+                    // AltGr also sets ctrlKey on Windows, its signs as @ are letters; jQuery does not pass getModifierState()
+                    var oe = e.originalEvent || e;
+                    if (character.length !== 1 || e.metaKey || (e.ctrlKey && !(oe.getModifierState && oe.getModifierState('AltGraph')))) return;
                     var select = O.select.find('select');
                     var label = O.optDiv.find('ul li label');
+                    var before = O.E.val();
                     settings.word += character;
                     if (settings.consoleLog) console.log('settings.word:'+ settings.word);
                     var foundMatch = false;
+                    // the choice changes only with a hit on an enabled option, letters without one leave it as it is
+                    var enabled = function(i){ return !O.E.children('option')[i].disabled && !label.eq(i).closest('li').hasClass('disabled'); };
+                    var hit = false;
+                    label.each(function(index){
+                        if (!enabled(index)) return;
+                        var value = $.trim($(this).text().replace(/\u00a0/g,'')).substring(0, settings.word.length);
+                        if (value && value.toLowerCase() == settings.word.toLowerCase()) hit = true;
+                    });
                     label.each(function(index, value){
-                        var value = $(this).html();
-                        value = value.replace(/&nbsp;/g,'');
+                        if (!enabled(index)) return;
+                        // the visible text, so that &amp; and the like match the signs typed
+                        var value = $(this).text();
+                        value = value.replace(/\u00a0/g,'');
                         value = $.trim(value);
                         if (settings.consoleLog) console.log('value:'+value+'|');
                         value = value.substring(0,settings.word.length);
@@ -363,13 +383,14 @@
                                 O.selectItem(index);
                                 $(this).closest('li').addClass('sel');
                                 foundMatch = true;
-                            }else{
+                            }else if (hit){
                                 $(this).closest('li').removeClass('sel');
                                 O.unSelectItem(index);
                             }
                         }  
                     });
                     O.showSelectItem();
+                    if (!O.is_opened && !O.is_multi && O.E.val() !== before) O.E.trigger('change');
                     //timeout for multisigns
                     setTimeout(function(){
                        settings.word = '';
@@ -458,7 +479,10 @@
                             O.E.trigger('change').trigger('click');
                         }
 
-                        if (!O.is_multi) O.hideOpts(); //if its not a multiselect then hide on single select.
+                        if (!O.is_multi) {
+                            O.openVal = O.E.val();   // the click sent its change, also after a handler rewrote the value; closing must not send another
+                            O.hideOpts(); //if its not a multiselect then hide on single select.
+                        }
                     });
                 },
 
