@@ -52,6 +52,8 @@
     var $total_amount;
     var $authorized;
     var $preauthorized;
+    var $settled;
+    var $resent;
     protected static $task_support_ready = false;
     
     function __construct() {}
@@ -209,6 +211,7 @@
       $this->ecCheckout->restore();
 
       // a run that ended in the authorization left a bare order row, a repeated run cannot complete it
+      $bare_order = false;
       if (isset($_SESSION['tmp_oID'])) {
         $check_query = xtc_db_query("SELECT o.orders_id
                                        FROM ".TABLE_ORDERS." o
@@ -218,59 +221,60 @@
                                         AND o.customers_id = '".(int)$_SESSION['customer_id']."'
                                         AND o.payment_method = '".xtc_db_input($this->code)."'
                                         AND ot.orders_id IS NULL");
-        if (xtc_db_num_rows($check_query) > 0) {
-          require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$_SESSION['tmp_oID']);
-          unset($_SESSION['tmp_oID']);
-        }
+        $bare_order = (xtc_db_num_rows($check_query) > 0);
       }
 
       try {
         $TransactionInformation = $this->ecCheckout->loadTransaction();
       } catch (Exception $e) {
-        // a repeated run has its order booked already, a redirect would orphan it
+        // OPEN, DECLINED or EXPIRED end the attempt and the bare row with it
+        if ($bare_order === true && $e instanceof \Teambank\EasyCreditApiV3\Integration\InitializationException) {
+          $this->remove_bare_order($_SESSION['tmp_oID']);
+        }
+        // without an answer a repeated run keeps its order for the next attempt, as main does
         if (isset($_SESSION['tmp_oID'])) {
           throw $e;
         }
         $this->payment_error_redirect();
       }
-      // a repeated run of an existing order finds its transaction authorized already
+      if ($bare_order === true) {
+        // the status is known, the checkout writes a new order; easyCredit may still process
+        // the request of the ended run, so the answer to the next one cannot remove anything
+        $this->remove_bare_order($_SESSION['tmp_oID']);
+        $this->resent = true;
+      }
+      // a repeated run, or the run after an ended one, may find the transaction authorized already
       $this->preauthorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED);
+      $this->authorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED);
       
       return false;
     }
-    
-    function authorize_order($orders_id, $remove = false) {
-      if ($this->preauthorized !== true) {
+
+    function authorize_order($orders_id) {
+      // checkout_process_order_insert: the outcome is settled before anything is booked for the order
+      $this->settled = true;
+      if ($this->authorized === true) {
         return;
       }
-      $this->preauthorized = false;
 
       $answer = $this->send_authorization($orders_id);
-
-      // a booked order is left to the polling in before_send_order()
-      if ($answer == 'accepted' || $remove !== true) {
-        return;
+      if ($answer == 'refused' && $this->resent === true) {
+        $answer = 'unclear';
       }
-
-      // a lost answer or a 409 may hide an authorization, the status decides before anything is booked
-      if ($answer == 'unclear') {
-        $status = $this->read_authorization_status();
-        if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED) {
-          // the first request most likely never reached easyCredit
-          $answer = $this->send_authorization($orders_id);
-        }
-        // an unknown outcome keeps the order, a payment without an order would be worse
-        if ($status != 'failed' && $answer != 'refused') {
-          return;
-        }
+      $result = (($answer == 'refused') ? 'failed' : $this->poll_authorization($orders_id, ($answer == 'unclear')));
+      if ($result == 'failed') {
+        $this->remove_bare_order($orders_id);
+        $this->payment_error_redirect();
       }
+      // still open after the window, the order stays pending and the task decides
+      $this->authorized = ($result == 'authorized');
+    }
 
-      // easyCredit said no and nothing is booked yet, the order is only its row
+    function remove_bare_order($orders_id) {
+      // nothing is booked for it yet, and the session must not lead a repeated run back to it
       require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
       xtc_remove_order((int)$orders_id);
-
-      $this->payment_error_redirect();
+      unset($_SESSION['tmp_oID']);
     }
 
     function send_authorization($orders_id) {
@@ -293,37 +297,7 @@
       }
     }
 
-    function read_authorization_status() {
-      // about five seconds, the last status read, or null when easyCredit never answered
-      $status = null;
-      for ($i = 0; $i < 5; $i ++) {
-        usleep($i * 500000);
-        try {
-          $status = $this->ecCheckout->loadTransaction()->getStatus();
-        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
-          // OPEN, DECLINED or EXPIRED
-          return 'failed';
-        } catch (\Throwable $e) {
-          // a server error may pass, no answer at all will not within this window
-          if (!($e instanceof \Teambank\EasyCreditApiV3\ApiException) || (int)$e->getCode() == 0) {
-            break;
-          }
-          continue;
-        }
-        if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          break;
-        }
-      }
-      return $status;
-    }
-    
-    function before_send_order() {
-      global $insert_id;
-      
-      // a repeated run skips the insert, its order is booked and a failure is left to the polling
-      $this->authorize_order($insert_id);
-
-      $this->authorized = false;
+    function poll_authorization($orders_id, $retry) {
       // microseconds, the back-off grows by half a second per attempt
       $wait = 0;
       for ($i = 0; $i <= 10; $i ++) {
@@ -334,18 +308,39 @@
           $TransactionInformation = $this->ecCheckout->loadTransaction();
         } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
           // the SDK throws for DECLINED and EXPIRED instead of returning the status
-          require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-          
-          $this->payment_error_redirect();
-        } catch (Exception $e) {
+          return 'failed';
+        } catch (\Throwable $e) {
           // no answer is not a negative one, a still pending order goes to the task
           continue;
         }
         if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          $this->authorized = true;
-          break;
+          return 'authorized';
         }
+        // after a lost answer the first request may never have arrived, the second answer cannot remove anything
+        if ($retry === true && $i >= 3) {
+          $retry = false;
+          $this->send_authorization($orders_id);
+        }
+      }
+      return 'pending';
+    }
+    
+    function before_send_order() {
+      global $insert_id;
+      
+      // a repeated run skips the insert, its order is booked and a failure is left to the polling
+      if ($this->settled !== true && $this->authorized !== true) {
+        if ($this->preauthorized === true) {
+          $this->send_authorization($insert_id);
+        }
+        $result = $this->poll_authorization($insert_id, false);
+        if ($result == 'failed') {
+          require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          
+          $this->payment_error_redirect();
+        }
+        $this->authorized = ($result == 'authorized');
       }
 
       // the transaction can still be authorized after the polling window, so keep

@@ -10,12 +10,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // authorized before stock, specials, vouchers and coupons are booked, so a refusal costs none of them
+  // the authorization is settled before stock, specials, vouchers and coupons are booked
   if (isset($payment_modules->selected_module)
       && isset($GLOBALS[$payment_modules->selected_module])
       && $GLOBALS[$payment_modules->selected_module] instanceof TeambankPayment
       && method_exists($GLOBALS[$payment_modules->selected_module], 'authorize_order')
       )
   {
-    $GLOBALS[$payment_modules->selected_module]->authorize_order($insert_id, true);
+    $GLOBALS[$payment_modules->selected_module]->authorize_order($insert_id);
   }
