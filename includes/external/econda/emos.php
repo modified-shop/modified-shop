@@ -69,6 +69,11 @@ class EMOS{
 
 	}
 
+	/** PHP 8 no longer runs a method named like the class as constructor */
+	function __construct($pathToFile="econda/", $scriptFileName="emos32_xtc.js"){
+		$this->EMOS($pathToFile, $scriptFileName);
+	}
+
 	/** switch on pretty printing of generated code. If not called, the output
 	* will be in one line of html.
 	*/
@@ -114,6 +119,11 @@ class EMOS{
 		return preg_replace_callback('/[\\\\\'"<>&\r\n]/', function ($match) { return sprintf('\\x%02x', ord($match[0])); }, (string)$value);
 	}
 
+	/** a URL-encoded value in UTF-8, as the econda script decodes it with decodeURIComponent() */
+	function urlValue($value){
+		return urlencode(encode_utf8((string)$value, get_default_charset(), true));
+	}
+
 	/** constructs a emos anchor tag */
 	function getAnchorTag($title="",$rel="",$rev=""){
 		$anchor = "<a name=\"emos_name\" "
@@ -141,6 +151,8 @@ class EMOS{
 	* <a name="emos_name" title="search" rel="$queryString" rev="$numberOfHits"></a>
 	*/
 	function addSearch($queryString,$numberOfHits){
+		// the search term is plain text, so an entity typed into it stays text
+		$queryString = htmlspecialchars((string)$queryString, ENT_QUOTES | ENT_HTML5, 'ISO-8859-1');
 		$this->appendPreScript($this->getAnchorTag("search",$queryString,$numberOfHits));
 	}
 
@@ -186,9 +198,9 @@ class EMOS{
 		."$this->tab var emosECPageArray = new Array();$this->br"
 		."$this->tab emosECPageArray['event'] = '$event';$this->br"
 		."$this->tab emosECPageArray['id'] = '".$this->jsValue($item->productID)."';$this->br"
-		."$this->tab emosECPageArray['name'] = '".urlencode($item->productName)."';$this->br"
+		."$this->tab emosECPageArray['name'] = '".$this->urlValue($item->productName)."';$this->br"
 		."$this->tab emosECPageArray['preis'] = '".$this->jsValue($item->price)."';$this->br"
-		."$this->tab emosECPageArray['group'] = '".urlencode($item->productGroup)."';$this->br"
+		."$this->tab emosECPageArray['group'] = '".$this->urlValue($item->productGroup)."';$this->br"
 		."$this->tab emosECPageArray['anzahl'] = '".$this->jsValue($item->quantity)."';$this->br"
 		."$this->tab emosECPageArray['var1'] = '".$this->jsValue($item->variant1)."';$this->br"
 		."$this->tab emosECPageArray['var2'] = '".$this->jsValue($item->variant2)."';$this->br"
@@ -269,9 +281,9 @@ class EMOS{
 			$out .= $this->br;
 			$out .= "$this->tab $arrayName"."[$count]=new Array();$this->br";
 			$out .= "$this->tab $arrayName"."[$count][0]='".$this->jsValue($item->productID)."';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][1]='".urlencode($item->productName)."';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][1]='".$this->urlValue($item->productName)."';$this->br";
 			$out .= "$this->tab $arrayName"."[$count][2]='".$this->jsValue($item->price)."';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][3]='".urlencode($item->productGroup)."';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][3]='".$this->urlValue($item->productGroup)."';$this->br";
 			$out .= "$this->tab $arrayName"."[$count][4]='".$this->jsValue($item->quantity)."';$this->br";
 			$out .= "$this->tab $arrayName"."[$count][5]='".$this->jsValue($item->variant1)."';$this->br";
 			$out .= "$this->tab $arrayName"."[$count][6]='".$this->jsValue($item->variant2)."';$this->br";
