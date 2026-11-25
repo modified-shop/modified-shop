@@ -214,10 +214,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $gv_send_token = xtc_RandomString(32);
   $_SESSION['gv_send_tokens'] = array_slice(array_merge((isset($_SESSION['gv_send_tokens']) ? $_SESSION['gv_send_tokens'] : array()), array($gv_send_token)), -10);
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').xtc_draw_hidden_field('gv_send_token', $gv_send_token));
-  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), $to_name, $to_email, $to_name, $xtPrice->xtcFormat((float)$gv_amount, true), $send_name));
+  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), encode_htmlspecialchars($to_name), encode_htmlspecialchars($to_email), encode_htmlspecialchars($to_name), $xtPrice->xtcFormat((float)$gv_amount, true), encode_htmlspecialchars($send_name)));
   if ($message != '') {
-    $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $send_name));
-    $smarty->assign('POST_MESSAGE', $message);
+    $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, encode_htmlspecialchars($send_name)));
+    $smarty->assign('POST_MESSAGE', encode_htmlspecialchars($message));
   }
   $smarty->assign('HIDDEN_FIELDS', xtc_draw_hidden_field('send_name', $send_name).xtc_draw_hidden_field('to_name', $to_name).xtc_draw_hidden_field('to_email', $to_email).xtc_draw_hidden_field('amount', $gv_amount).xtc_draw_hidden_field('message', $message));
   $smarty->assign('LINK_BACK', xtc_image_submit('button_back.gif', IMAGE_BUTTON_BACK, 'name=back').'</a>');
