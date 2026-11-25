@@ -53,7 +53,6 @@
     var $authorized;
     var $preauthorized;
     var $settled;
-    var $resent;
     protected static $task_support_ready = false;
     
     function __construct() {}
@@ -213,7 +212,8 @@
       // a run that ended in the authorization left a bare order row, a repeated run cannot complete it
       $bare_order = false;
       if (isset($_SESSION['tmp_oID'])) {
-        $check_query = xtc_db_query("SELECT o.orders_id
+        $check_query = xtc_db_query("SELECT o.orders_id,
+                                            o.orders_status
                                        FROM ".TABLE_ORDERS." o
                                   LEFT JOIN ".TABLE_ORDERS_TOTAL." ot
                                             ON ot.orders_id = o.orders_id
@@ -221,15 +221,19 @@
                                         AND o.customers_id = '".(int)$_SESSION['customer_id']."'
                                         AND o.payment_method = '".xtc_db_input($this->code)."'
                                         AND ot.orders_id IS NULL");
-        $bare_order = (xtc_db_num_rows($check_query) > 0);
+        $bare_order = ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
       }
 
       try {
         $TransactionInformation = $this->ecCheckout->loadTransaction();
       } catch (Exception $e) {
-        // OPEN, DECLINED or EXPIRED end the attempt and the bare row with it
-        if ($bare_order === true && $e instanceof \Teambank\EasyCreditApiV3\Integration\InitializationException) {
-          $this->remove_bare_order($_SESSION['tmp_oID']);
+        if ($bare_order !== false && $e instanceof \Teambank\EasyCreditApiV3\Integration\InitializationException) {
+          // OPEN, DECLINED or EXPIRED end the attempt and the bare row with it, a missing token says nothing
+          if (isset($_SESSION['easycredit']['storage']['token']) && $_SESSION['easycredit']['storage']['token'] != '') {
+            $this->remove_bare_order($_SESSION['tmp_oID']);
+          } else {
+            $this->keep_bare_order($bare_order);
+          }
         }
         // without an answer a repeated run keeps its order for the next attempt, as main does
         if (isset($_SESSION['tmp_oID'])) {
@@ -237,13 +241,10 @@
         }
         $this->payment_error_redirect();
       }
-      if ($bare_order === true) {
-        // the status is known, the checkout writes a new order; easyCredit may still process
-        // the request of the ended run, so the answer to the next one cannot remove anything
-        $this->remove_bare_order($_SESSION['tmp_oID']);
-        $this->resent = true;
+      if ($bare_order !== false) {
+        $this->keep_bare_order($bare_order);
       }
-      // a repeated run, or the run after an ended one, may find the transaction authorized already
+      // a repeated run may find the transaction authorized already
       $this->preauthorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED);
       $this->authorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED);
       
@@ -258,9 +259,6 @@
       }
 
       $answer = $this->send_authorization($orders_id);
-      if ($answer == 'refused' && $this->resent === true) {
-        $answer = 'unclear';
-      }
       $result = (($answer == 'refused') ? 'failed' : $this->poll_authorization($orders_id, ($answer == 'unclear')));
       if ($result == 'failed') {
         $this->remove_bare_order($orders_id);
@@ -268,6 +266,22 @@
       }
       // still open after the window, the order stays pending and the task decides
       $this->authorized = ($result == 'authorized');
+    }
+
+    function keep_bare_order($bare_order) {
+      // the row keeps the number easyCredit may know, a new order would also skip the stock check
+      $text = 'TEXT_'.strtoupper($this->code).'_CHECKOUT_ABORTED';
+      $sql_data_array = array(
+        'orders_id' => (int)$bare_order['orders_id'],
+        'orders_status_id' => (int)$bare_order['orders_status'],
+        'date_added' => 'now()',
+        'customer_notified' => 0,
+        'comments' => ((defined($text)) ? constant($text) : ''),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      unset($_SESSION['tmp_oID']);
+
+      $this->payment_error_redirect();
     }
 
     function remove_bare_order($orders_id) {
@@ -303,6 +317,7 @@
       for ($i = 0; $i <= 10; $i ++) {
         $wait += $i * 500000;
         usleep($wait);
+        $this->keep_db_alive();
   
         try {
           $TransactionInformation = $this->ecCheckout->loadTransaction();
@@ -323,6 +338,31 @@
         }
       }
       return 'pending';
+    }
+    
+    function keep_db_alive() {
+      // the polling may outlast wait_timeout, the bookings follow it and the checkout lock must hold
+      static $reconnected = false;
+
+      foreach (array('db_link', 'checkout_lock_link') as $link) {
+        if (!isset($GLOBALS[$link]) || !is_object($GLOBALS[$link])) {
+          continue;
+        }
+        try {
+          $alive = (@mysqli_query($GLOBALS[$link], 'SELECT 1') !== false);
+        } catch (\Throwable $e) {
+          $alive = false;
+        }
+        // one attempt per request, a database that is really down must not hold the checkout
+        if ($alive !== true && $link == 'db_link' && $reconnected !== true) {
+          $reconnected = true;
+          try {
+            xtc_db_connect();
+          } catch (\Throwable $e) {
+            // the queries after the polling fail as they would on main
+          }
+        }
+      }
     }
     
     function before_send_order() {
