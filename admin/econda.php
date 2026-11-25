@@ -26,8 +26,13 @@
     switch ($_GET['action']) {
       case 'save':
         $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '23' order by sort_order");
-        while ($configuration = xtc_db_fetch_array($configuration_query))
+        while ($configuration = xtc_db_fetch_array($configuration_query)) {
+          // a radio group without a chosen option sends only its marker, its stored value stays
+          if (!isset($_POST[$configuration['configuration_key']]) && isset($_POST['cfg_radio'][$configuration['configuration_key']])) {
+            continue;
+          }
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".xtc_db_input((isset($_POST[$configuration['configuration_key']])) ? $_POST[$configuration['configuration_key']] : '')."' where configuration_key='".xtc_db_input($configuration['configuration_key'])."'");
+        }
         xtc_redirect(xtc_href_link('econda.php'));
         break;
 
