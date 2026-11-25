@@ -23,10 +23,12 @@
 
     $field .= '>';
 
-    if ( (isset($GLOBALS[$name])) && ($reinsert_value == true) ) {
-      $field .= $GLOBALS[$name];
+    // the content of a textarea is text, so markup and entities are encoded and come back as typed;
+    // an invalid byte becomes U+FFFD instead of emptying the text
+    if ( (isset($GLOBALS[$name])) && !is_array($GLOBALS[$name]) && !is_object($GLOBALS[$name]) && ($reinsert_value == true) ) {
+      $field .= encode_htmlspecialchars((string)$GLOBALS[$name], ENT_COMPAT | ENT_SUBSTITUTE);
     } elseif (xtc_not_null($text)) {
-      $field .= $text;
+      $field .= encode_htmlspecialchars((string)$text, ENT_COMPAT | ENT_SUBSTITUTE);
     }
 
     $field .= '</textarea>';
