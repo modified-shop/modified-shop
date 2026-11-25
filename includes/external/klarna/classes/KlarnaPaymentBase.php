@@ -324,10 +324,10 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       } else {
         $data_js = '{
                   billing_address: 
-                    '.json_encode($order_array['billing_address']).'
+                    '.json_encode($order_array['billing_address'], JSON_HEX_TAG | JSON_HEX_AMP).'
                   ,
                   shipping_address:
-                    '.json_encode($order_array['shipping_address']).'
+                    '.json_encode($order_array['shipping_address'], JSON_HEX_TAG | JSON_HEX_AMP).'
                   
                 }';
       }
