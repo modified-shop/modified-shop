@@ -409,7 +409,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                     <?php
                       foreach ($customers_statuses_array as $customers_statuses) {
                         $checked = false;
-                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || (!isset($_GET['coID']) && $content_failed_save !== true && $customers_statuses['id'] == 'all')) {
+                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || ($action == 'new_content_manager_content' && $content_failed_save !== true && $customers_statuses['id'] == 'all')) {
                           $checked = true;
                         }
                         echo xtc_draw_checkbox_field('groups[]', $customers_statuses['id'], $checked).' ' .$customers_statuses['text'].'<br />';

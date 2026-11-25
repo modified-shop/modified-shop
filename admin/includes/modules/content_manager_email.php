@@ -247,6 +247,9 @@ if (!$action || in_array($action, array('delete', 'list'))) {
     );
   }
 
+  // a known eID fixes the template, otherwise the form offers the choice
+  $email_template_choice = !(isset($_GET['eID']) && isset($email_content));
+
   // after a failed save the form shows the posted values instead of the stored ones
   $content_failed_save = (isset($error) && $error === true && isset($content_title));
   if ($content_failed_save === true) {
@@ -263,7 +266,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
         }
       }
     }
-    if (!isset($_GET['eID']) && is_string($product)) {
+    if ($email_template_choice === true && is_string($product)) {
       $content['email_id'] = $product;
     }
   }
@@ -376,7 +379,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
         <table class="tableConfig borderall">
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_EMAIL_CONTENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo ((isset($_GET['eID']) && isset($email_content)) ? $email_content . xtc_draw_hidden_field('product', $_GET['eID']) : xtc_draw_pull_down_menu('product', $email_array, $content['email_id'])); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo (($email_template_choice === false) ? $email_content . xtc_draw_hidden_field('product', $_GET['eID']) : xtc_draw_pull_down_menu('product', $email_array, $content['email_id'])); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
@@ -394,7 +397,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                     <?php
                       foreach ($customers_statuses_array as $customers_statuses) {
                         $checked = false;
-                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || (!isset($_GET['coID']) && $content_failed_save !== true && $customers_statuses['id'] == 'all')) {
+                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || ($action == 'new_email_content' && $content_failed_save !== true && $customers_statuses['id'] == 'all')) {
                           $checked = true;
                         }
                         echo xtc_draw_checkbox_field('groups[]', $customers_statuses['id'], $checked).' ' .$customers_statuses['text'].'<br />';
