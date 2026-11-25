@@ -17,5 +17,5 @@
       && method_exists($GLOBALS[$payment_modules->selected_module], 'authorize_order')
       )
   {
-    $GLOBALS[$payment_modules->selected_module]->authorize_order($insert_id);
+    $GLOBALS[$payment_modules->selected_module]->authorize_order($insert_id, ((isset($checkout_nonce)) ? $checkout_nonce : ''));
   }

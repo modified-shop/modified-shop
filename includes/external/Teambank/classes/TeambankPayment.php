@@ -212,16 +212,7 @@
       // a run that ended in the authorization left a bare order row, a repeated run cannot complete it
       $bare_order = false;
       if (isset($_SESSION['tmp_oID'])) {
-        $check_query = xtc_db_query("SELECT o.orders_id,
-                                            o.orders_status
-                                       FROM ".TABLE_ORDERS." o
-                                  LEFT JOIN ".TABLE_ORDERS_TOTAL." ot
-                                            ON ot.orders_id = o.orders_id
-                                      WHERE o.orders_id = '".(int)$_SESSION['tmp_oID']."'
-                                        AND o.customers_id = '".(int)$_SESSION['customer_id']."'
-                                        AND o.payment_method = '".xtc_db_input($this->code)."'
-                                        AND ot.orders_id IS NULL");
-        $bare_order = ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
+        $bare_order = $this->find_bare_order($_SESSION['tmp_oID']);
       }
 
       try {
@@ -251,9 +242,13 @@
       return false;
     }
 
-    function authorize_order($orders_id) {
+    function authorize_order($orders_id, $ident_key = '') {
       // checkout_process_order_insert: the outcome is settled before anything is booked for the order
       $this->settled = true;
+      // no authorization for an order this attempt did not write
+      if ($this->find_bare_order($orders_id, $ident_key) === false) {
+        $this->abandon_attempt();
+      }
       if ($this->authorized === true) {
         return;
       }
@@ -279,9 +274,34 @@
         'comments' => ((defined($text)) ? constant($text) : ''),
       );
       xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      $this->abandon_attempt();
+    }
+
+    function abandon_attempt() {
+      // the old key still finds the row of this attempt, the next attempt needs its own
       unset($_SESSION['tmp_oID']);
+      $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
 
       $this->payment_error_redirect();
+    }
+
+    function find_bare_order($orders_id, $ident_key = '') {
+      // a row of this customer and module without totals, nothing is booked for it yet
+      if ((int)$orders_id < 1) {
+        return false;
+      }
+      $check_query = xtc_db_query("SELECT o.orders_id,
+                                          o.orders_status
+                                     FROM ".TABLE_ORDERS." o
+                                LEFT JOIN ".TABLE_ORDERS_TOTAL." ot
+                                          ON ot.orders_id = o.orders_id
+                                    WHERE o.orders_id = '".(int)$orders_id."'
+                                      AND o.customers_id = '".(int)$_SESSION['customer_id']."'
+                                      AND o.payment_method = '".xtc_db_input($this->code)."'
+                                      ".(($ident_key != '') ? "AND o.orders_ident_key = '".xtc_db_input($ident_key)."'" : "")."
+                                      AND ot.orders_id IS NULL");
+      return ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
     }
 
     function remove_bare_order($orders_id) {
