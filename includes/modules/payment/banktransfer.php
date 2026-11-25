@@ -351,19 +351,20 @@
       );
              
       if ($_POST['banktransfer_owner'] != '') {
+        // the confirmation page prints the fields as HTML; the session keeps the values as entered
         $confirmation = array(
           'title' => $this->title,
           'fields' => array(
             array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER,
-                  'field' => $this->banktransfer_owner),
+                  'field' => encode_htmlspecialchars($this->banktransfer_owner, ENT_COMPAT | ENT_SUBSTITUTE)),
             array('title' => (($this->iban_mode) ? MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN : MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER),
-                  'field' => (($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number)),
+                  'field' => encode_htmlspecialchars((($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number), ENT_COMPAT | ENT_SUBSTITUTE)),
             array('title' => (($this->iban_mode) ? MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC : MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ),
-                  'field' => (($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz)),
+                  'field' => encode_htmlspecialchars((($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz), ENT_COMPAT | ENT_SUBSTITUTE)),
             array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME,
-                  'field' => $this->banktransfer_bankname),
+                  'field' => encode_htmlspecialchars($this->banktransfer_bankname, ENT_COMPAT | ENT_SUBSTITUTE)),
             array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER_EMAIL,
-                  'field' => $this->banktransfer_owner_email),
+                  'field' => encode_htmlspecialchars($this->banktransfer_owner_email, ENT_COMPAT | ENT_SUBSTITUTE)),
           )
         );
       }
