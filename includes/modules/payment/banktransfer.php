@@ -378,13 +378,14 @@
     }
 
     function process_button() {      
-      $process_button_string = xtc_draw_hidden_field('banktransfer_blz', $this->banktransfer_blz) .
-                               xtc_draw_hidden_field('banktransfer_bankname', $this->banktransfer_bankname).
-                               xtc_draw_hidden_field('banktransfer_number', $this->banktransfer_number) .
-                               xtc_draw_hidden_field('banktransfer_iban', $this->banktransfer_iban) .
-                               xtc_draw_hidden_field('banktransfer_bic', $this->banktransfer_bic) .
-                               xtc_draw_hidden_field('banktransfer_owner', $this->banktransfer_owner) .
-                               xtc_draw_hidden_field('banktransfer_owner_email', $this->banktransfer_owner_email) .
+      // the hidden fields encode only the double quote, an entity like &copy would come back decoded
+      $process_button_string = xtc_draw_hidden_field('banktransfer_blz', encode_htmlspecialchars($this->banktransfer_blz, ENT_COMPAT | ENT_SUBSTITUTE)) .
+                               xtc_draw_hidden_field('banktransfer_bankname', encode_htmlspecialchars($this->banktransfer_bankname, ENT_COMPAT | ENT_SUBSTITUTE)).
+                               xtc_draw_hidden_field('banktransfer_number', encode_htmlspecialchars($this->banktransfer_number, ENT_COMPAT | ENT_SUBSTITUTE)) .
+                               xtc_draw_hidden_field('banktransfer_iban', encode_htmlspecialchars($this->banktransfer_iban, ENT_COMPAT | ENT_SUBSTITUTE)) .
+                               xtc_draw_hidden_field('banktransfer_bic', encode_htmlspecialchars($this->banktransfer_bic, ENT_COMPAT | ENT_SUBSTITUTE)) .
+                               xtc_draw_hidden_field('banktransfer_owner', encode_htmlspecialchars($this->banktransfer_owner, ENT_COMPAT | ENT_SUBSTITUTE)) .
+                               xtc_draw_hidden_field('banktransfer_owner_email', encode_htmlspecialchars($this->banktransfer_owner_email, ENT_COMPAT | ENT_SUBSTITUTE)) .
                                xtc_draw_hidden_field('banktransfer_status', $this->banktransfer_status) .
                                xtc_draw_hidden_field('banktransfer_prz', $this->banktransfer_prz) .
                                (isset($_POST['banktransfer_fax'])? xtc_draw_hidden_field('banktransfer_fax', $this->banktransfer_fax):'');
