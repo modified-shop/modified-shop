@@ -742,7 +742,15 @@
     xtc_db_query("UPDATE ".TABLE_SPECIALS." 
                      SET specials_quantity = specials_quantity + ".sprintf('%d', (float)$data_array['del_qty'])."
                    WHERE products_id = ".(int)$data_array['products_id']."
-                     AND specials_quantity != 0");
+                     AND specials_quantity != 0", 'db_link', $specials_query_info);
+
+    // the special got the quantity back, a later revert of the order must not give it again
+    if (is_array($specials_query_info) && $specials_query_info['affected_rows'] > 0) {
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_BOOKINGS."
+                          WHERE orders_id = '".(int)$oID."'
+                            AND orders_products_id = '".(int)$data_array['opID']."'
+                            AND class = 'specials'");
+    }
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
   }

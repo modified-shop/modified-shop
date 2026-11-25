@@ -438,7 +438,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
     // update specials quantity
     if ($_SESSION['customers_status']['customers_status_specials'] == '1') {
-      $specials_query = xtc_db_query("SELECT products_id,
+      $specials_query = xtc_db_query("SELECT specials_id,
+                                             products_id,
                                              specials_quantity
                                         FROM ".TABLE_SPECIALS."
                                        WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
@@ -446,17 +447,23 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       if (xtc_db_num_rows($specials_query)) {
         $specials = xtc_db_fetch_array($specials_query);
         if ($specials['specials_quantity'] != 0) {
-          $specials_quantity = ($specials['specials_quantity'] - $order->products[$i]['qty']);
-          
-          $stock_set = '';
-          if ($specials_quantity < 1) {
-            $stock_set = " status = '0', ";
-          }
-          
+          // one statement, so two checkouts at the same time both take their units
           xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                           SET ".$stock_set."
-                               specials_quantity = '".$specials_quantity."' 
-                         WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
+                           SET status = IF(specials_quantity - ".(int)$order->products[$i]['qty']." < 1, '0', status),
+                               specials_quantity = specials_quantity - ".(int)$order->products[$i]['qty']."
+                         WHERE specials_id = '".(int)$specials['specials_id']."' ", 'db_link', $specials_query_info);
+
+          // a removed order gives the quantity back
+          if (is_array($specials_query_info) && $specials_query_info['affected_rows'] == 1) {
+            $booking_data_array = array(
+              'orders_id' => $insert_id,
+              'orders_products_id' => $order_products_id,
+              'class' => 'specials',
+              'reference_id' => $specials['specials_id'],
+              'value' => (int)$order->products[$i]['qty'],
+            );
+            xtc_db_perform(TABLE_ORDERS_BOOKINGS, $booking_data_array);
+          }
         }
       }
     }

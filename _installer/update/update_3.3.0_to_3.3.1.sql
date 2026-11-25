@@ -246,5 +246,17 @@ ALTER TABLE `customers`
 #GTB - 2026-11-12 - remove the SSL session ID check, the TLS session ID is no stable client identifier
 DELETE FROM `configuration` WHERE `configuration_key` = 'SESSION_CHECK_SSL_SESSION_ID';
 
+#GTB - 2026-11-25 - record the voucher debit and the specials quantity of an order, so a removed order can take them back
+CREATE TABLE IF NOT EXISTS `orders_bookings` (
+  `orders_bookings_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `orders_id` INT(11) NOT NULL,
+  `orders_products_id` INT(11) NOT NULL DEFAULT 0,
+  `class` VARCHAR(32) NOT NULL,
+  `reference_id` INT(11) NOT NULL,
+  `value` DECIMAL(15,4) NOT NULL,
+  PRIMARY KEY (`orders_bookings_id`),
+  KEY `idx_orders_id` (`orders_id`)
+);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
 

@@ -935,6 +935,18 @@ CREATE TABLE orders (
   KEY idx_orders_source (orders_source)
 );
 
+DROP TABLE IF EXISTS orders_bookings;
+CREATE TABLE orders_bookings (
+  orders_bookings_id INT(11) NOT NULL AUTO_INCREMENT,
+  orders_id INT(11) NOT NULL,
+  orders_products_id INT(11) NOT NULL DEFAULT 0,
+  class VARCHAR(32) NOT NULL,
+  reference_id INT(11) NOT NULL,
+  value DECIMAL(15,4) NOT NULL,
+  PRIMARY KEY (orders_bookings_id),
+  KEY idx_orders_id (orders_id)
+);
+
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   orders_products_id INT(11) NOT NULL AUTO_INCREMENT,

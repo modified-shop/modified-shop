@@ -176,7 +176,7 @@ class ot_gv {
   }
 
   function apply_credit() {
-    global $order, $xtPrice;
+    global $order, $xtPrice, $insert_id;
     
     $gv_amount = 0;
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
@@ -184,10 +184,25 @@ class ot_gv {
                                   FROM ".TABLE_COUPON_GV_CUSTOMER." 
                                  WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
       $gv_result = xtc_db_fetch_array($gv_query);
-      $gv_amount = $gv_result['amount'] + $xtPrice->xtcRemoveCurr($this->deduction);
+      // one decimal string for the debit and its booking
+      $gv_deduction = number_format((float)$xtPrice->xtcRemoveCurr($this->deduction), 4, '.', '');
+      $gv_amount = $gv_result['amount'] + $gv_deduction;
+      // one statement, so two checkouts at the same time both take their debit
       xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
-                       SET amount = '".$gv_amount."' 
-                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+                       SET amount = amount + ".$gv_deduction."
+                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'", 'db_link', $gv_query_info);
+
+      // a removed order gives the debit back
+      if (is_array($gv_query_info) && $gv_query_info['affected_rows'] > 0) {
+        $sql_data_array = array(
+          'orders_id' => (int)$insert_id,
+          'orders_products_id' => 0,
+          'class' => $this->code,
+          'reference_id' => (int)$_SESSION['customer_id'],
+          'value' => (float)$gv_deduction * (-1),
+        );
+        xtc_db_perform(TABLE_ORDERS_BOOKINGS, $sql_data_array);
+      }
       unset($_SESSION['cot_gv']);
     }
     

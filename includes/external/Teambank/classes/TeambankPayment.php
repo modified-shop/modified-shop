@@ -231,7 +231,7 @@
         
         if ($result !== true) {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
 
           $this->payment_error_redirect();
         }
@@ -249,7 +249,7 @@
         } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
           // the SDK throws for DECLINED and EXPIRED instead of returning the status
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
           
           $this->payment_error_redirect();
         } catch (Exception $e) {

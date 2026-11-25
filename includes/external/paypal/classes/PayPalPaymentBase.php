@@ -1295,11 +1295,13 @@ class PayPalPaymentBase extends PayPalCommon {
       if ($_SESSION['customer_id'] == $check['customers_id']) {
         if ($this->get_config('PAYPAL_REMOVE_ORDER_TMP') == '1') {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
           $this->LoggingManager->log('INFO', 'Remove Order ID: '.$orders_id);
         } else {
           require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
+          require_once(DIR_FS_INC.'xtc_revert_order_bookings.inc.php');
           xtc_restock_order((int)$orders_id, true);
+          xtc_revert_order_bookings((int)$orders_id);
           $this->LoggingManager->log('INFO', 'Restock Order ID: '.$orders_id);
         }
       }

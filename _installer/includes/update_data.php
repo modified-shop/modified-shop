@@ -193,6 +193,7 @@
         ),
       ),
     ),
+    'orders_bookings' => array(),
     'orders_products' => array(
       'drop' => array(
         'idx' => array(
