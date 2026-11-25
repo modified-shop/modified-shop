@@ -43,6 +43,10 @@ if (isset($_REQUEST['speed'])) {
   include_once('includes/application_top.php');
 }
 
+// the early error messages below are text; the answer of the extension sets its own type
+header('X-Content-Type-Options: nosniff');
+header('Content-Type: text/plain');
+
 // check for extension
 if (!isset($_REQUEST['ext'])) {
   die("no extension");
@@ -53,12 +57,8 @@ $ajax_ext = preg_replace("/[^a-z0-9\\.\\_]/i", "", $_REQUEST['ext']);
 
 $ajax_ext_file = DIR_WS_INCLUDES . 'extra/ajax/' . $ajax_ext . '.php';
 
-// response type (e.g. json, xml or html): default is json
-$ajax_rt = (isset($_REQUEST['type']) ?  preg_replace("/[^a-z]/i", "", $_REQUEST['type']) : 'json');
-if (isset($_REQUEST['type1']) && isset($_REQUEST['type2'])) {
-  $ajax_rt1 = (isset($_REQUEST['type1']) ?  preg_replace("/[^a-z]/i", "", $_REQUEST['type1']) : 'application');
-  $ajax_rt2 = (isset($_REQUEST['type2']) ?  preg_replace("/[^a-z]/i", "", $_REQUEST['type2']) : 'json');  
-}
+// response type: json (default) or plain text; any other value is answered as json, which a browser does not render
+$ajax_rt = ((isset($_REQUEST['type']) && is_string($_REQUEST['type']) && strtolower($_REQUEST['type']) == 'plain') ? 'plain' : 'json');
 
 // return error if file not exist or include it
 !file_exists($ajax_ext_file) ? die('extension does not exist!') : include_once($ajax_ext_file);
@@ -94,13 +94,11 @@ if (!isset($_REQUEST['speed'])
   header('Content-Encoding: ' . $encoding);
 }
 
-if ($ajax_rt == 'json' || (isset($ajax_rt2) && $ajax_rt2 == 'json')) {
+if ($ajax_rt == 'json') {
   $response = json_encode($response);
   header('Content-Type: application/json');
-} elseif (isset($ajax_rt1) && isset($ajax_rt2)) {
-  header('Content-Type: '.$ajax_rt1.'/'.$ajax_rt2);
 } else {
-  header('Content-Type: text/'.$ajax_rt);
+  header('Content-Type: text/plain');
 }
 
 // response headers
