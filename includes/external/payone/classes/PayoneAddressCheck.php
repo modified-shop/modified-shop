@@ -45,11 +45,17 @@ class PayoneAddressCheck {
     return $address;
   }
 
-  // the request asks Payone for ISO-8859-1, a UTF-8 shop converts a value that is not UTF-8 yet
+  // the request asks Payone for ISO-8859-1, a UTF-8 shop converts a value that is not UTF-8 yet;
+  // ISO-8859-15 differs in eight signs, which it cannot show, so they become a question mark instead of another sign
   protected function _response_value($value) {
     $value = (string)$value;
-    if (get_default_charset() === 'UTF-8' && !mb_check_encoding($value, 'UTF-8')) {
-      $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+    $charset = get_default_charset();
+    if ($charset === 'UTF-8') {
+      if (!mb_check_encoding($value, 'UTF-8')) {
+        $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+      }
+    } elseif ($charset !== 'ISO-8859-1') {
+      $value = mb_convert_encoding($value, $charset, 'ISO-8859-1');
     }
     return $value;
   }
