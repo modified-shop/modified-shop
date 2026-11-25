@@ -79,6 +79,16 @@ class seo_url_shopstat extends modified_seo_url {
       }
     }
 
+    // the category path goes into the path of the link; the parameters may name it in another spelling than $_GET
+    if (isset($this->params_array['cPath'])) {
+      // the export bootstrap does not load it
+      require_once(DIR_FS_INC . 'xtc_input_validation.inc.php');
+      $this->params_array['cPath'] = xtc_input_validation($this->params_array['cPath'], 'cPath');
+      if ($this->params_array['cPath'] == '') {
+        unset($this->params_array['cPath']);
+      }
+    }
+
     if (isset($this->params_array['language']) 
         && strlen($this->params_array['language']) > 0
         && array_key_exists($this->params_array['language'], parent::$language)
