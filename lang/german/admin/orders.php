@@ -83,7 +83,7 @@ define('ENTRY_PRINTABLE', 'Rechnung Drucken');
 define('TEXT_INFO_HEADING_DELETE_ORDER', 'Bestellung l&ouml;schen');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Bestellung l&ouml;schen m&ouml;chten?');
 define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Artikelanzahl dem Lager gutschreiben');
-define('TEXT_INFO_REVERT_ORDER_BOOKINGS', 'Verrechnetes Guthaben, Coupon und Sonderangebotsmenge zur&uuml;ckbuchen');
+define('TEXT_INFO_REVERT_ORDER_BOOKINGS', 'Verrechnetes Guthaben, Coupon und Sonderangebotsmenge zur&uuml;ckbuchen, ausverkaufte Sonderangebote wieder aktivieren');
 define('TEXT_DATE_ORDER_CREATED', 'erstellt am:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'letzte &Auml;nderung:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Zahlungsweise:');

@@ -65,7 +65,16 @@
                            SET specials_sold_out = '0'
                          WHERE specials_id = '".(int)$bookings['reference_id']."'
                            AND specials_sold_out = '1'
-                           AND status = '1'");
+                           AND status = '1'", 'db_link', $active_info);
+          if (is_array($active_info) && $active_info['affected_rows'] == 1) {
+            // the special is on again, so modules like zettle can send its price
+            $specials_query = xtc_db_query("SELECT specials_id,
+                                                   products_id
+                                              FROM ".TABLE_SPECIALS."
+                                             WHERE specials_id = '".(int)$bookings['reference_id']."'");
+            $specials = xtc_db_fetch_array($specials_query);
+            foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/revert_order_bookings_specials/','php') as $file) require ($file);
+          }
           break;
       }
     }
