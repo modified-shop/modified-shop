@@ -1714,6 +1714,7 @@ class categories {
         'specials_last_modified' => 'now()',
         'start_date' => $start_date,
         'expires_date' => $expires_date,
+        'specials_sold_out' => '0',
         'status' => ((isset($products_data['specials_status'])) ? (int)$products_data['specials_status'] : '1')
       );
     

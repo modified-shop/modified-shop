@@ -49,29 +49,23 @@
           break;
 
         case 'specials':
-          // only a special the checkout used up comes back on, not one switched off, expired or saved since the last order that took from it
-          $last_query = xtc_db_query("SELECT MAX(o.date_purchased) AS date_purchased
-                                        FROM ".TABLE_ORDERS_BOOKINGS." ob
-                                        JOIN ".TABLE_ORDERS." o
-                                             ON o.orders_id = ob.orders_id
-                                       WHERE ob.class = 'specials'
-                                         AND ob.reference_id = '".(int)$bookings['reference_id']."'");
-          $last = xtc_db_fetch_array($last_query);
-          $status_set = '';
-          if (is_array($last) && xtc_not_null($last['date_purchased'])) {
-            // timestamps have no fractions, a change in the same second counts as later
-            $status_set = "status = IF(status = '0'
-                                       AND specials_quantity < 1
-                                       AND specials_quantity + ".(int)$bookings['value']." > 0
-                                       AND (date_status_change IS NULL OR date_status_change < '".xtc_db_input($last['date_purchased'])."')
-                                       AND (specials_last_modified IS NULL OR specials_last_modified < '".xtc_db_input($last['date_purchased'])."'), '1', status),";
-          }
+          // only a special the checkout switched off comes back on, and only within its dates
           // quantity 0 means unlimited, an active one stays so
           xtc_db_query("UPDATE ".TABLE_SPECIALS."
-                           SET ".$status_set."
+                           SET status = IF(status = '0'
+                                           AND specials_sold_out = '1'
+                                           AND specials_quantity + ".(int)$bookings['value']." > 0
+                                           AND (start_date <= now() OR start_date IS NULL OR start_date = 0)
+                                           AND (expires_date >= now() OR expires_date IS NULL OR expires_date = 0), '1', status),
                                specials_quantity = specials_quantity + ".(int)$bookings['value']."
                          WHERE specials_id = '".(int)$bookings['reference_id']."'
                            AND NOT (status = '1' AND specials_quantity = 0)");
+          // the mark only belongs to an inactive special
+          xtc_db_query("UPDATE ".TABLE_SPECIALS."
+                           SET specials_sold_out = '0'
+                         WHERE specials_id = '".(int)$bookings['reference_id']."'
+                           AND specials_sold_out = '1'
+                           AND status = '1'");
           break;
       }
     }

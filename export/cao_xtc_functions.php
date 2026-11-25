@@ -2118,7 +2118,7 @@ function ProductsSpecialPriceUpdate ()
               " set specials_last_modified = now()" .
               ((isset($_POST['price'])) ? ", specials_new_products_price = '" . xtc_db_input($Price) . "'" : "") .
               ((isset($_POST['expired'])) ? ", expires_date = '" . xtc_db_input($Expire) . "'" : "") .
-              (($Status === '0' || $Status === '1') ? ", status = '" . $Status . "'" : "") .
+              (($Status === '0' || $Status === '1') ? ", status = '" . $Status . "', specials_sold_out = '0'" : "") .
               " where specials_id = '" . (int)$SpecialID. "'");
 
       print_xml_status (0, $_POST['action'], 'OK', 'UPDATE', '', '');

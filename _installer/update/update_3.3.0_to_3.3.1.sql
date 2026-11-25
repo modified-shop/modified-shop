@@ -255,9 +255,11 @@ CREATE TABLE IF NOT EXISTS `orders_bookings` (
   `reference_id` INT(11) NOT NULL,
   `value` DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (`orders_bookings_id`),
-  KEY `idx_orders_id` (`orders_id`),
-  KEY `idx_class_reference_id` (`class`, `reference_id`)
+  KEY `idx_orders_id` (`orders_id`)
 );
+
+#GTB - 2026-11-25 - mark a special the checkout switched off, so a removed order can switch it back on
+ALTER TABLE `specials` ADD `specials_sold_out` INT(1) NOT NULL DEFAULT 0 AFTER `status`;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
 

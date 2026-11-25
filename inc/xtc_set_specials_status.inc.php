@@ -23,6 +23,7 @@
     }
     xtc_db_query("UPDATE " . TABLE_SPECIALS . " 
                      SET status = '" .(int)$status . "', 
+                         specials_sold_out = '0',
                          date_status_change = now() 
                    WHERE specials_id = '" . (int)$specials_id . "'");
   }
