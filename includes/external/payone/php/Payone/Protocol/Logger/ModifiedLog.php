@@ -36,10 +36,10 @@ class Payone_Protocol_Logger_ModifiedLog implements Payone_Protocol_Logger_Inter
 
 	public function log($message, $level = 0) {
 		$this->_logcount++;
-		// the return URLs of a request carry the session id, keep it out of the table
+		// the return URLs of a request carry the session id and the checkout return token, keep both out of the table
 		require_once(DIR_FS_INC.'strip_session_id_from_url.inc.php');
 		$message = preg_replace_callback('~https?://[^|\s]+~i', function($matches) {
-			return strip_session_id_from_url($matches[0]);
+			return strip_session_id_from_url($matches[0], array('payone_return_token'));
 		}, (string)$message);
 		$table = $this->_mode == 'api' ? 'payone_api_log' : 'payone_transactions_log';
 		$sql_data_array = array(
