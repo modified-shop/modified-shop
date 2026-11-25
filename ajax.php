@@ -130,6 +130,8 @@ if (!isset($_REQUEST['speed'])
 if (defined('STORE_PAGE_PARSE_TIME') && STORE_PAGE_PARSE_TIME == 'true') {
   $parse_time = number_format((microtime(true) - PAGE_PARSE_START_TIME), 3);
   if ($parse_time >= STORE_PAGE_PARSE_TIME_THRESHOLD) {
-    error_log(date(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
+    // keep the session id out of the log
+    require_once (DIR_FS_INC.'strip_session_id_from_url.inc.php');
+    error_log(date(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . strip_session_id_from_url((string)getenv('REQUEST_URI')) . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
   }
 }
