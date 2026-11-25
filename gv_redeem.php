@@ -53,7 +53,8 @@ if (isset($_GET['gv_no'])) {
 		$coupon = xtc_db_fetch_array($gv_query);
 		$redeem_query = xtc_db_query("SELECT coupon_id 
 		                                FROM ".TABLE_COUPON_REDEEM_TRACK." 
-		                               WHERE coupon_id = '".$coupon['coupon_id']."'");
+		                               WHERE coupon_id = '".$coupon['coupon_id']."'
+		                                 AND redeem_date <> '0000-00-00 00:00:00'");
 		if (xtc_db_num_rows($redeem_query) == 0) {
 			// check for required session variables
 			$_SESSION['gv_id'] = $coupon['coupon_id'];
@@ -67,24 +68,16 @@ if (isset($_GET['gv_no'])) {
 }
 
 if ($error === false) {
-	// only the request that switches the code off redeems it, in the same statement as the credit
+	// only the request that switches the code off redeems it, in the same statement as the credit and the receipt
 	require_once (DIR_FS_INC.'xtc_gv_redeem_code.inc.php');
-	if (xtc_gv_redeem_code($_SESSION['customer_id'], $_SESSION['gv_id']) !== true) {
+	$gv_redeemed = xtc_gv_redeem_code($_SESSION['customer_id'], $_SESSION['gv_id'], (isset($_SESSION['tracking']['ip']) ? $_SESSION['tracking']['ip'] : ''));
+	if ($gv_redeemed !== true) {
 		$error = true;
-		unset($_SESSION['gv_id']);
+		if ($gv_redeemed === null) {
+			// nothing was booked, the code can be redeemed later
+			$smarty->assign('error_message', ERROR_GV_SEND_BOOKING);
+		}
 	}
-}
-
-if ($error === false) {
-	// Update redeem status
-	$sql_data_array = array(
-	  'coupon_id' => (int)$_SESSION['gv_id'],
-    'customer_id' => (int)$_SESSION['customer_id'],
-    'redeem_date' => 'now()',
-    'redeem_ip' => $_SESSION['tracking']['ip']
-  );
-	xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);                        
-	
 	unset($_SESSION['gv_id']);
 }
 

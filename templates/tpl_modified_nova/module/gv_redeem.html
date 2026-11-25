@@ -8,7 +8,7 @@
   <div>{#text_information#}</div>
 
   {if $error eq 'true'}
-    <div class="errormessage my_20">{#text_invalid_gv#}</div>
+    <div class="errormessage my_20">{if $error_message}{$error_message}{else}{#text_invalid_gv#}{/if}</div>
   {else}
     <div class="infomessage my_20">{#text_valid_gva#} {$coupon_amount} {#text_valid_gvb#}</div>
   {/if}
