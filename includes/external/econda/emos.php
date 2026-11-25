@@ -69,11 +69,6 @@ class EMOS{
 
 	}
 
-	/** PHP 8 no longer runs a method named like the class as constructor */
-	function __construct($pathToFile="econda/", $scriptFileName="emos32_xtc.js"){
-		$this->EMOS($pathToFile, $scriptFileName);
-	}
-
 	/** switch on pretty printing of generated code. If not called, the output
 	* will be in one line of html.
 	*/
@@ -151,8 +146,8 @@ class EMOS{
 	* <a name="emos_name" title="search" rel="$queryString" rev="$numberOfHits"></a>
 	*/
 	function addSearch($queryString,$numberOfHits){
-		// the search term is plain text, so an entity typed into it stays text
-		$queryString = htmlspecialchars((string)$queryString, ENT_QUOTES | ENT_HTML5, 'ISO-8859-1');
+		// the search term is plain text; URL-encoded as UTF-8 the econda script decodes it once and gets it as typed
+		$queryString = rawurlencode(encode_utf8((string)$queryString, get_default_charset(), true));
 		$this->appendPreScript($this->getAnchorTag("search",$queryString,$numberOfHits));
 	}
 
