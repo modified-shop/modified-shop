@@ -93,7 +93,8 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
                 ?>
                 <div class="pp_txstatus">
                   <div class="pp_txstatus_received pp_received_icon">
-                    <?php echo $plan->getName().xtc_draw_hidden_field('paypal_plan_id', $plan->getId(), 'data-id="pp-'.$cnt.'"'); ?>
+                    <?php // the names come from PayPal in UTF-8: signs beyond ASCII go as numeric references, which fit any charset of the panel ?>
+                    <?php echo mb_encode_numericentity($plan->getName(), array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8').xtc_draw_hidden_field('paypal_plan_id', $plan->getId(), 'data-id="pp-'.$cnt.'"'); ?>
                   </div>
                   <div class="pp_txstatus_data">
                     <table class="tableInput border0">
@@ -103,7 +104,7 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
                       </tr>
                       <tr>
                         <td><span class="main"><?php echo TEXT_PAYPAL_PLAN_NAME; ?></span></td>
-                        <td><span class="main"><?php echo $detail->getName(); ?></span></td>
+                        <td><span class="main"><?php echo mb_encode_numericentity($detail->getName(), array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8'); ?></span></td>
                       </tr>
                       <tr>
                         <td><span class="main"><?php echo TEXT_PAYPAL_PLAN_INTERVAL; ?></span></td>
