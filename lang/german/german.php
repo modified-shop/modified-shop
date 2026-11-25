@@ -515,6 +515,7 @@ define('TEXT_COUPON_HELP_CATEGORIES', 'Kategorie Einschr&auml;nkung');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Artikel Einschr&auml;nkung');
 define('TEXT_COUPON_HELP_MANUFACTURERS', 'Hersteller Einschr&auml;nkung');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Ung&uuml;ltiger Gutscheinbetrag');
+define('ERROR_GV_SEND_BOOKING', 'Der Gutschein konnte nicht gebucht werden. Bitte versuchen Sie es sp&auml;ter erneut.');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Ung&uuml;ltige E-Mail-Adresse');
 define('TEXT_SESSION_RENEW_ERROR', 'Der Vorgang konnte nicht abgeschlossen werden, weil noch eine andere Anfrage Ihrer Sitzung l&auml;uft. Bitte versuchen Sie es gleich noch einmal.');
 define('TEXT_GV_SEND_ALREADY_RUNNING', 'Ein anderer Vorgang in Ihrer Sitzung l&auml;uft noch, zum Beispiel ein Gutscheinversand. Bitte warten Sie einen Moment, pr&uuml;fen Sie Ihr Guthaben und versuchen Sie es dann erneut.');

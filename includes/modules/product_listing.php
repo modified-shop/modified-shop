@@ -117,7 +117,7 @@ if (isset($_GET['page'])
 
   if ($current_category_id == '0' && isset($_GET['keywords'])) {
     $module_smarty->assign('listing_mode', 'search');
-    $category['categories_name'] = TEXT_SEARCH_TERM . stripslashes(trim($_GET['keywords']));
+    $category['categories_name'] = TEXT_SEARCH_TERM . encode_htmlspecialchars(stripslashes(trim($_GET['keywords'])), ENT_QUOTES | ENT_SUBSTITUTE);
   }
 
   if (isset($category['categories_heading_title']) && $category['categories_heading_title'] != '') {

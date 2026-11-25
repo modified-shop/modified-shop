@@ -53,6 +53,8 @@ function get_klarna_data() {
   ob_end_clean();  
     
   $output = encode_htmlentities($output);
+  // atob() of the page reads the base64 text byte by byte, so a sign without a named entity goes as a numeric reference
+  $output = mb_encode_numericentity($output, array(0x80, 0x10FFFF, 0, 0x1FFFFF), get_default_encoding(''));
   $output = base64_encode($output);
 
   return $output;

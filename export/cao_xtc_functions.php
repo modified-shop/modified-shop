@@ -148,6 +148,31 @@ function column_exists($table, $column)
 
 //--------------------------------------------------------------
 
+// title of an order total, stored as HTML, as XML text
+function cao_xml_text($text)
+{
+  $utf8 = (strtoupper(CHARSET) == 'UTF-8');
+  $text = strip_tags((string)$text);
+  if (!$utf8) {
+    $text = mb_convert_encoding($text, 'UTF-8', CHARSET);
+  }
+  // decoded in UTF-8: the charset of the shop may lack a character of an entity
+  $text = decode_htmlentities($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  // XML 1.0 forbids most control characters, a reference like &#12; decodes to one
+  $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]|\xEF\xBF[\xBE\xBF]/', '', $text);
+  $text = encode_htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+  if (!$utf8) {
+    // a character the charset lacks becomes a numeric reference
+    $substitute = mb_substitute_character();
+    mb_substitute_character('entity');
+    $text = mb_convert_encoding($text, CHARSET, 'UTF-8');
+    mb_substitute_character($substitute);
+  }
+  return $text;
+}
+
+//--------------------------------------------------------------
+
 // id from the request as int, false when it is no plain number
 function cao_post_id($key, $default = false)
 {
@@ -509,7 +534,7 @@ function SendOrders ()
       if ($totals['value'] < 0) $total_prefix = '-';
 
       $schema .= '<TOTAL>' . "\n" .
-                 '<TOTAL_TITLE>' . encode_htmlspecialchars(strip_tags($totals['title'])) . '</TOTAL_TITLE>' . "\n" .
+                 '<TOTAL_TITLE>' . cao_xml_text($totals['title']) . '</TOTAL_TITLE>' . "\n" .
                  '<TOTAL_VALUE>' . encode_htmlspecialchars(abs($totals['value'])) . '</TOTAL_VALUE>' . "\n" .
                  '<TOTAL_CLASS>' . encode_htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
                  '<TOTAL_SORT_ORDER>' . encode_htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .

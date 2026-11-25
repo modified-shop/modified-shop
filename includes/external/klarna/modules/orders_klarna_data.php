@@ -16,6 +16,11 @@ if (isset($order) && is_object($order)) {
   if (in_array($order->info['payment_method'], klarna_payment_modules(), true)) {
     require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 
+    // the texts of the Klarna answer are UTF-8: signs beyond ASCII go as numeric references, which fit any charset of the panel
+    $klarna_api_text = function ($text) {
+      return mb_encode_numericentity((string)$text, array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
+    };
+
     // a language without Klarna texts falls back to english
     $klarna_language = $order->info['language'];
     if (!is_file(DIR_FS_CATALOG.'lang/'.basename($klarna_language).'/modules/payment/'.$order->info['payment_method'].'.php')) {
@@ -41,19 +46,19 @@ if (isset($order) && is_object($order)) {
               <div class="pp_boxheading"><?php echo TEXT_KLARNA_TRANSACTION; ?></div>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_KLARNA_TRANSACTION_METHOD; ?></dt>
-                <dd><?php echo $admin_info_array['initial_payment_method']['description']; ?></dd>
+                <dd><?php echo $klarna_api_text($admin_info_array['initial_payment_method']['description']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_KLARNA_TRANSACTION_REFERENCE; ?></dt>
-                <dd><?php echo $admin_info_array['klarna_reference']; ?></dd>
+                <dd><?php echo $klarna_api_text($admin_info_array['klarna_reference']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_KLARNA_TRANSACTION_STATUS; ?></dt>
-                <dd><?php echo $admin_info_array['status']; ?></dd>
+                <dd><?php echo $klarna_api_text($admin_info_array['status']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_KLARNA_TRANSACTION_FRAUD_STATUS; ?></dt>
-                <dd><?php echo $admin_info_array['fraud_status']; ?></dd>
+                <dd><?php echo $klarna_api_text($admin_info_array['fraud_status']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_KLARNA_TRANSACTIONS_TOTAL; ?></dt>
@@ -110,7 +115,7 @@ if (isset($order) && is_object($order)) {
                   <div class="pp_txstatus_data">
                     <dl class="pp_txstatus_data_list">
                       <dt><?php echo TEXT_KLARNA_TRANSACTION_ID; ?></dt>
-                      <dd><?php echo $transaction['id']; ?></dd>
+                      <dd><?php echo $klarna_api_text($transaction['id']); ?></dd>
                     </dl>
                     <dl class="pp_txstatus_data_list">
                       <dt><?php echo TEXT_KLARNA_TRANSACTION_TOTAL; ?></dt>
@@ -118,7 +123,7 @@ if (isset($order) && is_object($order)) {
                     </dl>
                     <dl class="pp_txstatus_data_list">
                       <dt><?php echo TEXT_KLARNA_TRANSACTION_REFERENCE; ?></dt>
-                      <dd><?php echo $transaction['reference']; ?></dd>
+                      <dd><?php echo $klarna_api_text($transaction['reference']); ?></dd>
                     </dl>
                   </div>
                 </div>

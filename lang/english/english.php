@@ -514,6 +514,7 @@ define('TEXT_COUPON_HELP_CATEGORIES', 'Category Restrictions');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product Restrictions');
 define('TEXT_COUPON_HELP_MANUFACTURERS', 'Manufacturers Restrictions');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
+define('ERROR_GV_SEND_BOOKING', 'The voucher could not be booked. Please try again later.');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
 define('TEXT_SESSION_RENEW_ERROR', 'The request could not be completed because another request of your session is still running. Please try again in a moment.');
 define('TEXT_GV_SEND_ALREADY_RUNNING', 'Another request of your session is still running, for example a voucher transfer. Please wait a moment, check your balance and then try again.');

@@ -134,7 +134,7 @@
             $module_content[] = $product->buildDataArray($autocomplete_search);
           }
           $module_smarty->assign('module_content', $module_content);
-          $module_smarty->assign('BUTTON_VIEW_RESULTS', '<a href="'.xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords='.$keywords.$params).'">'.xtc_image_button('button_results.gif', sprintf(TEXT_BUTTON_RESULTS, $autocomplete_search_total)).'</a>');
+          $module_smarty->assign('BUTTON_VIEW_RESULTS', '<a href="'.xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords='.urlencode($keywords).$params).'">'.xtc_image_button('button_results.gif', sprintf(TEXT_BUTTON_RESULTS, $autocomplete_search_total)).'</a>');
           $module_smarty->assign('module_content', $module_content);
         } else {
           $module_smarty->assign('error', 'true');

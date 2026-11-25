@@ -91,7 +91,12 @@ class micropayment_method extends micropayment_helper
         );
 
         if (isset($_GET['orderid']) && is_numeric($_GET['orderid'])) {
-            $check_query = xtc_db_query("SELECT orders_status FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$_GET['orderid'] . "' LIMIT 1");
+            // only an order of the customer of this session, the id in the address is anybody's to type
+            $check_query = xtc_db_query("SELECT orders_status
+                                           FROM " . TABLE_ORDERS . "
+                                          WHERE orders_id = '" . (int)$_GET['orderid'] . "'
+                                            AND customers_id = '" . (int)(isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0) . "'
+                                          LIMIT 1");
             if ($result = xtc_db_fetch_array($check_query)) {
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
                     // a running notification holds the order, its event is read under the lock

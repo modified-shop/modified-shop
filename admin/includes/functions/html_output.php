@@ -66,26 +66,32 @@
   // javascript to dynamically update the states/provinces list when the country is changed
   // TABLES: zones
   function xtc_js_zone_list($country, $form, $field) {
+    // the names go into the script as text: decoded once as a page shows them, then encoded for JavaScript;
+    // in UTF-8 first, a single byte charset cannot hold every character of an entity such as &rsquo;
+    $js_text = function ($value) {
+      $value = html_entity_decode(encode_utf8((string)$value, get_default_encoding(''), true), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      return json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE);
+    };
     $countries_query = xtc_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
     $num_country = 1;
     $output_string = '';
     while ($countries = xtc_db_fetch_array($countries_query)) {
       if ($num_country == 1) {
-        $output_string .= '  if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
+        $output_string .= '  if (' . $country . ' == "' . (int)$countries['zone_country_id'] . '") {' . "\n";
       } else {
-        $output_string .= '  } else if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
+        $output_string .= '  } else if (' . $country . ' == "' . (int)$countries['zone_country_id'] . '") {' . "\n";
       }
       $states_query = xtc_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
       $num_state = 1;
      while ($states = xtc_db_fetch_array($states_query)) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(PLEASE_SELECT, ENT_COMPAT, strtoupper($_SESSION['language_charset']))  . '", "");' . "\n";
-        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states['zone_name'] . '", "' . $states['zone_id'] . '");' . "\n";
+        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option(' . $js_text(PLEASE_SELECT) . ', "");' . "\n";
+        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option(' . $js_text($states['zone_name']) . ', "' . (int)$states['zone_id'] . '");' . "\n";
         $num_state++;
       }
       $num_country++;
     }
     $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(TYPE_BELOW, ENT_COMPAT, strtoupper($_SESSION['language_charset'])). '", "");' . "\n" .
+                      '    ' . $form . '.' . $field . '.options[0] = new Option(' . $js_text(TYPE_BELOW) . ', "");' . "\n" .
                       '  }' . "\n";
     return $output_string;
   }
@@ -322,15 +328,20 @@
         // ids like banner groups or campaign ids are text from the database and come back as posted value,
         // so every character is encoded, also the & of something that looks like an entity
         $val_id = htmlspecialchars((string)$val['id'], ENT_QUOTES | ENT_HTML5, get_default_encoding(''));
+        // the text is printed as text: an entity it holds stays, as the &nbsp; of a category tree, a quote is encoded;
+        // a formatted name reads as the browser showed it: comments and tags go, an inline tag without a trace,
+        // every other tag (a line break, a block) leaves a space between the words; a < before no letter stays
+        $val_text = preg_replace(array('#<!--.*?(-->|$)#s', '#</?(a|abbr|acronym|b|bdi|bdo|big|cite|code|data|del|dfn|em|font|i|ins|kbd|mark|q|s|samp|small|span|strike|strong|sub|sup|time|tt|u|var|wbr)\b[^>]*>#i', '#</?[a-z][^>]*>#i'), array('', '', ' '), (string)$val['text']);
+        $val_text = htmlspecialchars($val_text, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, get_default_encoding(''), false);
         $field .= '<option value="' .$val_id . '"';
         $li .= '<li data-val="' .$val_id . '"';
         if ($selected_key !== false && $key === $selected_key) {
           $field .= ' selected="selected"';
           $li .= ' class="selected"';
-          $selText = $val['text'];
+          $selText = $val_text;
         }
-        $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
-        $li .= '>'. PHP_EOL .'<label>' . $val['text'] . '</label>'. PHP_EOL . '</li>' . PHP_EOL;
+        $field .= '>' . $val_text . '</option>' . PHP_EOL;
+        $li .= '>'. PHP_EOL .'<label>' . $val_text . '</label>'. PHP_EOL . '</li>' . PHP_EOL;
       }
     }
     $field .= '</select>'. PHP_EOL;

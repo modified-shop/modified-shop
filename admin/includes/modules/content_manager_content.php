@@ -280,6 +280,26 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                                     AND content_group = '".(int)$_GET['cID']."'");
   $content_data = xtc_db_fetch_array($content_query);
 
+  // after a failed save the form shows the posted values instead of the stored ones
+  $content_failed_save = (isset($error) && $error === true && isset($content_title));
+  if ($content_failed_save === true) {
+    $content['content_name'] = $content_title;
+    $content['sort_order'] = $sort_order;
+    if (isset($content_language_id)) {
+      $content['languages_id'] = $content_language_id;
+    }
+    $content['group_ids'] = '';
+    if (isset($_POST['groups']) && is_array($_POST['groups'])) {
+      foreach ($_POST['groups'] as $posted_group) {
+        if (is_string($posted_group)) {
+          $content['group_ids'] .= 'c_'.$posted_group.'_group,';
+        }
+      }
+    }
+    $content['content_link'] = $content_link;
+    $content['file_comment'] = $file_comment;
+  }
+
   // get languages
   $languages_selected = $_SESSION['language_code'];
   $languages_id = (int)$_SESSION['languages_id'];
@@ -342,6 +362,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
     array('id' => 1,'text' => YES),
     array('id' => 0,'text' => NO),
   );
+  $keep_filename = (($content_failed_save === true && isset($_POST['keep_filename']) && $_POST['keep_filename'] === '1') ? 1 : 0);
 
   // add default value to array
   $default_array[]=array('id' => 'default','text' => TEXT_SELECT);
@@ -388,7 +409,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                     <?php
                       foreach ($customers_statuses_array as $customers_statuses) {
                         $checked = false;
-                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || (!isset($_GET['coID']) && $customers_statuses['id'] == 'all')) {
+                        if (strpos($content['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || ($action == 'new_content_manager_content' && $content_failed_save !== true && $customers_statuses['id'] == 'all')) {
                           $checked = true;
                         }
                         echo xtc_draw_checkbox_field('groups[]', $customers_statuses['id'], $checked).' ' .$customers_statuses['text'].'<br />';
@@ -426,7 +447,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_KEEP_FILENAME; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('keep_filename', $keep_filename_array, false, 'style="width: 155px"'); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('keep_filename', $keep_filename_array, $keep_filename, 'style="width: 155px"'); ?></td>
           </tr>
           <?php
             if ($content['content_file']!='') {

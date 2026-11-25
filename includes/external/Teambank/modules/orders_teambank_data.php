@@ -16,6 +16,10 @@
     if (!function_exists('xtc_date_short')) {
       require_once(DIR_FS_INC.'xtc_date_short.inc.php');
     }
+    // the texts of the Teambank answer are UTF-8: signs beyond ASCII go as numeric references, which fit any charset of the panel
+    $teambank_api_text = function ($text) {
+      return mb_encode_numericentity((string)$text, array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
+    };
 
     // include needed classes
     require_once(DIR_FS_EXTERNAL.'Teambank/classes/TeambankPayment.php');
@@ -76,11 +80,11 @@
               <div class="ec_boxheading"><?php echo TEXT_TEAMBANK_TRANSACTION; ?></div>
               <dl class="ec_transaction">
                 <dt><?php echo TEXT_TEAMBANK_TRANSACTION_STATE; ?></dt>
-                <dd><?php echo $admin_info_data->getStatus(); ?></dd>
+                <dd><?php echo $teambank_api_text($admin_info_data->getStatus()); ?></dd>
               </dl>
               <dl class="ec_transaction">
                 <dt><?php echo TEXT_TEAMBANK_TRANSACTION_CUSTOMER; ?></dt>
-                <dd><?php echo $admin_info_data->getCustomer()->getFirstName() . ' ' . $admin_info_data->getCustomer()->getLastName(); ?></dd>
+                <dd><?php echo $teambank_api_text($admin_info_data->getCustomer()->getFirstName() . ' ' . $admin_info_data->getCustomer()->getLastName()); ?></dd>
               </dl>
               <dl class="ec_transaction">
                 <dt><?php echo TEXT_TEAMBANK_TRANSACTION_TOTAL; ?></dt>
@@ -102,7 +106,7 @@
               <?php } ?>
               <dl class="ec_transaction">
                 <dt><?php echo TEXT_TEAMBANK_TRANSACTION_ID; ?></dt>
-                <dd><?php echo $admin_info_data->getTransactionId(); ?></dd>
+                <dd><?php echo $teambank_api_text($admin_info_data->getTransactionId()); ?></dd>
               </dl>
               <?php if (is_object($admin_info_data->getExpirationDateTime())) { ?>
               <dl class="ec_transaction">
@@ -126,7 +130,7 @@
                 ?>
                 <div class="ec_txstatus">
                   <div class="ec_txstatus_received ec_received_icon">
-                    <?php echo xtc_datetime_short($booking->getCreated()->format('Y-m-d H:i:s')) . ' ' . $booking->getType(); ?>
+                    <?php echo xtc_datetime_short($booking->getCreated()->format('Y-m-d H:i:s')) . ' ' . $teambank_api_text($booking->getType()); ?>
                   </div>
                   <div class="ec_txstatus_data">
                     <?php
@@ -141,11 +145,11 @@
                     ?>
                     <dl class="ec_txstatus_data_list">
                       <dt><?php echo TEXT_TEAMBANK_TRANSACTIONS_STATE; ?></dt>
-                      <dd><?php echo $booking->getStatus(); ?></dd>
+                      <dd><?php echo $teambank_api_text($booking->getStatus()); ?></dd>
                     </dl>
                     <dl class="ec_txstatus_data_list">
                       <dt><?php echo TEXT_TEAMBANK_TRANSACTIONS_ID; ?></dt>
-                      <dd><?php echo $booking->getUuid(); ?></dd>
+                      <dd><?php echo $teambank_api_text($booking->getUuid()); ?></dd>
                     </dl>
                   </div>
                 </div>
