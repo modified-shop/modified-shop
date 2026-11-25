@@ -41,9 +41,11 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
     }
     
     $plan_tax_array = array (array ('id' => '0', 'text' => TEXT_NONE));
+    // the title holds one text per language, DE::...||EN::...
+    require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
     $tax_class_query = xtc_db_query("SELECT tax_class_id, tax_class_title FROM ".TABLE_TAX_CLASS." ORDER BY tax_class_title");
     while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
-      $plan_tax_array[] = array ('id' => number_format(xtc_get_tax_rate($tax_class['tax_class_id']), 2), 'text' => $tax_class['tax_class_title']);
+      $plan_tax_array[] = array ('id' => number_format(xtc_get_tax_rate($tax_class['tax_class_id']), 2), 'text' => parse_multi_language_html($tax_class['tax_class_title'], $_SESSION['language_code']));
     }
 
     $plan_tax_include_array = array(
