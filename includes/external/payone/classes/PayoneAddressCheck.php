@@ -46,7 +46,8 @@ class PayoneAddressCheck {
   }
 
   // the request asks Payone for ISO-8859-1, a UTF-8 shop converts a value that is not UTF-8 yet;
-  // ISO-8859-15 differs in eight signs, which it cannot show, so they become a question mark instead of another sign
+  // ISO-8859-15 cannot show eight of its signs: fractions and the acute keep their meaning as text (12½ becomes 12 1/2),
+  // the others become a question mark instead of another sign
   protected function _response_value($value) {
     $value = (string)$value;
     $charset = get_default_charset();
@@ -55,6 +56,8 @@ class PayoneAddressCheck {
         $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
       }
     } elseif ($charset !== 'ISO-8859-1') {
+      $value = preg_replace('/(?<=[0-9])(?=[\xBC-\xBE])/', ' ', $value);
+      $value = strtr($value, array("\xBC" => '1/4', "\xBD" => '1/2', "\xBE" => '3/4', "\xB4" => "'"));
       $value = mb_convert_encoding($value, $charset, 'ISO-8859-1');
     }
     return $value;
