@@ -67,6 +67,18 @@ if (isset($_GET['gv_no'])) {
 }
 
 if ($error === false) {
+	// only the request that switches the code off redeems it, a second one at the same time gets no credit
+	xtc_db_query("UPDATE ".TABLE_COUPONS." 
+	                 SET coupon_active = 'N' 
+	               WHERE coupon_id = '".(int)$_SESSION['gv_id']."'
+	                 AND coupon_active = 'Y'", 'db_link', $gv_claim_info);
+	if (!is_array($gv_claim_info) || $gv_claim_info['success'] !== true || $gv_claim_info['affected_rows'] != 1) {
+		$error = true;
+		unset($_SESSION['gv_id']);
+	}
+}
+
+if ($error === false) {
 	// Update redeem status
 	$sql_data_array = array(
 	  'coupon_id' => (int)$_SESSION['gv_id'],
@@ -76,9 +88,6 @@ if ($error === false) {
   );
 	xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);                        
 	
-	xtc_db_query("UPDATE ".TABLE_COUPONS." 
-	                 SET coupon_active = 'N' 
-	               WHERE coupon_id = '".(int)$_SESSION['gv_id']."'");
 	xtc_gv_account_update($_SESSION['customer_id'], $_SESSION['gv_id']);
 	unset($_SESSION['gv_id']);
 }
