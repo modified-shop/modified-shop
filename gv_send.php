@@ -234,10 +234,10 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').xtc_draw_hidden_field('gv_send_token', $gv_send_token));
   // the value of the voucher in the currency of the session, as its redemption shows it
   $gv_shown = $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($gv_debit), true);
-  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $gv_shown, $to_name, $to_email, $to_name, $gv_shown, $send_name));
+  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $gv_shown, encode_htmlspecialchars($to_name, ENT_COMPAT | ENT_SUBSTITUTE), encode_htmlspecialchars($to_email, ENT_COMPAT | ENT_SUBSTITUTE), encode_htmlspecialchars($to_name, ENT_COMPAT | ENT_SUBSTITUTE), $gv_shown, encode_htmlspecialchars($send_name, ENT_COMPAT | ENT_SUBSTITUTE)));
   if ($message != '') {
-    $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $send_name));
-    $smarty->assign('POST_MESSAGE', $message);
+    $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, encode_htmlspecialchars($send_name, ENT_COMPAT | ENT_SUBSTITUTE)));
+    $smarty->assign('POST_MESSAGE', encode_htmlspecialchars($message, ENT_COMPAT | ENT_SUBSTITUTE));
   }
   $smarty->assign('HIDDEN_FIELDS', xtc_draw_hidden_field('send_name', $send_name).xtc_draw_hidden_field('to_name', $to_name).xtc_draw_hidden_field('to_email', $to_email).xtc_draw_hidden_field('amount', $gv_amount).xtc_draw_hidden_field('message', $message));
   $smarty->assign('LINK_BACK', xtc_image_submit('button_back.gif', IMAGE_BUTTON_BACK, 'name=back').'</a>');
