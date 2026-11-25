@@ -45,7 +45,12 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
     require_once(DIR_FS_INC.'parse_multi_language_html.inc.php');
     $tax_class_query = xtc_db_query("SELECT tax_class_id, tax_class_title FROM ".TABLE_TAX_CLASS." ORDER BY tax_class_title");
     while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
-      $plan_tax_array[] = array ('id' => number_format(xtc_get_tax_rate($tax_class['tax_class_id']), 2), 'text' => parse_multi_language_html($tax_class['tax_class_title'], $_SESSION['language_code']));
+      $plan_tax_text = parse_multi_language_html($tax_class['tax_class_title'], $_SESSION['language_code']);
+      // the form reaches the page through atob(), which reads bytes: in UTF-8 a sign beyond ASCII goes as a numeric reference
+      if (isset($_SESSION['language_charset']) && strtoupper($_SESSION['language_charset']) == 'UTF-8') {
+        $plan_tax_text = mb_encode_numericentity($plan_tax_text, array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
+      }
+      $plan_tax_array[] = array ('id' => number_format(xtc_get_tax_rate($tax_class['tax_class_id']), 2), 'text' => $plan_tax_text);
     }
 
     $plan_tax_include_array = array(
