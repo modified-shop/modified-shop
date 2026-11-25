@@ -54,6 +54,10 @@ if (isset($_GET['cpID']) && (int)$_GET['cpID'] > 0) {
   $_SESSION['CatPath'] = xtc_get_category_path((int)$_GET['cpID']);
   unset($_GET['cpID']);
 }
+// links built from the request take the parameter, so it is checked also when a product is given
+if (isset($_GET['cPath'])) {
+  $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath');
+}
 if (isset ($_GET['cPath']) && (!isset($product) || !is_object($product))) {
   $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath');
 } elseif (isset($product) 
