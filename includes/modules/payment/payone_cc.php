@@ -185,6 +185,8 @@ class payone_cc extends PayonePayment {
 
     $payment_smarty->assign('cc_javascript', $cc_javascript);
         
+    // encoded here and not in the template, so the charset of this request applies and not the one it was compiled with
+    $payment_smarty->assign('cardholder', encode_htmlspecialchars(trim((isset($_SESSION['customer_first_name']) ? $_SESSION['customer_first_name'] : '').' '.(isset($_SESSION['customer_last_name']) ? $_SESSION['customer_last_name'] : '')), ENT_QUOTES | ENT_SUBSTITUTE));
     $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
     $payment_smarty->caching = 0;
     $module_form = $payment_smarty->fetch('checkout_payone_cc_form.html');
