@@ -33,11 +33,6 @@ if (isset($_GET['cat'])) {
   unset($_GET['cat']);
 }
 
-// links and redirects built from the request take the parameter, so it is checked before them, also when a product is given
-if (isset($_GET['cPath'])) {
-  $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath');
-}
-
 // manufacturer URLS
 if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0) {
   require_once (DIR_FS_INC.'manufacturer_redirect.inc.php');
