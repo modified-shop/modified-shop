@@ -29,6 +29,31 @@ class PayoneAddressCheck {
     $this->content[$key] = $value;
   }
 
+  // the template prints these values as they are; encoded here, the charset of this request applies
+  protected function _html($value) {
+    return encode_htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE);
+  }
+
+  protected function _html_address($address) {
+    if (is_array($address)) {
+      foreach ($address as $key => $value) {
+        if (is_string($value)) {
+          $address[$key] = $this->_html($value);
+        }
+      }
+    }
+    return $address;
+  }
+
+  // the request asks Payone for ISO-8859-1, a UTF-8 shop converts a value that is not UTF-8 yet
+  protected function _response_value($value) {
+    $value = (string)$value;
+    if (get_default_charset() === 'UTF-8' && !mb_check_encoding($value, 'UTF-8')) {
+      $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+    }
+    return $value;
+  }
+
 	protected function _correctAddressBookEntry($ab_id, $data) {
 		$sql_data_array = array('entry_street_address' => $data['street_address'],
                             'entry_postcode' => $data['postcode'],
@@ -78,7 +103,7 @@ class PayoneAddressCheck {
 		if ($config['address_check']['billing_address'] != 'none') {
 			$billto_check = false;
 			$ab_billto = $this->_payone->getAddressBookEntry($_SESSION['billto']);
-			$this->set_content_data('billto_address', $ab_billto);
+			$this->set_content_data('billto_address', $this->_html_address($ab_billto));
 			$billto_checktype = $checktypes[$config['address_check']['billing_address']];
 			if ($billto_checktype == 'PE' && $ab_billto['countries_iso_code_2'] != 'DE') {
 				// fall back to basic check if address is not in Germany
@@ -87,17 +112,17 @@ class PayoneAddressCheck {
 			$billto_check = $this->_payone->addressCheck($_SESSION['billto'], $billto_checktype);
 			if ($billto_check instanceof Payone_Api_Response_AddressCheck_Invalid || $billto_check instanceof Payone_Api_Response_Error) {
 				$addresses_correct = false;
-				$this->set_content_data('billto_customermessage', $billto_check->getCustomermessage());
-				$this->set_content_data('billto_corrected_street', $ab_billto['entry_street_address']);
-				$this->set_content_data('billto_corrected_zip', $ab_billto['entry_postcode']);
-				$this->set_content_data('billto_corrected_city', $ab_billto['entry_city']);
+				$this->set_content_data('billto_customermessage', $this->_html($this->_response_value($billto_check->getCustomermessage())));
+				$this->set_content_data('billto_corrected_street', $this->_html($ab_billto['entry_street_address']));
+				$this->set_content_data('billto_corrected_zip', $this->_html($ab_billto['entry_postcode']));
+				$this->set_content_data('billto_corrected_city', $this->_html($ab_billto['entry_city']));
 			}
 			else if ($billto_check instanceof Payone_Api_Response_AddressCheck_Valid) {
 				if ($billto_check->isCorrect() == false) {
 					$addresses_correct = false;
-					$this->set_content_data('billto_corrected_street', $billto_check->getStreet());
-					$this->set_content_data('billto_corrected_zip', $billto_check->getZip());
-					$this->set_content_data('billto_corrected_city', $billto_check->getCity());
+					$this->set_content_data('billto_corrected_street', $this->_html($this->_response_value($billto_check->getStreet())));
+					$this->set_content_data('billto_corrected_zip', $this->_html($this->_response_value($billto_check->getZip())));
+					$this->set_content_data('billto_corrected_city', $this->_html($this->_response_value($billto_check->getCity())));
 				}
 				else {
 					// fully validated address, store PStatus mapping
@@ -118,7 +143,7 @@ class PayoneAddressCheck {
 		if ($config['address_check']['delivery_address'] != 'none') {
 			$sendto_check = false;
 			$ab_sendto = $this->_payone->getAddressBookEntry($_SESSION['sendto']);
-			$this->set_content_data('sendto_address', $ab_sendto);
+			$this->set_content_data('sendto_address', $this->_html_address($ab_sendto));
 			$sendto_checktype = $checktypes[$config['address_check']['delivery_address']];
 			if ($sendto_checktype == 'PE' && $ab_sendto['countries_iso_code_2'] != 'DE') {
 				// fall back to basic check if address is not in Germany
@@ -127,17 +152,17 @@ class PayoneAddressCheck {
 			$sendto_check = $this->_payone->addressCheck($_SESSION['sendto'], $sendto_checktype);
 			if ($sendto_check instanceof Payone_Api_Response_AddressCheck_Invalid || $sendto_check instanceof Payone_Api_Response_Error) {
 				$addresses_correct = false;
-				$this->set_content_data('sendto_customermessage', $sendto_check->getCustomermessage());
-				$this->set_content_data('sendto_corrected_street', $ab_sendto['entry_street_address']);
-				$this->set_content_data('sendto_corrected_zip', $ab_sendto['entry_postcode']);
-				$this->set_content_data('sendto_corrected_city', $ab_sendto['entry_city']);
+				$this->set_content_data('sendto_customermessage', $this->_html($this->_response_value($sendto_check->getCustomermessage())));
+				$this->set_content_data('sendto_corrected_street', $this->_html($ab_sendto['entry_street_address']));
+				$this->set_content_data('sendto_corrected_zip', $this->_html($ab_sendto['entry_postcode']));
+				$this->set_content_data('sendto_corrected_city', $this->_html($ab_sendto['entry_city']));
 			}
 			else if ($sendto_check instanceof Payone_Api_Response_AddressCheck_Valid) {
 				if ($sendto_check->isCorrect() == false) {
 					$addresses_correct = false;
-					$this->set_content_data('sendto_corrected_street', $sendto_check->getStreet());
-					$this->set_content_data('sendto_corrected_zip', $sendto_check->getZip());
-					$this->set_content_data('sendto_corrected_city', $sendto_check->getCity());
+					$this->set_content_data('sendto_corrected_street', $this->_html($this->_response_value($sendto_check->getStreet())));
+					$this->set_content_data('sendto_corrected_zip', $this->_html($this->_response_value($sendto_check->getZip())));
+					$this->set_content_data('sendto_corrected_city', $this->_html($this->_response_value($sendto_check->getCity())));
 				}
 				else {
 					// fully validated address, store PStatus mapping
