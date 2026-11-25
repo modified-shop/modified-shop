@@ -362,6 +362,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
     array('id' => 1,'text' => YES),
     array('id' => 0,'text' => NO),
   );
+  $keep_filename = (($content_failed_save === true && isset($_POST['keep_filename']) && $_POST['keep_filename'] === '1') ? 1 : 0);
 
   // add default value to array
   $default_array[]=array('id' => 'default','text' => TEXT_SELECT);
@@ -446,7 +447,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_KEEP_FILENAME; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('keep_filename', $keep_filename_array, false, 'style="width: 155px"'); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('keep_filename', $keep_filename_array, $keep_filename, 'style="width: 155px"'); ?></td>
           </tr>
           <?php
             if ($content['content_file']!='') {
