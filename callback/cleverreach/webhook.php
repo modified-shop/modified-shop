@@ -19,6 +19,8 @@
      
   if (defined('MODULE_CLEVERREACH_STATUS') && MODULE_CLEVERREACH_STATUS == 'true') {
     if (isset($_GET['secret'])) {
+      // CleverReach reads the answer as text; served as HTML a browser would render the echoed secret
+      header('Content-Type: text/plain');
       echo sprintf('%s %s', MODULE_CLEVERREACH_WEBHOOK_VERIFY, $_GET['secret']);
     } elseif (isset($_SERVER['HTTP_X_CR_CALLTOKEN'])
               && $_SERVER['HTTP_X_CR_CALLTOKEN'] == MODULE_CLEVERREACH_WEBHOOK_TOKEN
