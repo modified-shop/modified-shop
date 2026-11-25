@@ -43,6 +43,10 @@ if (isset($_REQUEST['speed'])) {
   include_once('includes/application_top.php');
 }
 
+// the early error messages below are text; the answer of the extension sets its own type
+header('X-Content-Type-Options: nosniff');
+header('Content-Type: text/plain');
+
 // check for extension
 if (!isset($_REQUEST['ext'])) {
   die("no extension");
@@ -96,7 +100,6 @@ if ($ajax_rt == 'json') {
 } else {
   header('Content-Type: text/plain');
 }
-header('X-Content-Type-Options: nosniff');
 
 // response headers
 header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
