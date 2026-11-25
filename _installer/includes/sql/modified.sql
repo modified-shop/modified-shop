@@ -944,7 +944,8 @@ CREATE TABLE orders_bookings (
   reference_id INT(11) NOT NULL,
   value DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_bookings_id),
-  KEY idx_orders_id (orders_id)
+  KEY idx_orders_id (orders_id),
+  KEY idx_class_reference_id (class, reference_id)
 );
 
 DROP TABLE IF EXISTS orders_products;

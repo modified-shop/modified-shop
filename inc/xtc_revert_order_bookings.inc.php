@@ -25,12 +25,6 @@
                           WHERE order_id = '".(int)$order_id."'");
     }
 
-    $order_query = xtc_db_query("SELECT date_purchased
-                                   FROM ".TABLE_ORDERS."
-                                  WHERE orders_id = '".(int)$order_id."'");
-    $order = xtc_db_fetch_array($order_query);
-    $date_purchased = ((is_array($order) && xtc_not_null($order['date_purchased'])) ? $order['date_purchased'] : '');
-
     $bookings_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_ORDERS_BOOKINGS."
                                      WHERE orders_id = '".(int)$order_id."'
@@ -55,14 +49,22 @@
           break;
 
         case 'specials':
-          // only a special the checkout used up comes back on, not one switched off, expired or saved after the order
+          // only a special the checkout used up comes back on, not one switched off, expired or saved since the last order that took from it
+          $last_query = xtc_db_query("SELECT MAX(o.date_purchased) AS date_purchased
+                                        FROM ".TABLE_ORDERS_BOOKINGS." ob
+                                        JOIN ".TABLE_ORDERS." o
+                                             ON o.orders_id = ob.orders_id
+                                       WHERE ob.class = 'specials'
+                                         AND ob.reference_id = '".(int)$bookings['reference_id']."'");
+          $last = xtc_db_fetch_array($last_query);
           $status_set = '';
-          if ($date_purchased != '') {
+          if (is_array($last) && xtc_not_null($last['date_purchased'])) {
+            // timestamps have no fractions, a change in the same second counts as later
             $status_set = "status = IF(status = '0'
                                        AND specials_quantity < 1
                                        AND specials_quantity + ".(int)$bookings['value']." > 0
-                                       AND (date_status_change IS NULL OR date_status_change <= '".xtc_db_input($date_purchased)."')
-                                       AND (specials_last_modified IS NULL OR specials_last_modified <= '".xtc_db_input($date_purchased)."'), '1', status),";
+                                       AND (date_status_change IS NULL OR date_status_change < '".xtc_db_input($last['date_purchased'])."')
+                                       AND (specials_last_modified IS NULL OR specials_last_modified < '".xtc_db_input($last['date_purchased'])."'), '1', status),";
           }
           // quantity 0 means unlimited, an active one stays so
           xtc_db_query("UPDATE ".TABLE_SPECIALS."
