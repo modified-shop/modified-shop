@@ -104,12 +104,22 @@ class EMOS{
 		return $this->preScript.$this->inScript.$this->postScript;
 	}
 
+	/** a value for an attribute of the anchor tag; a value the shop encoded before stays as it is */
+	function attributeValue($value){
+		return htmlspecialchars((string)$value, ENT_QUOTES | ENT_HTML5, 'ISO-8859-1', false);
+	}
+
+	/** a value inside a single-quoted JS string; bytes above ASCII stay, so it works in every shop charset */
+	function jsValue($value){
+		return preg_replace_callback('/[\\\\\'"<>&\r\n]/', function ($match) { return sprintf('\\x%02x', ord($match[0])); }, (string)$value);
+	}
+
 	/** constructs a emos anchor tag */
 	function getAnchorTag($title="",$rel="",$rev=""){
 		$anchor = "<a name=\"emos_name\" "
-		."title=\"$title\" "
-		."rel=\"$rel\" "
-		."rev=\"$rev\"></a>$this->br";
+		."title=\"".$this->attributeValue($title)."\" "
+		."rel=\"".$this->attributeValue($rel)."\" "
+		."rev=\"".$this->attributeValue($rev)."\"></a>$this->br";
 		return $anchor;
 	}
 
@@ -175,14 +185,14 @@ class EMOS{
 		."<!--$this->br"
 		."$this->tab var emosECPageArray = new Array();$this->br"
 		."$this->tab emosECPageArray['event'] = '$event';$this->br"
-		."$this->tab emosECPageArray['id'] = '$item->productID';$this->br"
+		."$this->tab emosECPageArray['id'] = '".$this->jsValue($item->productID)."';$this->br"
 		."$this->tab emosECPageArray['name'] = '".urlencode($item->productName)."';$this->br"
-		."$this->tab emosECPageArray['preis'] = '$item->price';$this->br"
+		."$this->tab emosECPageArray['preis'] = '".$this->jsValue($item->price)."';$this->br"
 		."$this->tab emosECPageArray['group'] = '".urlencode($item->productGroup)."';$this->br"
-		."$this->tab emosECPageArray['anzahl'] = '$item->quantity';$this->br"
-		."$this->tab emosECPageArray['var1'] = '$item->variant1';$this->br"
-		."$this->tab emosECPageArray['var2'] = '$item->variant2';$this->br"
-		."$this->tab emosECPageArray['var3'] = '$item->variant3';$this->br"
+		."$this->tab emosECPageArray['anzahl'] = '".$this->jsValue($item->quantity)."';$this->br"
+		."$this->tab emosECPageArray['var1'] = '".$this->jsValue($item->variant1)."';$this->br"
+		."$this->tab emosECPageArray['var2'] = '".$this->jsValue($item->variant2)."';$this->br"
+		."$this->tab emosECPageArray['var3'] = '".$this->jsValue($item->variant3)."';$this->br"
 		."// -->$this->br"
 		."</script>$this->br";
 		return $out;
@@ -233,10 +243,10 @@ class EMOS{
 		$out .= "<script type=\"text/javascript\">$this->br"
 		."<!--$this->br"
 		."$this->tab var $arrayName = new Array();$this->br"
-		."$this->tab $arrayName"."['0'] = '$billingID';$this->br"
-		."$this->tab $arrayName"."['1'] = '$customerNumber';$this->br"
-		."$this->tab $arrayName"."['2'] = '$ort';$this->br"
-		."$this->tab $arrayName"."['3'] = '$total';$this->br"
+		."$this->tab $arrayName"."['0'] = '".$this->jsValue($billingID)."';$this->br"
+		."$this->tab $arrayName"."['1'] = '".$this->jsValue($customerNumber)."';$this->br"
+		."$this->tab $arrayName"."['2'] = '".$this->jsValue($ort)."';$this->br"
+		."$this->tab $arrayName"."['3'] = '".$this->jsValue($total)."';$this->br"
 		."// -->$this->br"
 		."</script>$this->br";
 		return $out;
@@ -258,14 +268,14 @@ class EMOS{
 		foreach( $basket as $item){
 			$out .= $this->br;
 			$out .= "$this->tab $arrayName"."[$count]=new Array();$this->br";
-			$out .= "$this->tab $arrayName"."[$count][0]='$item->productID';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][0]='".$this->jsValue($item->productID)."';$this->br";
 			$out .= "$this->tab $arrayName"."[$count][1]='".urlencode($item->productName)."';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][2]='$item->price';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][2]='".$this->jsValue($item->price)."';$this->br";
 			$out .= "$this->tab $arrayName"."[$count][3]='".urlencode($item->productGroup)."';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][4]='$item->quantity';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][5]='$item->variant1';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][6]='$item->variant2';$this->br";
-			$out .= "$this->tab $arrayName"."[$count][7]='$item->variant3';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][4]='".$this->jsValue($item->quantity)."';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][5]='".$this->jsValue($item->variant1)."';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][6]='".$this->jsValue($item->variant2)."';$this->br";
+			$out .= "$this->tab $arrayName"."[$count][7]='".$this->jsValue($item->variant3)."';$this->br";
 			$count++;
 		}
 		$out .= "// -->$this->br"
