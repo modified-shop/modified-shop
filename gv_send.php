@@ -132,23 +132,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $gv_debit_failed = false;
   $gv_booking_error = (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.');
   if ((float)$gv_debit > 0) {
-    // count of this statement, a query of the query log or of its hooks after it does not change it
-    $gv_debit_query = xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
-                                       SET amount = amount - ".$gv_debit."
-                                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'
-                                       AND amount >= ".$gv_debit, 'db_link', $gv_debit_info);
-    $gv_debit_failed = ($gv_debit_query === false);
-    $gv_debited = ($gv_debit_failed === false && is_array($gv_debit_info) && $gv_debit_info['affected_rows'] == 1);
+    // success and count of this statement decide, a query of the query log or of its hooks after it changes neither
+    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                     SET amount = amount - ".$gv_debit."
+                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'
+                     AND amount >= ".$gv_debit, 'db_link', $gv_debit_info);
+    $gv_debit_failed = (!is_array($gv_debit_info) || $gv_debit_info['success'] !== true);
+    $gv_debited = ($gv_debit_failed === false && $gv_debit_info['affected_rows'] == 1);
   }
   if ($gv_debited === true) {
-    $gv_insert_query = xtc_db_query("INSERT INTO ".TABLE_COUPONS." (coupon_type, coupon_code, date_created, coupon_amount)
-                                     VALUES ('G', '".xtc_db_input($gv_code)."', now(), '".$gv_debit."')", 'db_link', $gv_insert_info);
-    $insert_id = (($gv_insert_query !== false && is_array($gv_insert_info)) ? (int)$gv_insert_info['insert_id'] : 0);
+    xtc_db_query("INSERT INTO ".TABLE_COUPONS." (coupon_type, coupon_code, date_created, coupon_amount)
+                  VALUES ('G', '".xtc_db_input($gv_code)."', now(), '".$gv_debit."')", 'db_link', $gv_insert_info);
+    $insert_id = ((is_array($gv_insert_info) && $gv_insert_info['success'] === true) ? (int)$gv_insert_info['insert_id'] : 0);
     if ($insert_id < 1) {
-      // no voucher: the debit goes back, nothing is tracked, mailed or shown as sent
-      xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
-                       SET amount = amount + ".$gv_debit."
-                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+      // no voucher: nothing is tracked, mailed or shown as sent; only an insert known to have failed gives the debit back
+      if (is_array($gv_insert_info) && $gv_insert_info['success'] === false) {
+        xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                         SET amount = amount + ".$gv_debit."
+                       WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+      }
       $gv_debited = false;
       $gv_debit_failed = true;
     }

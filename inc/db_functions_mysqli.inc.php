@@ -235,7 +235,8 @@
   }
 
 
-  // $query_info, when passed: affected rows and insert id of this statement, read before the query log and its hooks run queries of their own
+  // $query_info, when passed: success, affected rows and insert id of this statement, read before the query log and its hooks run;
+  // the hooks share this scope and may overwrite $result, the passed result keeps the statement's own
   function xtc_db_query($query, $link='db_link', &$query_info = null) {
     global ${$link};
 
@@ -255,11 +256,11 @@
     try {
       $result = mysqli_query(${$link}, $query);
     } catch (Exception $ex) {
-      $query_info = array('affected_rows' => -1, 'insert_id' => 0);
+      $query_info = array('success' => false, 'affected_rows' => -1, 'insert_id' => 0);
       xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link}));
       return false;
     }
-    $xtc_db_query_info = ((func_num_args() > 2) ? (($result === false) ? array('affected_rows' => -1, 'insert_id' => 0) : array('affected_rows' => mysqli_affected_rows(${$link}), 'insert_id' => mysqli_insert_id(${$link}))) : null);
+    $xtc_db_query_info = ((func_num_args() > 2) ? (($result === false) ? array('success' => false, 'affected_rows' => -1, 'insert_id' => 0) : array('success' => true, 'affected_rows' => mysqli_affected_rows(${$link}), 'insert_id' => mysqli_insert_id(${$link}))) : null);
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = microtime(true); 
