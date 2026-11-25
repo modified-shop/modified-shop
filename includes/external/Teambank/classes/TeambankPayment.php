@@ -49,6 +49,7 @@
     var $WebshopDetails;
     var $total_amount;
     var $authorized;
+    var $preauthorized;
     protected static $task_support_ready = false;
     
     function __construct() {}
@@ -200,15 +201,15 @@
     }
   
     function before_process() {
-      if ($this->use_real_order_id !== true) {
-        $this->ecCheckout->restore();
-        $this->ecCheckout->loadTransaction();
-        $result = $this->ecCheckout->authorize($_SESSION['easycredit']['oID']);
-        
-        if ($result !== true) {
-          $this->payment_error_redirect();
-        }
+      // the order does not exist yet, its id goes to easyCredit with the authorization
+      $this->ecCheckout->restore();
+      try {
+        $TransactionInformation = $this->ecCheckout->loadTransaction();
+      } catch (Exception $e) {
+        $this->payment_error_redirect();
       }
+      // a repeated run of an existing order finds its transaction authorized already
+      $this->preauthorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED);
       
       return false;
     }
@@ -216,25 +217,15 @@
     function before_send_order() {
       global $insert_id;
       
-      if ($this->use_real_order_id === true) {
-        $this->ecCheckout->restore();
-        
-        $TransactionInformation = $this->ecCheckout->loadTransaction();
-        $Transaction = $TransactionInformation->getTransaction();
-        $orderDetails = $Transaction->getOrderDetails();
-        $orderDetails->setOrderId($insert_id);
-        
-        $this->ecCheckout->update($Transaction);
+      // easyCredit shows the order id of the authorization as the order number
+      if ($this->preauthorized === true
+          && $this->ecCheckout->authorize((string)$insert_id) !== true
+          )
+      {
+        require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+        xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
 
-        $this->ecCheckout->loadTransaction();
-        $result = $this->ecCheckout->authorize($insert_id);
-        
-        if ($result !== true) {
-          require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-
-          $this->payment_error_redirect();
-        }
+        $this->payment_error_redirect();
       }
 
       $this->authorized = false;
