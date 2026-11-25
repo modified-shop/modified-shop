@@ -103,21 +103,22 @@ switch ($current_page) {
 	case FILENAME_ADVANCED_SEARCH_RESULT:
 		$numRows = $listing_split->number_of_rows;
 		if(!$numRows) $numRows = 0;
-		if ($error == 0 || $keyerror == 1) $emos->addSearch($_GET['keywords'],$numRows);
+		// only a search with hits is tracked: an empty result includes the error handler, which sets $error
+		if (!isset($error) || $error == 0 || (isset($keyerror) && $keyerror == 1)) $emos->addSearch((isset($_GET['keywords']) ? $_GET['keywords'] : ''),$numRows);
 		break;
 	case FILENAME_CREATE_ACCOUNT:
 		if($messageStack){
 			if ($messageStack->size('create_account') > 0) { // Registrierung fehlerhaft
 				$emos->addRegister('0','1'); // no customer_id given, dummy id
 				$emos->addOrderProcess("2_Anmelden/Neu");
-			} elseif ($_SESSION['customer_id']) { // Registrierung erfolgreich
+			} elseif (!empty($_SESSION['customer_id'])) { // Registrierung erfolgreich
 				$emos->addRegister($_SESSION['customer_id'],'0');
 				$emos->addOrderProcess("2_Anmelden/Erfolg");
 			}
 		}
 		break;
 	case FILENAME_LOGIN:
-		if (!$_SESSION['login_success']) { // Login fehlerhaft
+		if (empty($_SESSION['login_success'])) { // Login fehlerhaft
 			$emos->addLogin('0','1'); // no customer_id given, dummy id
 			$emos->addOrderProcess("2_Anmelden/Fehler");
 		} else {
