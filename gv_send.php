@@ -74,11 +74,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
                              WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
-  $customer_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']);
-  $gv_amount = xtc_input_validation($amount, 'amount');
-  
-  if ((float)$gv_amount <= 0
-      || (float)$gv_amount > (float)$customer_amount
+  // the amount as the currency of the session shows it, checked in the default currency as it will be booked
+  $gv_amount = number_format((float)xtc_input_validation($amount, 'amount'), (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places'], '.', '');
+  $gv_debit = number_format((float)$xtPrice->xtcRemoveCurr($gv_amount), 4, '.', '');
+
+  if ((float)$gv_debit <= 0
+      || !is_array($gv_result)
+      || (float)$gv_debit > (float)$gv_result['amount']
       )
   {
     $error = true;
@@ -121,30 +123,44 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $gv_code = create_coupon_code(10);
-  $gv_query = xtc_db_query("SELECT amount 
-                              FROM ".TABLE_COUPON_GV_CUSTOMER." 
-                             WHERE customer_id='".(int)$_SESSION['customer_id']."'");
-  $gv_result = xtc_db_fetch_array($gv_query);
-  $gv_amount = xtc_input_validation($amount, 'amount');
-  $new_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']) - (float)$gv_amount;
-  if ($new_amount < 0) {
+  $gv_amount = number_format((float)xtc_input_validation($amount, 'amount'), (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places'], '.', '');
+  // the balance is kept in the default currency, like the amount of the voucher;
+  // one decimal string for both, rounded as round() does, a float would be written with fewer digits
+  $gv_debit = number_format((float)$xtPrice->xtcRemoveCurr($gv_amount), 4, '.', '');
+  // one statement takes the amount only while the balance covers it, so two transfers at the same time cannot both spend it
+  $gv_debited = false;
+  $gv_debit_failed = false;
+  $gv_booking_error = (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.');
+  if ((float)$gv_debit > 0) {
+    // success and count of this statement decide, a query of the query log or of its hooks after it changes neither
+    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                     SET amount = amount - ".$gv_debit."
+                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'
+                     AND amount >= ".$gv_debit, 'db_link', $gv_debit_info);
+    $gv_debit_failed = (!is_array($gv_debit_info) || $gv_debit_info['success'] !== true);
+    $gv_debited = ($gv_debit_failed === false && $gv_debit_info['affected_rows'] == 1);
+  }
+  if ($gv_debited === true) {
+    xtc_db_query("INSERT INTO ".TABLE_COUPONS." (coupon_type, coupon_code, date_created, coupon_amount)
+                  VALUES ('G', '".xtc_db_input($gv_code)."', now(), '".$gv_debit."')", 'db_link', $gv_insert_info);
+    $insert_id = ((is_array($gv_insert_info) && $gv_insert_info['success'] === true) ? (int)$gv_insert_info['insert_id'] : 0);
+    if ($insert_id < 1) {
+      // no voucher: nothing is tracked, mailed or shown as sent; only an insert known to have failed gives the debit back
+      if (is_array($gv_insert_info) && $gv_insert_info['success'] === false) {
+        xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                         SET amount = amount + ".$gv_debit."
+                       WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+      }
+      $gv_debited = false;
+      $gv_debit_failed = true;
+    }
+  }
+  if ($gv_debited !== true) {
     $error = true;
-    $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
+    // a refused statement is no matter of the amount, the balance is unchanged
+    $messageStack->add('gv_send', (($gv_debit_failed === true) ? $gv_booking_error : ERROR_ENTRY_AMOUNT_CHECK));
     $_GET['action'] = 'send';
   } else {
-    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
-                     SET amount = '".xtc_db_input($new_amount)."' 
-                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
-    
-    $sql_data_array = array(
-      'coupon_type' => 'G',
-      'coupon_code' => $gv_code,
-      'date_created' => 'now()',
-      'coupon_amount' => $xtPrice->xtcRemoveCurr($gv_amount)
-    );
-    xtc_db_perform(TABLE_COUPONS, $sql_data_array);
-    $insert_id = xtc_db_insert_id();
-
     $sql_data_array = array(
       'coupon_id' => $insert_id,
       'customer_id_sent' => $_SESSION['customer_id'],
@@ -161,8 +177,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$gv_code, 'NONSSL', false));
-    $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
-    $smarty->assign('AMOUNT', $xtPrice->xtcFormat($gv_amount, true));
+    // the value of the voucher in the currency of the session, as its redemption shows it
+    $gv_shown = $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($gv_debit), true);
+    $smarty->assign('AMMOUNT', $gv_shown);
+    $smarty->assign('AMOUNT', $gv_shown);
     $smarty->assign('GIFT_CODE', $gv_code);
     $smarty->assign('MESSAGE', encode_htmlspecialchars($message, ENT_NOQUOTES));
     $smarty->assign('NAME', encode_htmlspecialchars($to_name, ENT_NOQUOTES));
@@ -214,7 +232,9 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'send' && $error === false)
   $gv_send_token = xtc_RandomString(32);
   $_SESSION['gv_send_tokens'] = array_slice(array_merge((isset($_SESSION['gv_send_tokens']) ? $_SESSION['gv_send_tokens'] : array()), array($gv_send_token)), -10);
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post').xtc_draw_hidden_field('gv_send_token', $gv_send_token));
-  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), encode_htmlspecialchars($to_name, ENT_COMPAT | ENT_SUBSTITUTE), encode_htmlspecialchars($to_email, ENT_COMPAT | ENT_SUBSTITUTE), encode_htmlspecialchars($to_name, ENT_COMPAT | ENT_SUBSTITUTE), $xtPrice->xtcFormat((float)$gv_amount, true), encode_htmlspecialchars($send_name, ENT_COMPAT | ENT_SUBSTITUTE)));
+  // the value of the voucher in the currency of the session, as its redemption shows it
+  $gv_shown = $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($gv_debit), true);
+  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $gv_shown, encode_htmlspecialchars($to_name, ENT_COMPAT | ENT_SUBSTITUTE), encode_htmlspecialchars($to_email, ENT_COMPAT | ENT_SUBSTITUTE), encode_htmlspecialchars($to_name, ENT_COMPAT | ENT_SUBSTITUTE), $gv_shown, encode_htmlspecialchars($send_name, ENT_COMPAT | ENT_SUBSTITUTE)));
   if ($message != '') {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, encode_htmlspecialchars($send_name, ENT_COMPAT | ENT_SUBSTITUTE)));
     $smarty->assign('POST_MESSAGE', encode_htmlspecialchars($message, ENT_COMPAT | ENT_SUBSTITUTE));

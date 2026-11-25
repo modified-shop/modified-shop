@@ -19,6 +19,9 @@ require_once(DIR_FS_INC.'get_external_content.inc.php');
 require_once(DIR_WS_CLASSES.'order.php');
 require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
+// tracking events that a callback was taken for
+defined('TABLE_SHIPCLOUD_EVENTS') OR define('TABLE_SHIPCLOUD_EVENTS', 'shipcloud_events');
+
 class shipcloud {
   
   const SC_URL_LABEL = 'https://api.shipcloud.io/v1/shipments/';
@@ -67,6 +70,268 @@ class shipcloud {
   }
   
   
+  // tracking events of a shipment counted by status, as shipcloud reports them:
+  // false when shipcloud has no such shipment, null without a usable answer
+  public function get_tracking_events($sc_id) {
+    $ch = curl_init();
+
+    // set options
+    curl_setopt($ch, CURLOPT_URL, self::SC_URL_LABEL.rawurlencode($sc_id));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Affiliate-ID: plugin.modified.zW7tF8ek'));
+    curl_setopt($ch, CURLOPT_USERPWD, MODULE_SHIPCLOUD_API);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+      $this->LoggingManager->log('INFO', curl_errno($ch), array('exception' => curl_error($ch)));
+      return null;
+    }
+
+    $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($status == 404) {
+      return false;
+    }
+
+    $shipment = json_decode((string)$response, true);
+    if ($status != 200
+        || !is_array($shipment)
+        || !isset($shipment['id'])
+        || !is_string($shipment['id'])
+        || strcasecmp($shipment['id'], $sc_id) != 0
+        )
+    {
+      $this->LoggingManager->log('INFO', 'get_tracking_events', array('exception' => 'status '.$status.' for shipment '.$sc_id));
+      return null;
+    }
+
+    $events = array();
+    if (isset($shipment['packages']) && is_array($shipment['packages'])) {
+      foreach ($shipment['packages'] as $package) {
+        if (!is_array($package) || !isset($package['tracking_events']) || !is_array($package['tracking_events'])) {
+          continue;
+        }
+        foreach ($package['tracking_events'] as $event) {
+          if (is_array($event) && isset($event['status']) && is_string($event['status'])) {
+            $event_status = strtolower($event['status']);
+            $events[$event_status] = (isset($events[$event_status]) ? $events[$event_status] + 1 : 1);
+          }
+        }
+      }
+    }
+
+    return $events;
+  }
+
+
+  // the text of the history entry of an event
+  public function event_comment($type) {
+    $type = strtoupper($type);
+
+    return (defined($type) ? decode_htmlentities(constant($type)) : '');
+  }
+
+
+  // a callback is taken once for each tracking event shipcloud reports for the shipment:
+  // true to take it, false when it is not confirmed or already taken, null when shipcloud or the database gave no answer.
+  // With true the events of the order stay locked for this request until count_event() or release_event()
+  public function claim_event($tracking_id, $sc_id, $type, $orders_id) {
+    $events = $this->get_tracking_events($sc_id);
+    if ($events === null) {
+      return null;
+    }
+
+    $type = strtoupper($type);
+    $count = 0;
+    if ($type == 'SHIPMENT.STATUS.DELETED') {
+      // shipcloud no longer knows a deleted shipment
+      $count = (($events === false) ? 1 : 0);
+    } elseif (is_array($events) && strpos($type, 'SHIPMENT.TRACKING.') === 0) {
+      $event_status = strtolower(substr($type, 18));
+      $count = (isset($events[$event_status]) ? $events[$event_status] : 0);
+    }
+    if ($count < 1) {
+      $this->LoggingManager->log('INFO', 'callback', array('exception' => 'not confirmed by shipcloud: '.$type.' for shipment '.$sc_id));
+      return false;
+    }
+
+    // a statement that failed is no answer, shipcloud delivers the event again.
+    // The table is created only while it is missing, a later call needs no right to create tables
+    $table_query = xtc_db_query("SHOW TABLES LIKE '".xtc_db_input(TABLE_SHIPCLOUD_EVENTS)."'");
+    if ($table_query === false) {
+      return null;
+    }
+    if (xtc_db_num_rows($table_query) < 1
+        && xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_SHIPCLOUD_EVENTS." (
+                           `tracking_id` int(11) NOT NULL,
+                           `event_type` varchar(64) NOT NULL,
+                           `event_count` int(11) NOT NULL DEFAULT 0,
+                           `orders_id` int(11) NOT NULL DEFAULT 0,
+                           `pending_from` int(11) DEFAULT NULL,
+                           `date_added` datetime NOT NULL,
+                           PRIMARY KEY (`tracking_id`, `event_type`),
+                           KEY `idx_orders_id` (`orders_id`)
+                         )") === false
+        )
+    {
+      // shipcloud switches the webhook off after 15 failed deliveries, the log names what is missing
+      $this->LoggingManager->log('ERROR', 'callback', array('exception' => 'table '.TABLE_SHIPCLOUD_EVENTS.' is missing and could not be created, no event is taken'));
+      return null;
+    }
+    if (xtc_db_query("INSERT IGNORE INTO ".TABLE_SHIPCLOUD_EVENTS." (tracking_id, event_type, orders_id, date_added) VALUES ('".(int)$tracking_id."', '".xtc_db_input($type)."', '".(int)$orders_id."', NOW())") === false) {
+      return null;
+    }
+
+    // the events of an order wait for each other. The event is counted after its history entry, and the
+    // lock ends with its connection: a request that breaks off leaves nothing behind that would keep the next delivery out
+    $locked = false;
+    if (is_object(xtc_db_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'shipcloud_lock_link', false))) {
+      // xtc_db_connect() sets the time zone and the SQL mode of the shop on the first link only.
+      // This link writes the event, without them its dates would follow the clock of the database server
+      if (xtc_db_query("SET time_zone = '".date('P')."'", 'shipcloud_lock_link') !== false
+          && xtc_db_query("SET SESSION sql_mode=''", 'shipcloud_lock_link') !== false
+          )
+      {
+        $lock_query = xtc_db_query("SELECT GET_LOCK('".xtc_db_input($this->event_lock_name($orders_id))."', 10) AS event_lock", 'shipcloud_lock_link');
+        $lock = (($lock_query !== false) ? xtc_db_fetch_array($lock_query) : false);
+        $locked = (is_array($lock) && isset($lock['event_lock']) && $lock['event_lock'] == '1');
+      }
+    }
+    if ($locked !== true) {
+      $this->release_event();
+      return null;
+    }
+    // from here on the request works on the connection that holds the lock, until release_event():
+    // what is written for the event ends with that connection, a request that lost its lock writes nothing more
+    $GLOBALS['shipcloud_main_link'] = $GLOBALS['db_link'];
+    $GLOBALS['db_link'] = $GLOBALS['shipcloud_lock_link'];
+
+    // an entry whose count was not stored is counted first, before anything new is written for the order
+    if ($this->count_stored_events($orders_id) !== true) {
+      $this->release_event();
+      return null;
+    }
+
+    $count_query = xtc_db_query("SELECT event_count
+                                   FROM ".TABLE_SHIPCLOUD_EVENTS."
+                                  WHERE tracking_id = '".(int)$tracking_id."'
+                                    AND event_type = '".xtc_db_input($type)."'");
+    $counted = (($count_query !== false) ? xtc_db_fetch_array($count_query) : false);
+    if (!is_array($counted)) {
+      $this->release_event();
+      return null;
+    }
+    // of several deliveries only as many pass as shipcloud has events
+    if ((int)$counted['event_count'] >= (int)$count) {
+      $this->release_event();
+      return false;
+    }
+
+    // the row notes the last history entry of the order before anything is written for the event: an entry
+    // after it is found again when its count cannot be stored. Without this write the event is not taken
+    $last_query = xtc_db_query("SELECT MAX(orders_status_history_id) AS last_id
+                                  FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                 WHERE orders_id = '".(int)$orders_id."'");
+    $last = (($last_query !== false) ? xtc_db_fetch_array($last_query) : false);
+    if (!is_array($last)
+        || xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                            SET pending_from = '".(int)$last['last_id']."',
+                                date_added = NOW()
+                          WHERE tracking_id = '".(int)$tracking_id."'
+                            AND event_type = '".xtc_db_input($type)."'") === false
+        )
+    {
+      $this->release_event();
+      return null;
+    }
+
+    return true;
+  }
+
+
+  // named locks are server wide, the name carries the database
+  protected function event_lock_name($orders_id) {
+    return 'MODsc_'.md5(DB_DATABASE.'|'.(int)$orders_id);
+  }
+
+
+  // counts the events of an order whose history entry is stored while their count is not, false without an answer.
+  // Entries of events are written only after claim_event(), which calls this first: an entry after the note of an event is its own
+  protected function count_stored_events($orders_id) {
+    $pending_query = xtc_db_query("SELECT tracking_id,
+                                          event_type,
+                                          pending_from
+                                     FROM ".TABLE_SHIPCLOUD_EVENTS."
+                                    WHERE orders_id = '".(int)$orders_id."'
+                                      AND pending_from IS NOT NULL");
+    if ($pending_query === false) {
+      return false;
+    }
+    while ($pending = xtc_db_fetch_array($pending_query)) {
+      $stored = 0;
+      $comments = $this->event_comment($pending['event_type']);
+      if ($comments != '') {
+        $history_query = xtc_db_query("SELECT orders_status_history_id
+                                         FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                        WHERE orders_id = '".(int)$orders_id."'
+                                          AND orders_status_history_id > '".(int)$pending['pending_from']."'
+                                          AND comments = '".xtc_db_input($comments)."'
+                                        LIMIT 1");
+        if ($history_query === false) {
+          return false;
+        }
+        $stored = ((xtc_db_num_rows($history_query) > 0) ? 1 : 0);
+      }
+      if (xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                           SET event_count = event_count + ".$stored.",
+                               pending_from = NULL
+                         WHERE tracking_id = '".(int)$pending['tracking_id']."'
+                           AND event_type = '".xtc_db_input($pending['event_type'])."'") === false)
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+
+  // counts a taken event once its history entry is written and ends its lock.
+  // A count that fails leaves the note of the event, the next event of the order counts the entry
+  public function count_event($tracking_id, $type) {
+    $result = xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                               SET event_count = event_count + 1,
+                                   pending_from = NULL
+                             WHERE tracking_id = '".(int)$tracking_id."'
+                               AND event_type = '".xtc_db_input(strtoupper($type))."'");
+    $this->release_event();
+
+    return ($result !== false);
+  }
+
+
+  // ends the lock of a taken event, nothing is counted: shipcloud delivers it again.
+  // With the event named its entry was not stored, the note for a later count goes
+  public function release_event($tracking_id = 0, $type = '') {
+    if ((int)$tracking_id > 0) {
+      xtc_db_query("UPDATE ".TABLE_SHIPCLOUD_EVENTS."
+                       SET pending_from = NULL
+                     WHERE tracking_id = '".(int)$tracking_id."'
+                       AND event_type = '".xtc_db_input(strtoupper($type))."'");
+    }
+    // back to the connection of the request
+    if (isset($GLOBALS['shipcloud_main_link']) && is_object($GLOBALS['shipcloud_main_link'])) {
+      $GLOBALS['db_link'] = $GLOBALS['shipcloud_main_link'];
+      unset($GLOBALS['shipcloud_main_link']);
+    }
+    xtc_db_close('shipcloud_lock_link');
+  }
+
+
   public function create_label($params) {
     global $messageStack;
     

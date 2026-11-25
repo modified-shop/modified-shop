@@ -77,18 +77,37 @@ if (is_array($request)
     require (DIR_WS_LANGUAGES.$order->info['language'].'/'. $order->info['language'] .'.php');
     require (DIR_WS_LANGUAGES.$order->info['language'].'/modules/system/shipcloud.php');
 
+    // shipcloud sends the event type as a plain string
+    $type = ((isset($request['type']) && is_string($request['type'])) ? strtoupper($request['type']) : '');
+
+    // the callback has no sender check, shipcloud has to confirm the event before the order changes
+    $event = false;
+    if (strpos($type, 'SHIPMENT.') === 0 && defined($type)) {
+      $event = $shipcloud->claim_event($orders['tracking_id'], $orders['sc_id'], $type, $orders['orders_id']);
+    }
+    if ($event !== true) {
+      // without an answer shipcloud sends the event again
+      if ($event === null) {
+        header('HTTP/1.1 503 Service Unavailable');
+      }
+      exit();
+    }
+
     // create smarty elements
     $smarty = new Smarty();
 
     // update order
     $oID = $order->info['orders_id'];
-    $status = $order->info['orders_status_id'];
-    $comments = '';
-    // shipcloud sends the event type as a plain string
-    $type = ((isset($request['type']) && is_string($request['type'])) ? strtoupper($request['type']) : '');
-    if (strpos($type, 'SHIPMENT.') === 0 && defined($type)) {
-      $comments = decode_htmlentities(constant($type));
+    // the confirmation took time, the order keeps the status it has now
+    $status_query = xtc_db_query("SELECT orders_status
+                                    FROM ".TABLE_ORDERS."
+                                   WHERE orders_id = '".(int)$oID."'");
+    $status_array = (($status_query !== false) ? xtc_db_fetch_array($status_query) : false);
+    if (is_array($status_array)) {
+      $order->info['orders_status_id'] = $status_array['orders_status'];
     }
+    $status = $order->info['orders_status_id'];
+    $comments = $shipcloud->event_comment($type);
     $order_updated = false;
     $email_preview = false;
     $_POST['notify'] = ((MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shop') ? 'on' : 'off');
@@ -96,7 +115,24 @@ if (is_array($request)
     // only the parcel this callback belongs to
     $_POST['tracking_id'] = array($orders['tracking_id']);
     
-    define('_VALID_XTC', true);
-    include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
+    // the event is counted with its history entry: without the entry nothing is counted and shipcloud delivers it again
+    $history_stored = false;
+    try {
+      define('_VALID_XTC', true);
+      include (DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/orders_update.php');
+    } catch (Throwable $ex) {
+      $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => $ex->getMessage()));
+    }
+    // an error after the entry, in the mail for instance, leaves the entry stored: it counts
+    $history_stored = ($order_updated === true);
+    if ($history_stored !== true) {
+      $shipcloud->release_event($orders['tracking_id'], $type);
+      header('HTTP/1.1 503 Service Unavailable');
+      exit();
+    }
+    // the entry is written and nothing is left to repeat, the next event of the order counts it
+    if ($shipcloud->count_event($orders['tracking_id'], $type) !== true) {
+      $shipcloud->LoggingManager->log('ERROR', 'callback', array('exception' => 'history entry written but not counted: '.$type.' for shipment '.$orders['sc_id']));
+    }
   }
 }
