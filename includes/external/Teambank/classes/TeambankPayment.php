@@ -246,47 +246,75 @@
       }
       $this->preauthorized = false;
 
+      $answer = $this->send_authorization($orders_id);
+
+      // a booked order is left to the polling in before_send_order()
+      if ($answer == 'accepted' || $remove !== true) {
+        return;
+      }
+
+      // a lost answer or a 409 may hide an authorization, the status decides before anything is booked
+      if ($answer == 'unclear') {
+        $status = $this->read_authorization_status();
+        if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED) {
+          // the first request most likely never reached easyCredit
+          $answer = $this->send_authorization($orders_id);
+        }
+        // an unknown outcome keeps the order, a payment without an order would be worse
+        if ($status != 'failed' && $answer != 'refused') {
+          return;
+        }
+      }
+
+      // easyCredit said no and nothing is booked yet, the order is only its row
+      require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+      xtc_remove_order((int)$orders_id);
+
+      $this->payment_error_redirect();
+    }
+
+    function send_authorization($orders_id) {
       // easyCredit shows the order id of the authorization as the order number
       try {
         $this->ecTransactionApi->apiPaymentV3TransactionTechnicalTransactionIdAuthorizationPostWithHttpInfo(
           $_SESSION['easycredit']['storage']['token'],
           new \Teambank\EasyCreditApiV3\Model\AuthorizationRequest(array('orderId' => (string)$orders_id))
         );
-        return;
+        return 'accepted';
       } catch (\Throwable $e) {
-        $code = (($e instanceof \Teambank\EasyCreditApiV3\ApiException) ? (int)$e->getCode() : 0);
         try {
           $this->ecLogger->warning($e);
         } catch (\Throwable $log_error) {
           // an unwritable log must not stop the checkout between the order row and its bookings
         }
+        // a 409 may mean the transaction is authorized or being authorized already
+        $code = (($e instanceof \Teambank\EasyCreditApiV3\ApiException) ? (int)$e->getCode() : 0);
+        return (($code >= 400 && $code < 500 && $code != 409) ? 'refused' : 'unclear');
       }
+    }
 
-      // a booked order is left to the polling in before_send_order()
-      if ($remove !== true) {
-        return;
-      }
-
-      // a lost answer or a 409 may hide an authorization, so the status decides before anything is booked
-      if ($code < 400 || $code >= 500 || $code == 409) {
-        for ($i = 0; $i < 3; $i ++) {
-          usleep($i * 500000);
-          try {
-            $status = $this->ecCheckout->loadTransaction()->getStatus();
-          } catch (\Throwable $e) {
+    function read_authorization_status() {
+      // about five seconds, the last status read, or null when easyCredit never answered
+      $status = null;
+      for ($i = 0; $i < 5; $i ++) {
+        usleep($i * 500000);
+        try {
+          $status = $this->ecCheckout->loadTransaction()->getStatus();
+        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
+          // OPEN, DECLINED or EXPIRED
+          return 'failed';
+        } catch (\Throwable $e) {
+          // a server error may pass, no answer at all will not within this window
+          if (!($e instanceof \Teambank\EasyCreditApiV3\ApiException) || (int)$e->getCode() == 0) {
             break;
           }
-          if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-            return;
-          }
+          continue;
+        }
+        if ($status == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
+          break;
         }
       }
-
-      // nothing is booked yet, the order is only its row
-      require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-      xtc_remove_order((int)$orders_id);
-
-      $this->payment_error_redirect();
+      return $status;
     }
     
     function before_send_order() {
