@@ -22,6 +22,8 @@
     }
     $parts = preg_split('/(['.preg_quote($separators, '/').'])/', substr($url, $pos + 1), -1, PREG_SPLIT_DELIM_CAPTURE);
 
+    // ajax.php?speed loads no session functions, the shop names its session MODsid
+    $session_name = (function_exists('xtc_session_name') ? xtc_session_name() : 'MODsid');
     $query = '';
     $kept = 0;
     foreach ($parts as $i => $part) {
@@ -31,7 +33,7 @@
       // parse_str() decodes the name exactly like the request does
       $param = array();
       parse_str($part, $param);
-      if (array_key_exists(xtc_session_name(), $param)) {
+      if (array_key_exists($session_name, $param)) {
         continue;
       }
       $query .= (($kept > 0) ? $parts[$i - 1] : '').$part;
