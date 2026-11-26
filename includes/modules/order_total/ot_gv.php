@@ -342,14 +342,20 @@ class ot_gv {
     return (float)$booked['value'] * (-1);
   }
 
-  function credit_in_order_currency($amount) {
+  function credit_in_order_currency($amount, $total = null) {
     global $xtPrice;
 
-    // whole cents of the order currency and never more than the balance, a part of a cent stays on it;
+    // a balance that covers the order is not rounded, the deduction is the order total then
+    $credit = $xtPrice->xtcCalculateCurr($amount);
+    if ($total !== null && $credit >= (float)$total) {
+      return $credit;
+    }
+
+    // otherwise whole cents of the order currency and never more than the balance, a part of a cent stays on it;
     // a deduction with half a cent would round differently in a total and in its breakdown
     $factor = pow(10, (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
 
-    return floor(round($xtPrice->xtcCalculateCurr($amount) * $factor, 6)) / $factor;
+    return floor(round($credit * $factor, 6)) / $factor;
   }
 
   function calculate_credit($amount) {
@@ -358,7 +364,7 @@ class ot_gv {
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
     // the balance is in the default currency, the order total in the currency of the customer
-    $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount']) : 0);
+    $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount'], $amount) : 0);
     
     if (($amount - $gv_payment_amount) <= 0) {
       $gv_payment_amount = $amount;
