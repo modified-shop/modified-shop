@@ -350,6 +350,26 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
   }
 
+  // the credit is debited before the payment starts and before anything else is booked for the order,
+  // so the provider never gets a deduction the balance does not cover
+  $credit_booked = $order_total_modules->book_credit();
+  if ($credit_booked !== true) {
+    // another checkout spent the balance after the totals were computed, or the debit could not be recorded;
+    // only the order and its totals are written so far
+    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+    xtc_remove_order($insert_id, false, false, true);
+    unset($_SESSION['tmp_oID']);
+
+    if ($checkout_lock != '') {
+      xtc_db_close('checkout_lock_link');
+      $checkout_lock = '';
+    }
+
+    $credit_error = (($credit_booked === false) ? ERROR_GV_BALANCE_CHANGED : (($credit_booked === 'lost') ? ERROR_GV_BOOKING_LOST : ERROR_GV_BOOKING_FAILED));
+    $messageStack->add_session('checkout_payment', $credit_error);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+  }
+
   $sql_data_array = array(
     'orders_id' => $insert_id,
     'orders_status_id' => $order->info['order_status'],
@@ -582,23 +602,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   }
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order/','php') as $file) require ($file);
-
-  // the credit is debited before the payment starts, so the provider never gets a deduction the balance does not cover
-  $credit_booked = $order_total_modules->book_credit();
-  if ($credit_booked !== true) {
-    // another checkout spent the balance after the totals were computed, or the debit could not be recorded and was undone
-    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-    xtc_remove_order($insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
-    unset($_SESSION['tmp_oID']);
-
-    if ($checkout_lock != '') {
-      xtc_db_close('checkout_lock_link');
-      $checkout_lock = '';
-    }
-
-    $messageStack->add_session('checkout_payment', (($credit_booked === false) ? ERROR_GV_BALANCE_CHANGED : ERROR_GV_BOOKING_FAILED));
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-  }
 
   // redirect to payment service
   if ($tmp) {

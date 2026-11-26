@@ -474,6 +474,7 @@ define('ERROR_NO_REDEEM_CODE', 'You did not enter a redeem code.');
 define('ERROR_NO_INVALID_REDEEM_GV', 'Invalid gift voucher code');
 define('ERROR_GV_BALANCE_CHANGED', 'Your credit balance has changed and no longer covers the deduction of this order. Please check your payment.');
 define('ERROR_GV_BOOKING_FAILED', 'Your credit balance could not be applied just now and is unchanged. Please try again.');
+define('ERROR_GV_BOOKING_LOST', 'Your credit balance could not be applied just now. Please contact us so that we can check your balance.');
 define('TABLE_HEADING_CREDIT', 'Credits available');
 define('EMAIL_GV_TEXT_SUBJECT', 'A gift from %s');
 define('MAIN_MESSAGE', 'You have decided to send a gift voucher worth %s to %s whose e-mail address is %s<br /><br />Following text will be included in the e-mail:<br /><br />Dear %s<br /><br />You have received a Gift voucher worth %s by %s');

@@ -222,7 +222,8 @@ class order_total {
 
   // Called in checkout process once the order is written and before the payment starts.
   // Returns true, or the answer of the first credit class module that did not debit:
-  // false if the credit no longer covers the deduction, 'error' if the debit could not be recorded.
+  // false if the credit no longer covers the deduction, 'error' if the debit could not be recorded and was undone,
+  // 'lost' if the undo failed as well.
   //
   function book_credit() {
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {

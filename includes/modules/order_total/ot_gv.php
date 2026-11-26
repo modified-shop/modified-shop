@@ -245,8 +245,9 @@ class ot_gv {
     if ($this->insert_booking($gv_deduction) === false) {
       xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
                        SET amount = amount + ".$gv_deduction."
-                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
-      return 'error';
+                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'", 'db_link', $gv_undo_info);
+      // a failed undo is reported like every failed statement, the balance stays lower
+      return ((is_array($gv_undo_info) && $gv_undo_info['affected_rows'] == 1) ? 'error' : 'lost');
     }
 
     return true;
