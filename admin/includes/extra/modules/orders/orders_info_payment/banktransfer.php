@@ -79,7 +79,7 @@
           </tr>
         <?php } ?>
         <tr>
-          <td class="main" colspan="2"><a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'action=custom&subaction=deletebanktransfer&oID='.$oID); ?>"><?php echo BUTTON_DELETE_BANKTRANSFER; ?></a></td>
+          <td class="main" colspan="2"><a class="button" onclick="return postLink(this, event);" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'action=custom&subaction=deletebanktransfer&oID='.$oID); ?>"><?php echo BUTTON_DELETE_BANKTRANSFER; ?></a></td>
         </tr>
         <?php
       }

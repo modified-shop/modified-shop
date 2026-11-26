@@ -109,7 +109,9 @@
     
         case 'content_manager.php':
           if (isset($_GET['coID']) && $_GET['coID'] != '0') {
-            $where = " content_group = '".(int)$_GET['coID']."' ";
+            // the list of the view names the type of the entry. Older entries have none and are shown in every list, as before
+            $admin_log_type = ((isset($_GET['set']) && in_array($_GET['set'], array('product', 'content', 'email'), true)) ? $_GET['set'] : 'pages');
+            $where = " type IN ('".xtc_db_input($admin_log_type)."', '') AND content_group = '".(int)$_GET['coID']."' ";
           }
           break;
 
@@ -167,6 +169,10 @@
           echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
                  '<h2 style="color: rgb(190, 50, 50);">Admin Log:</h2>' . PHP_EOL;
           $lc = 0;
+          // the content manager compares each page of a group with the entries of its own index,
+          // with the status of a switch that waits for the first form of the page
+          $log_bases = array();
+          $log_switch_status = array();
           while ($log = xtc_db_fetch_array($log_query)) {
             if (MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') {
               $log['text'] = unserialize(base64_decode($log['text']));
@@ -184,14 +190,42 @@
                 }
               }
               if (MODULE_ADMIN_LOG_SHOW_DETAILS_FULL == 'false') {
-                // only the manufacturers page has a posted status link among the logged pages: its action and value
-                // are shown also when the entry before had no such field. Every other page is compared as before,
-                // a form can hold access data of a module
+                // a posted link is shown also when the entry before had no such field: on the manufacturers page its
+                // action and value, on the other pages, as an event each time, an entry with only values of the address.
+                // Every other entry is compared as before, a form can hold access data of a module
                 $log_manufacturer = (basename($PHP_SELF) == 'manufacturers.php');
-                $log_link = (($log_manufacturer === true) ? array_intersect_key($log['text'], array('action' => 1, 'flag' => 1)) : array());
-                if ($lc == 0) {
-                  $base = $log['text'];
+                $log_content_manager = (basename($PHP_SELF) == 'content_manager.php');
+                $log_switch_fields = array('setaflag' => 'content_active', 'setsflag' => 'content_status');
+                $log_event = false;
+                if ($log_manufacturer === true) {
+                  $log_link = array_intersect_key($log['text'], array('action' => 1, 'flag' => 1));
+                } elseif (is_array($log['text'])
+                          && count($log['text']) > 0
+                          && count(array_diff_key($log['text'], array('action' => 1, 'subaction' => 1, 'special' => 1, 'flag' => 1, 'coIndex' => 1))) == 0
+                          )
+                {
+                  $log_link = $log['text'];
+                  $log_event = true;
                 } else {
+                  $log_link = array();
+                }
+                $log_index = '';
+                if ($log_content_manager === true) {
+                  foreach (array('content_group_index', 'coIndex') as $log_key) {
+                    if (isset($log['text'][$log_key]) && is_scalar($log['text'][$log_key])) {
+                      $log_index = (string)$log['text'][$log_key];
+                    }
+                  }
+                  $log_first = !isset($log_bases[$log_index]);
+                  if ($log_first !== true) {
+                    $base = $log_bases[$log_index];
+                  }
+                } else {
+                  $log_first = ($lc == 0);
+                }
+                if ($log_first === true) {
+                  $base = $log['text'];
+                } elseif ($log_event !== true) {
                   $log_link = array_diff_key($log_link, $base);
                   // the first form after a status link: only its status is compared, with the one the link set
                   if ($log_manufacturer === true
@@ -201,6 +235,23 @@
                       )
                   {
                     $log_link['manufacturers_status'] = $log['text']['manufacturers_status'];
+                  }
+                  // the same for the first form after a status switch of the content manager, in every language
+                  if ($log_content_manager === true && isset($log_switch_status[$log_index])) {
+                    foreach ($log_switch_status[$log_index] as $log_field => $log_flag) {
+                      if (isset($log['text'][$log_field]) && is_array($log['text'][$log_field]) && !isset($base[$log_field])) {
+                        $log_differs = false;
+                        array_walk_recursive($log['text'][$log_field], function ($value) use ($log_flag, &$log_differs) {
+                          if ((string)$value !== $log_flag) {
+                            $log_differs = true;
+                          }
+                        });
+                        if ($log_differs === true) {
+                          $log_link[$log_field] = $log['text'][$log_field];
+                        }
+                        unset($log_switch_status[$log_index][$log_field]);
+                      }
+                    }
                   }
                 }
                 $base_new = array_merge($base, $log['text']);
@@ -213,6 +264,27 @@
                   } elseif (isset($log['text']['manufacturers_status'], $base_new['flag'])) {
                     $base_new['flag'] = $log['text']['manufacturers_status'];
                   }
+                }
+                // a status switch of the content manager sets the field of its form in every language of the entry
+                if ($log_content_manager === true
+                    && $log_event === true
+                    && isset($log['text']['special'], $log['text']['flag'])
+                    && is_string($log['text']['special'])
+                    && isset($log_switch_fields[$log['text']['special']])
+                    )
+                {
+                  $log_field = $log_switch_fields[$log['text']['special']];
+                  $log_flag = (string)$log['text']['flag'];
+                  if (isset($base_new[$log_field]) && is_array($base_new[$log_field])) {
+                    array_walk_recursive($base_new[$log_field], function (&$value) use ($log_flag) {
+                      $value = $log_flag;
+                    });
+                  } else {
+                    $log_switch_status[$log_index][$log_field] = $log_flag;
+                  }
+                }
+                if ($log_content_manager === true) {
+                  $log_bases[$log_index] = $base_new;
                 }
                 $log['text'] = $log_shown;
               }

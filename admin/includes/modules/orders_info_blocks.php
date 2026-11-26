@@ -397,7 +397,7 @@
               <td class="smallText" align="center">
               <?php
                 if (!isset($tracking['external']) || $tracking['external'] == '0') {
-                  echo '<a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).'</a>'.PHP_EOL;
+                  echo '<a onclick="return postLink(this, event);" href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).'</a>'.PHP_EOL;
                 }
               ?>
               </td>
@@ -547,10 +547,10 @@
           <div class="flt-r"> 
             <?php
             if (defined('MODULE_ORDER_MAIL_STEP_STATUS') && MODULE_ORDER_MAIL_STEP_STATUS == 'true') {
-              echo '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send_order_mail&site=1').'">'.BUTTON_ORDER_MAIL_STEP.'</a>';
+              echo '<a class="button" onclick="return postLink(this, event);" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send_order_mail&site=1').'">'.BUTTON_ORDER_MAIL_STEP.'</a>';
             }
             ?>
-            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
+            <a class="button" onclick="return postLink(this, event);" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
             <?php
             if (ACTIVATE_GIFT_SYSTEM == 'true' 
                 && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
@@ -565,7 +565,7 @@
                 && $order->info['ibn_billnr'] == ''
                 )
             {
-              echo '<a class="button ibillnr-btn" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=custom&subaction=set_ibillnr').'">'.BUTTON_BILL.'</a>';
+              echo '<a class="button ibillnr-btn" onclick="return postLink(this, event);" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=custom&subaction=set_ibillnr').'">'.BUTTON_BILL.'</a>';
             }
             ?>
             <a class="button" href="Javascript:void(0)" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
