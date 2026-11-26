@@ -14,6 +14,16 @@
         
         case 'deletetracking':
           $tracking_id = (int)$_GET['tID'];
+          // DHL removes its entries with the same subaction: only a shipcloud entry of this order is taken here
+          $tracking_query = xtc_db_query("SELECT tracking_id
+                                            FROM ".TABLE_ORDERS_TRACKING."
+                                           WHERE tracking_id = '".$tracking_id."'
+                                             AND orders_id = '".(int)$oID."'
+                                             AND external = '1'
+                                             AND sc_id != ''");
+          if (xtc_db_num_rows($tracking_query) != 1) {
+            break;
+          }
           require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
           $shipcloud = new shipcloud($oID);
           // keep the entry as long as the shipment may still exist at shipcloud

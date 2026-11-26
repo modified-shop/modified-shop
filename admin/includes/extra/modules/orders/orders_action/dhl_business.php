@@ -67,13 +67,19 @@
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction')).'action=edit'));
     }
 
+    // shipcloud removes its entries with the same subaction: only a DHL entry of this order is taken here
+    $dhl_tracking = false;
     if (isset($_GET['subaction']) && $_GET['subaction'] == 'deletetracking') {
       $tracking_id = (int)$_GET['tID'];
       $tracking_links_query = xtc_db_query("SELECT * 
                                               FROM ".TABLE_ORDERS_TRACKING."
-                                             WHERE tracking_id = '".(int)$tracking_id."'");
+                                             WHERE tracking_id = '".(int)$tracking_id."'
+                                               AND orders_id = '".(int)$oID."'
+                                               AND external = '2'");
       $tracking_links = xtc_db_fetch_array($tracking_links_query);
-  
+      $dhl_tracking = is_array($tracking_links);
+    }
+    if ($dhl_tracking === true) {
       require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
       $dhl = new DHLBusinessShipment(array());
       $response = $dhl->DeleteLabel($tracking_links['parcel_id']);
