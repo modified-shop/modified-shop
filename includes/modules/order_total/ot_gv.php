@@ -347,6 +347,11 @@ class ot_gv {
   function credit_in_order_currency($amount, $total = null) {
     global $xtPrice;
 
+    // a voucher that leaves tax or shipping to pay never pays the whole order, the payment page decides alike
+    if ($total !== null && $this->pays_whole_order() !== true) {
+      $total = null;
+    }
+
     // a balance that covers the order is not rounded, the deduction is the order total then;
     // the check takes the total in the default currency at four decimals, as book_credit() debits it
     $credit = $xtPrice->xtcCalculateCurr($amount);
@@ -370,6 +375,14 @@ class ot_gv {
     return $deduction;
   }
 
+  function pays_whole_order() {
+    global $order;
+
+    // the voucher pays the whole order only if neither tax nor shipping is left out of it
+    return (($this->include_tax == 'true' || $order->info['tax'] == 0)
+            && ($this->include_shipping == 'true' || $order->info['shipping_cost'] == 0));
+  }
+
   function whole_cents($value) {
     global $xtPrice;
 
@@ -379,17 +392,13 @@ class ot_gv {
   }
 
   function calculate_credit($amount) {
-    global $order;
-
     $gv_query = xtc_db_query("SELECT amount 
                                 FROM ".TABLE_COUPON_GV_CUSTOMER." 
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
-    // the voucher pays the whole order only if neither tax nor shipping is left out of $amount
-    $whole_order = (($this->include_tax == 'true' || $order->info['tax'] == 0)
-                    && ($this->include_shipping == 'true' || $order->info['shipping_cost'] == 0));
+    $whole_order = $this->pays_whole_order();
     // the balance is in the default currency, the order total in the currency of the customer
-    $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount'], (($whole_order === true) ? $amount : null)) : 0);
+    $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount'], $amount) : 0);
     
     if (($amount - $gv_payment_amount) <= 0) {
       // with something left to pay the deduction stays in whole cents
