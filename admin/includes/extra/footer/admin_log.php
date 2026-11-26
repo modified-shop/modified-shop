@@ -268,7 +268,9 @@
                 // a status switch of the content manager sets the field of its form in every language of the entry
                 if ($log_content_manager === true
                     && $log_event === true
-                    && isset($log['text']['special'], $log['text']['flag'], $log_switch_fields[$log['text']['special']])
+                    && isset($log['text']['special'], $log['text']['flag'])
+                    && is_string($log['text']['special'])
+                    && isset($log_switch_fields[$log['text']['special']])
                     )
                 {
                   $log_field = $log_switch_fields[$log['text']['special']];

@@ -74,6 +74,11 @@
           // products, content and e-mail content count their entries on their own, the type keeps them apart from the pages
           // and from older entries, which have none
           $admin_log_content_types = array(
+            'delete' => 'pages',
+            'setaflag' => 'pages',
+            'setsflag' => 'pages',
+            'update' => 'pages',
+            'insert' => 'pages',
             'delete_product' => 'product',
             'update_products' => 'product',
             'insert_products' => 'product',
@@ -84,7 +89,8 @@
             'update_email' => 'email',
             'insert_email' => 'email',
           );
-          $admin_log_content_type = 'pages';
+          // another form of a list, e.g. the number per page, belongs to the list of the address
+          $admin_log_content_type = ((isset($_GET['set']) && in_array($_GET['set'], array('product', 'content', 'email'), true)) ? $_GET['set'] : 'pages');
           foreach (array('special', 'id') as $key) {
             if (isset($_GET[$key]) && is_string($_GET[$key]) && isset($admin_log_content_types[$_GET[$key]])) {
               $admin_log_content_type = $admin_log_content_types[$_GET[$key]];
