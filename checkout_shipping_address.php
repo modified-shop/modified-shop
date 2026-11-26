@@ -100,6 +100,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
       }
       if ($country_disabled === true) {
         unset($_SESSION['sendto']);
+        // a language pack without this text gets the English one
+        defined('ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED') OR define('ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED', 'We do not ship to the country of the selected shipping address. Please choose another address.');
         $messageStack->add('checkout_address', ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED);
       } else {
         xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));

@@ -41,10 +41,14 @@
 
       // the name also arrives from the request and from stored values, so check it where the file is written
       if (!check_export_filename($file, array('csv'))) {
+        // a language pack without this text gets the English one
+        defined('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME') OR define('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME', 'The filename may only contain letters, digits, dots, hyphens and underscores and must end with .csv.');
         $messageStack->add_session(MODULE_PRODUCTS_EXPORT_ERROR_FILENAME, 'error');
         return;
       }
       if (!check_export_target(DIR_FS_DOCUMENT_ROOT.'export/'.$file)) {
+        // a language pack without this text gets the English one
+        defined('MODULE_PRODUCTS_EXPORT_ERROR_FILE_TYPE') OR define('MODULE_PRODUCTS_EXPORT_ERROR_FILE_TYPE', 'A link or folder with this name exists in the export/ directory. It is not overwritten.');
         $messageStack->add_session(MODULE_PRODUCTS_EXPORT_ERROR_FILE_TYPE, 'error');
         return;
       }
@@ -220,6 +224,8 @@
       if (isset($config_values['MODULE_PRODUCTS_EXPORT_FILE'])
           && !check_export_filename($config_values['MODULE_PRODUCTS_EXPORT_FILE'], array('csv'))
           ) {
+        // a language pack without this text gets the English one
+        defined('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME') OR define('MODULE_PRODUCTS_EXPORT_ERROR_FILENAME', 'The filename may only contain letters, digits, dots, hyphens and underscores and must end with .csv.');
         return MODULE_PRODUCTS_EXPORT_ERROR_FILENAME;
       }
 

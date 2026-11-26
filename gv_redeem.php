@@ -75,7 +75,7 @@ if ($error === false) {
 		$error = true;
 		if ($gv_redeemed === null) {
 			// nothing was booked, the code can be redeemed later
-			$smarty->assign('error_message', ERROR_GV_SEND_BOOKING);
+			$smarty->assign('error_message', (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.'));
 		}
 	}
 	unset($_SESSION['gv_id']);
