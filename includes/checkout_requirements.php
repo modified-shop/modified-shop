@@ -31,10 +31,12 @@ if ($_SESSION['cart']->count_contents() < 1) {
       && isset($_SESSION['customer_id'])
       )
   {
+    // the order the success page takes, a checkout stopped at its voucher debit is none
     $finished_query = xtc_db_query("SELECT orders_date_finished
                                       FROM ".TABLE_ORDERS."
                                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                        AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".(int)SESSION_LIFE_CUSTOMERS."')
+                                       AND NOT (orders_status = '0' AND orders_date_finished IS NULL)
                                   ORDER BY orders_id DESC
                                      LIMIT 1");
     if (xtc_db_num_rows($finished_query) > 0) {

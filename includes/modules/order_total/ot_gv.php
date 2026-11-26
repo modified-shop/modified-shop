@@ -185,6 +185,7 @@ class ot_gv {
     // book_credit() debits before the payment, only an order written before that still needs it here;
     // the stored order decides, not the session
     $gv_query = xtc_db_query("SELECT ot.value,
+                                     o.currency,
                                      o.currency_value,
                                      o.orders_status
                                 FROM ".TABLE_ORDERS_TOTAL." ot
@@ -199,14 +200,26 @@ class ot_gv {
                                  AND ob.orders_id IS NULL");
     if (xtc_db_num_rows($gv_query) > 0) {
       $gv_order = xtc_db_fetch_array($gv_query);
-      // the deduction the order carries, at the rate of the order
-      $gv_deduction = number_format($this->to_default_currency((float)$gv_order['value'] * (-1), $gv_order['currency_value']), 4, '.', '');
+      // the deduction the order carries, converted as the code that wrote it did: like xtcRemoveCurr(),
+      // which keeps an amount in the default currency as it is
+      $gv_deduction = (float)$gv_order['value'] * (-1);
+      if ($gv_order['currency'] != DEFAULT_CURRENCY) {
+        $gv_deduction = $this->to_default_currency($gv_deduction, $gv_order['currency_value']);
+      }
+      $gv_deduction = number_format($gv_deduction, 4, '.', '');
       if ((float)$gv_deduction > 0) {
         // the provider has the reduced total already, so the debit is taken as before this change
         xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
                          SET amount = amount - ".$gv_deduction."
                        WHERE customer_id = '".(int)$_SESSION['customer_id']."'", 'db_link', $gv_query_info);
-        $gv_settled = (is_array($gv_query_info) && $gv_query_info['affected_rows'] == 1 && $this->insert_booking($gv_deduction) !== false);
+        $gv_settled = (is_array($gv_query_info) && $gv_query_info['affected_rows'] == 1);
+        if ($gv_settled === true && $this->insert_booking($gv_deduction) === false) {
+          // without its record a repeated return would debit again, so the debit is undone
+          xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                           SET amount = amount + ".$gv_deduction."
+                         WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+          $gv_settled = false;
+        }
         if ($gv_settled !== true) {
           // the order is paid and stays, the shop gets a note to check the balance
           $sql_data_array = array(

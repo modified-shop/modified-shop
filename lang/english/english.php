@@ -476,7 +476,7 @@ define('ERROR_GV_BALANCE_CHANGED', 'Your credit balance has changed and no longe
 define('ERROR_GV_BOOKING_FAILED', 'Your credit balance could not be applied just now and is unchanged. Please try again.');
 define('ERROR_GV_BOOKING_LOST', 'Your credit balance could not be applied just now. Please contact us so that we can check your balance.');
 define('TEXT_GV_CHECKOUT_STOPPED_BALANCE', 'The checkout was stopped because the credit balance no longer covered the deduction. No balance was debited, the order has no items. Please cancel an authorization at the payment service.');
-define('TEXT_GV_CHECKOUT_STOPPED_FAILED', 'The checkout was stopped because the credit deduction could not be recorded. The balance was booked back, the order has no items. Please cancel an authorization at the payment service.');
+define('TEXT_GV_CHECKOUT_STOPPED_FAILED', 'The checkout was stopped because the credit deduction could not be recorded. The balance is unchanged, the order has no items. Please cancel an authorization at the payment service.');
 define('TEXT_GV_CHECKOUT_STOPPED_LOST', 'The checkout was stopped because the credit deduction could neither be recorded nor booked back. The deduction of this order is debited from the balance of the customer and has to be credited again, the order has no items. Please cancel an authorization at the payment service.');
 define('TEXT_GV_SETTLEMENT_FAILED', 'The credit deduction of %s (default currency) for this order could not be booked completely. Please check the balance of the customer.');
 define('TABLE_HEADING_CREDIT', 'Credits available');
