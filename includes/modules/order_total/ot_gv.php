@@ -346,9 +346,9 @@ class ot_gv {
     global $xtPrice;
 
     // a balance that covers the order is not rounded, the deduction is the order total then;
-    // the comparison allows for the float error of the conversion
+    // the check takes the total in the default currency at four decimals, as book_credit() debits it
     $credit = $xtPrice->xtcCalculateCurr($amount);
-    if ($total !== null && round($credit, 6) >= round((float)$total, 6)) {
+    if ($total !== null && round((float)$amount, 4) >= (float)number_format($this->to_default_currency((float)$total), 4, '.', '')) {
       return max($credit, (float)$total);
     }
 
