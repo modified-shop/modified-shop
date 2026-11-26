@@ -355,10 +355,21 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $credit_booked = $order_total_modules->book_credit();
   if ($credit_booked !== true) {
     // another checkout spent the balance after the totals were computed, or the debit could not be recorded;
-    // only the order and its totals are written so far
-    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-    xtc_remove_order($insert_id, false, false, true);
+    // the order keeps its row and totals with a note, a provider may know its number already and a debit
+    // that could not be undone needs it to be found, nothing else is booked for it yet
+    $credit_note = (($credit_booked === false) ? TEXT_GV_CHECKOUT_STOPPED_BALANCE : (($credit_booked === 'lost') ? TEXT_GV_CHECKOUT_STOPPED_LOST : TEXT_GV_CHECKOUT_STOPPED_FAILED));
+    $sql_data_array = array(
+      'orders_id' => $insert_id,
+      'orders_status_id' => (($tmp == true) ? $orders_status_id : $order->info['order_status']),
+      'date_added' => 'now()',
+      'customer_notified' => 0,
+      'comments' => $credit_note,
+    );
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+    // the old key still finds this order, the next attempt needs its own
     unset($_SESSION['tmp_oID']);
+    $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
 
     if ($checkout_lock != '') {
       xtc_db_close('checkout_lock_link');
