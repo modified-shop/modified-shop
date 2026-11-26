@@ -61,7 +61,7 @@ if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
                 continue;
             }
             require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-            xtc_remove_order((int)$data['order_id'], ((STOCK_LIMITED == 'true') ? 'on' : false));
+            xtc_remove_order((int)$data['order_id'], ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
             xtc_db_query(sprintf('DELETE FROM micropayment_orders WHERE order_id = "%s"',$data['order_id']));
             xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$data['order_id']));
             micropayment_helper::unlockOrder();

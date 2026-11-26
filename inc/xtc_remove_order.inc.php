@@ -11,10 +11,14 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
+  require_once(DIR_FS_INC.'xtc_revert_order_bookings.inc.php');
 
-  function xtc_remove_order($order_id, $restock = false, $activate = true) {
+  function xtc_remove_order($order_id, $restock = false, $activate = true, $revert = false) {
     if ($restock == 'on') {
       xtc_restock_order($order_id, $activate);
+    }
+    if ($revert === true) {
+      xtc_revert_order_bookings($order_id);
     }
     xtc_db_query("DELETE FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id = '".(int)$order_id."'");
@@ -26,6 +30,7 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_BANKTRANSFER." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_QUEUE." WHERE order_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_BOOKINGS." WHERE orders_id = '".(int)$order_id."'");
 
     // these tables come with the withdraw module and can be missing
     $withdraw_tables = array(TABLE_ORDERS_WITHDRAW, TABLE_ORDERS_WITHDRAW_PRODUCTS, TABLE_ORDERS_WITHDRAW_TOKEN);

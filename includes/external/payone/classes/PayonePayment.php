@@ -658,7 +658,7 @@ class PayonePayment {
       $check = xtc_db_fetch_array($check_query);
       if ($_SESSION['customer_id'] == $check['customers_id']) {
         require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-        xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+        xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
       }
     }
   }

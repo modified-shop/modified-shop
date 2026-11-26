@@ -495,7 +495,7 @@ class micropayment_callback
                 xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
                 require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-                xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+                xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
                 xtc_db_query(sprintf('DELETE FROM micropayment_orders WHERE order_id = "%s"',$order_id));
                 xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$order_id));
                 $this->returnStatus = self::STATUS_OK;

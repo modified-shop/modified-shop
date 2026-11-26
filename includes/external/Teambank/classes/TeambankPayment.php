@@ -461,7 +461,7 @@
         $result = $this->poll_authorization($insert_id, false);
         if ($result == 'failed') {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
           unset($_SESSION['tmp_oID'], $_SESSION['easycredit_order']);
 
           $this->payment_error_redirect();

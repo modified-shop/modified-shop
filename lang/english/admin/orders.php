@@ -83,6 +83,7 @@ define('ENTRY_PRINTABLE', 'Print Invoice');
 define('TEXT_INFO_HEADING_DELETE_ORDER', 'Delete Order');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this order?');
 define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Restock product quantity');
+define('TEXT_INFO_REVERT_ORDER_BOOKINGS', 'Revert used voucher balance, coupon and specials quantity, switch sold out specials back on');
 define('TEXT_DATE_ORDER_CREATED', 'Date Created:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Payment Method:');

@@ -935,6 +935,19 @@ CREATE TABLE orders (
   KEY idx_orders_source (orders_source)
 );
 
+DROP TABLE IF EXISTS orders_bookings;
+CREATE TABLE orders_bookings (
+  orders_bookings_id INT(11) NOT NULL AUTO_INCREMENT,
+  orders_id INT(11) NOT NULL,
+  orders_products_id INT(11) NOT NULL DEFAULT 0,
+  class VARCHAR(32) NOT NULL,
+  reference_id INT(11) NOT NULL,
+  reference_date DATETIME DEFAULT NULL,
+  value DECIMAL(15,4) NOT NULL,
+  PRIMARY KEY (orders_bookings_id),
+  KEY idx_orders_id (orders_id)
+);
+
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   orders_products_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1456,6 +1469,7 @@ CREATE TABLE specials (
   expires_date DATETIME,
   date_status_change DATETIME,
   status INT(1) NOT NULL DEFAULT 1,
+  specials_sold_out INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (specials_id),
   KEY idx_products_id (products_id),
   KEY idx_status (status),

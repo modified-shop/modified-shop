@@ -103,7 +103,7 @@ class micropayment_method extends micropayment_helper
                     if (self::lockOrder((int) $_GET['orderid'], 0)) {
                         if(isset($_GET['orderid']) && in_array($this->getLastEventFromMicropaymentLog((int) $_GET['orderid']),array('new','error'))) {
                             require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-                            xtc_remove_order((int) $_GET['orderid'], ((STOCK_LIMITED == 'true') ? 'on' : false));
+                            xtc_remove_order((int) $_GET['orderid'], ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
                         }
                         self::unlockOrder();
                     }
