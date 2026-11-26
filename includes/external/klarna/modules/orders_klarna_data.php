@@ -16,9 +16,9 @@ if (isset($order) && is_object($order)) {
   if (in_array($order->info['payment_method'], klarna_payment_modules(), true)) {
     require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 
-    // the texts of the Klarna answer are UTF-8: signs beyond ASCII go as numeric references, which fit any charset of the panel
+    // the texts of the Klarna answer are UTF-8 and printed as text: signs beyond ASCII go as numeric references, which fit any charset of the panel
     $klarna_api_text = function ($text) {
-      return mb_encode_numericentity((string)$text, array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
+      return mb_encode_numericentity(htmlspecialchars((string)$text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
     };
 
     // a language without Klarna texts falls back to english
