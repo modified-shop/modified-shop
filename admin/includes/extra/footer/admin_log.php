@@ -109,9 +109,9 @@
     
         case 'content_manager.php':
           if (isset($_GET['coID']) && $_GET['coID'] != '0') {
-            // the list of the view names the type of the entry, the pages have none
-            $admin_log_type = ((isset($_GET['set']) && in_array($_GET['set'], array('product', 'content', 'email'), true)) ? $_GET['set'] : '');
-            $where = " type = '".xtc_db_input($admin_log_type)."' AND content_group = '".(int)$_GET['coID']."' ";
+            // the list of the view names the type of the entry. Older entries have none and are shown in every list, as before
+            $admin_log_type = ((isset($_GET['set']) && in_array($_GET['set'], array('product', 'content', 'email'), true)) ? $_GET['set'] : 'pages');
+            $where = " type IN ('".xtc_db_input($admin_log_type)."', '') AND content_group = '".(int)$_GET['coID']."' ";
           }
           break;
 
@@ -169,7 +169,9 @@
           echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
                  '<h2 style="color: rgb(190, 50, 50);">Admin Log:</h2>' . PHP_EOL;
           $lc = 0;
-          // the status of a switch of the content manager that waits for the first form of the entry
+          // the content manager compares each page of a group with the entries of its own index,
+          // with the status of a switch that waits for the first form of the page
+          $log_bases = array();
           $log_switch_status = array();
           while ($log = xtc_db_fetch_array($log_query)) {
             if (MODULE_ADMIN_LOG_SHOW_DETAILS == 'true') {
@@ -199,7 +201,7 @@
                   $log_link = array_intersect_key($log['text'], array('action' => 1, 'flag' => 1));
                 } elseif (is_array($log['text'])
                           && count($log['text']) > 0
-                          && count(array_diff_key($log['text'], array('action' => 1, 'subaction' => 1, 'special' => 1, 'flag' => 1))) == 0
+                          && count(array_diff_key($log['text'], array('action' => 1, 'subaction' => 1, 'special' => 1, 'flag' => 1, 'coIndex' => 1))) == 0
                           )
                 {
                   $log_link = $log['text'];
@@ -207,7 +209,21 @@
                 } else {
                   $log_link = array();
                 }
-                if ($lc == 0) {
+                $log_index = '';
+                if ($log_content_manager === true) {
+                  foreach (array('content_group_index', 'coIndex') as $log_key) {
+                    if (isset($log['text'][$log_key]) && is_scalar($log['text'][$log_key])) {
+                      $log_index = (string)$log['text'][$log_key];
+                    }
+                  }
+                  $log_first = !isset($log_bases[$log_index]);
+                  if ($log_first !== true) {
+                    $base = $log_bases[$log_index];
+                  }
+                } else {
+                  $log_first = ($lc == 0);
+                }
+                if ($log_first === true) {
                   $base = $log['text'];
                 } elseif ($log_event !== true) {
                   $log_link = array_diff_key($log_link, $base);
@@ -221,8 +237,8 @@
                     $log_link['manufacturers_status'] = $log['text']['manufacturers_status'];
                   }
                   // the same for the first form after a status switch of the content manager, in every language
-                  if ($log_content_manager === true) {
-                    foreach ($log_switch_status as $log_field => $log_flag) {
+                  if ($log_content_manager === true && isset($log_switch_status[$log_index])) {
+                    foreach ($log_switch_status[$log_index] as $log_field => $log_flag) {
                       if (isset($log['text'][$log_field]) && is_array($log['text'][$log_field]) && !isset($base[$log_field])) {
                         $log_differs = false;
                         array_walk_recursive($log['text'][$log_field], function ($value) use ($log_flag, &$log_differs) {
@@ -233,7 +249,7 @@
                         if ($log_differs === true) {
                           $log_link[$log_field] = $log['text'][$log_field];
                         }
-                        unset($log_switch_status[$log_field]);
+                        unset($log_switch_status[$log_index][$log_field]);
                       }
                     }
                   }
@@ -262,8 +278,11 @@
                       $value = $log_flag;
                     });
                   } else {
-                    $log_switch_status[$log_field] = $log_flag;
+                    $log_switch_status[$log_index][$log_field] = $log_flag;
                   }
+                }
+                if ($log_content_manager === true) {
+                  $log_bases[$log_index] = $base_new;
                 }
                 $log['text'] = $log_shown;
               }
