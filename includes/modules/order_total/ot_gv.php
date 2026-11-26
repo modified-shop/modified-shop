@@ -354,6 +354,11 @@ class ot_gv {
       return max($credit, (float)$total);
     }
 
+    // without a conversion a balance that may pay the whole order is deducted as it is, as before this change
+    if ($total !== null && (float)$xtPrice->currencies[$xtPrice->actualCurr]['value'] == 1) {
+      return $credit;
+    }
+
     // otherwise whole cents of the order currency and never more than the balance, a part of a cent stays on it;
     // a deduction with half a cent would round differently in a total and in its breakdown
     $deduction = $this->whole_cents($credit);
