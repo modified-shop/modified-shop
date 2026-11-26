@@ -356,7 +356,13 @@ class ot_gv {
 
     // otherwise whole cents of the order currency and never more than the balance, a part of a cent stays on it;
     // a deduction with half a cent would round differently in a total and in its breakdown
-    return $this->whole_cents($credit);
+    $deduction = $this->whole_cents($credit);
+    // the float error can lift it to a cent the debit at four decimals would not find on the balance
+    if ($deduction > 0 && (float)number_format($this->to_default_currency($deduction), 4, '.', '') > round((float)$amount, 4)) {
+      $deduction = $this->whole_cents($deduction - 0.5 / pow(10, (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']));
+    }
+
+    return $deduction;
   }
 
   function whole_cents($value) {
