@@ -94,23 +94,40 @@
         $dhl_delete_error = preg_replace_callback('/<a((?:\s+[^\s"\'>\/=]+(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>]+))?)*)\s*>/i', function ($tag) use ($dhl_delete_link, &$dhl_delete_posted) {
           preg_match_all('/([^\s"\'>\/=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s"\'>]+))?/', $tag[1], $attributes, PREG_SET_ORDER);
           $href = '';
-          $onclick = false;
+          $onclick = null;
+          $others = '';
           foreach ($attributes as $attribute) {
             $value = (isset($attribute[2]) ? $attribute[2] : '');
+            $quote = '';
             if ($value != '' && ($value[0] == '"' || $value[0] == "'")) {
+              $quote = $value[0];
               $value = substr($value, 1, -1);
+            }
+            if (strtolower($attribute[1]) == 'onclick') {
+              if ($onclick === null) {
+                // the handler goes into double quotes
+                $onclick = (($quote == "'") ? str_replace('"', '&quot;', $value) : $value);
+              }
+              continue;
             }
             if (strtolower($attribute[1]) == 'href') {
               $href = $value;
-            } elseif (strtolower($attribute[1]) == 'onclick') {
-              $onclick = true;
             }
+            $others .= ' '.$attribute[0];
           }
-          if ($dhl_delete_posted === true || $href !== $dhl_delete_link || $onclick === true) {
+          if ($dhl_delete_posted === true || $href !== $dhl_delete_link) {
             return $tag[0];
           }
           $dhl_delete_posted = true;
-          return '<a onclick="return postLink(this, event);"'.$tag[1].'>';
+          // a handler that posts already stays; any other runs first and can still cancel the link with false
+          if ($onclick !== null && preg_match('/\b(confirmPostLink|postLink)\s*\(/', $onclick)) {
+            return $tag[0];
+          }
+          $post = 'return postLink(this, event);';
+          if ($onclick !== null && trim($onclick) != '') {
+            $post = 'if ((function (event) { '.$onclick.' }).call(this, event) === false) { return false; } '.$post;
+          }
+          return '<a onclick="'.$post.'"'.$others.'>';
         }, sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, $dhl_delete_link));
         $messageStack->add_session($dhl_delete_error, 'warning');
       } else {
