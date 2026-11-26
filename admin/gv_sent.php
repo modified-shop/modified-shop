@@ -194,7 +194,8 @@
                   $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . (($gInfo->coupon_type == 'P' || $gInfo->coupon_type == 'T') ? number_format($gInfo->coupon_amount, 2).'%' : $currencies->format($gInfo->coupon_amount)).'</b>');
                   $redeem_query = xtc_db_query("SELECT * 
                                                   FROM " . TABLE_COUPON_REDEEM_TRACK . " 
-                                                 WHERE coupon_id = '" . $gInfo->coupon_id . "'");
+                                                 WHERE coupon_id = '" . $gInfo->coupon_id . "'
+                                                   AND redeem_date <> '0000-00-00 00:00:00'");
                   $redeemed = xtc_db_num_rows($redeem_query);
                   $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
                   $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . (($gInfo->coupon_type == 'P' || $gInfo->coupon_type == 'T') ? number_format($gInfo->coupon_amount, 2).'%' : $currencies->format($gInfo->coupon_amount)));

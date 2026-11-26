@@ -41,7 +41,8 @@
       if (xtc_db_num_rows($gv_query) != 0) {
         $redeem_query = xtc_db_query("SELECT * 
                                         FROM " . TABLE_COUPON_REDEEM_TRACK . " 
-                                       WHERE coupon_id = '" . $gv_result['coupon_id'] . "'");
+                                       WHERE coupon_id = '" . $gv_result['coupon_id'] . "'
+                                         AND redeem_date <> '0000-00-00 00:00:00'");
         if ((xtc_db_num_rows($redeem_query) != 0) && ($gv_result['coupon_type'] == 'G')) {
           $messageStack->add_session('coupon_message', ERROR_NO_INVALID_REDEEM_GV);
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
@@ -58,41 +59,15 @@
         if ($_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {                         
           $gv_amount = $gv_result['coupon_amount'];
           
-          // check gv for customer
-          $gv_amount_query = xtc_db_query("SELECT amount 
-                                             FROM " . TABLE_COUPON_GV_CUSTOMER . " 
-                                            WHERE customer_id = '" . (int)$_SESSION['customer_id'] . "'");
-          $customer_gv = false;
-          $total_gv_amount = $gv_amount;
-          if ($gv_amount_result = xtc_db_fetch_array($gv_amount_query)) {
-            $total_gv_amount = $gv_amount_result['amount'] + $gv_amount;
-            $customer_gv = true;
+          // only the request that switches the code off redeems it, in the same statement as the credit and the receipt
+          require_once (DIR_FS_INC . 'xtc_gv_redeem_code.inc.php');
+          $gv_redeemed = xtc_gv_redeem_code($_SESSION['customer_id'], $gv_result['coupon_id'], (isset($_SESSION['tracking']['ip']) ? xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''));
+          if ($gv_redeemed !== true) {
+            // a database error booked nothing, the code can be redeemed later
+            $messageStack->add_session('coupon_message', (($gv_redeemed === null) ? ERROR_GV_SEND_BOOKING : ERROR_NO_INVALID_REDEEM_GV));
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
           }
-          $gv_update = xtc_db_query("UPDATE " . TABLE_COUPONS . " 
-                                        SET coupon_active = 'N' 
-                                      WHERE coupon_id = '" . $gv_result['coupon_id'] . "'");
-        
-          $sql_data_array = array(
-             'coupon_id' => $gv_result['coupon_id'], 
-             'redeem_date' => 'now()',  
-             'redeem_ip' => (isset($_SESSION['tracking']['ip']) ? xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''),  
-             'customer_id' => (int)$_SESSION['customer_id']  
-          );
-          xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);
           
-          if ($customer_gv === true) {
-            // already has gv_amount so update
-            $gv_update = xtc_db_query("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " 
-                                          SET amount = '" . $total_gv_amount . "' 
-                                        WHERE customer_id = '" . (int)$_SESSION['customer_id'] . "'");
-          } else {
-            // no gv_amount so insert
-            $sql_data_array = array(
-               'customer_id' => (int)$_SESSION['customer_id'],
-               'amount' => $total_gv_amount               
-            );
-            xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
-          }
           $messageStack->add_session('coupon_message', sprintf(REDEEMED_AMOUNT, $xtPrice->xtcFormatCurrency($gv_amount)), 'success');
           
           if (strpos(basename($PHP_SELF), 'checkout') !== false) {
