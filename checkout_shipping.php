@@ -114,6 +114,8 @@ if (xtc_check_address_country($_SESSION['sendto'], $_SESSION['customer_id']) ===
   if (isset($_SESSION['paypal']['PayerID']) && $_SESSION['paypal']['PayerID'] != '') {
     $_SESSION['shipping'] = '';
   }
+  // a language pack without this text gets the English one
+  defined('ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED') OR define('ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED', 'We do not ship to the country of the selected shipping address. Please choose another address.');
   $messageStack->add_session('checkout_address', ERROR_CHECKOUT_SHIPPING_COUNTRY_DISABLED);
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
 }

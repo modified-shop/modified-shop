@@ -276,6 +276,8 @@
         <?php
           $heading = array ();
           $contents = array ();
+          // a language pack without this text gets the English one
+          defined('TEXT_INFO_REVERT_ORDER_BOOKINGS') OR define('TEXT_INFO_REVERT_ORDER_BOOKINGS', 'Revert used voucher balance, coupon and specials quantity, switch sold out specials back on');
           switch ($action) {
             case 'storno' :
               $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_REVERSE_ORDER.'</b>');

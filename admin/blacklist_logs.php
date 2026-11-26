@@ -14,6 +14,10 @@
   require_once(DIR_FS_CATALOG.'includes/xss_secure.php');
   require_once(DIR_FS_INC.'admin_form_posted.inc.php');
 
+  // a language pack without these texts gets the English ones
+  defined('ERROR_BLACKLIST_WRITE') OR define('ERROR_BLACKLIST_WRITE', 'Error: The blacklist could not be saved.');
+  defined('ERROR_BLACKLIST_ENTRY') OR define('ERROR_BLACKLIST_ENTRY', 'Error: Enter a valid IP address and a future expiration time.');
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
     switch ($action) {
