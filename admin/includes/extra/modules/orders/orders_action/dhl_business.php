@@ -119,13 +119,16 @@
             return $tag[0];
           }
           $dhl_delete_posted = true;
-          // a handler that posts already stays; any other runs first and can still cancel the link with false
-          if ($onclick !== null && preg_match('/\b(confirmPostLink|postLink)\s*\(/', $onclick)) {
-            return $tag[0];
-          }
           $post = 'return postLink(this, event);';
           if ($onclick !== null && trim($onclick) != '') {
-            $post = 'if ((function (event) { '.$onclick.' }).call(this, event) === false) { return false; } '.$post;
+            // the handler of the translation runs first. It can stop the link (false, preventDefault) or post it itself:
+            // the helpers of the shop are handed in, confirmLink() as confirmPostLink() with its text and title
+            $post = 'var posted = false,'
+                   .' post = function (link, e) { posted = true; return postLink(link, e); },'
+                   .' confirmPost = function (message, title, link) { posted = true; return confirmPostLink(message, title, link); };'
+                   .' if ((function (event, postLink, confirmPostLink, confirmLink) { '.$onclick.' }).call(this, event, post, confirmPost, confirmPost) === false'
+                   .' || posted || event.defaultPrevented) { return false; } '
+                   .$post;
           }
           return '<a onclick="'.$post.'"'.$others.'>';
         }, sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, $dhl_delete_link));
