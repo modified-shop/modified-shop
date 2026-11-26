@@ -583,6 +583,22 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order/','php') as $file) require ($file);
 
+  // the credit is debited before the payment starts, so the provider never gets a deduction the balance does not cover
+  if ($order_total_modules->book_credit() !== true) {
+    // another checkout spent the balance after the totals were computed
+    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+    xtc_remove_order($insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false), true, true);
+    unset($_SESSION['tmp_oID']);
+
+    if ($checkout_lock != '') {
+      xtc_db_close('checkout_lock_link');
+      $checkout_lock = '';
+    }
+
+    $messageStack->add_session('checkout_payment', ERROR_GV_BALANCE_CHANGED);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+  }
+
   // redirect to payment service
   if ($tmp) {
     $sql_data_array = array(

@@ -219,6 +219,27 @@ class order_total {
       }
     }
   }
+
+  // Called in checkout process once the order is written and before the payment starts.
+  // Returns false if a credit class module could not debit what the order deducts.
+  //
+  function book_credit() {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+      foreach ($this->modules as $value) {
+        $class = substr($value, 0, strrpos($value, '.'));
+        if ($GLOBALS[$class]->enabled
+            && isset($GLOBALS[$class]->credit_class)
+            && $GLOBALS[$class]->credit_class
+            && method_exists($GLOBALS[$class], 'book_credit')
+            && $GLOBALS[$class]->book_credit() !== true
+            )
+        {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
   
   // Called in checkout process to clear session variables created by each credit class module.
   //
