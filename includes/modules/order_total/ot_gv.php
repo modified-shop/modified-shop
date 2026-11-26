@@ -48,6 +48,9 @@ class ot_gv {
   var $tax_class;
   var $checkbox;
 
+  // per order id, survives the new instance a payment module creates with order_total in the same request
+  static $booked_deductions = array();
+
   function __construct() {    
     $this->code = 'ot_gv';
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
@@ -280,6 +283,9 @@ class ot_gv {
       return ((is_array($gv_undo_info) && $gv_undo_info['affected_rows'] == 1) ? 'error' : 'lost');
     }
 
+    // totals computed again in this request take the exact deduction, the stored one is rounded
+    self::$booked_deductions[(int)$insert_id] = $this->deduction * (-1);
+
     return true;
   }
 
@@ -311,6 +317,10 @@ class ot_gv {
   function booked_credit() {
     if (!isset($_SESSION['tmp_oID']) || !is_numeric($_SESSION['tmp_oID'])) {
       return false;
+    }
+
+    if (isset(self::$booked_deductions[(int)$_SESSION['tmp_oID']])) {
+      return self::$booked_deductions[(int)$_SESSION['tmp_oID']];
     }
 
     // the deduction stored with the order, in the currency of the order;
