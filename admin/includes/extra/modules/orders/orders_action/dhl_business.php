@@ -88,7 +88,12 @@
 
       // keep the entry as long as DHL has not confirmed the cancellation
       if ($response['deleted'] !== true) {
-        $messageStack->add_session(sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$oID.'&tID='.(int)$tracking_id.'&action=deletetracking')), 'warning');
+        // the link of the text removes the entry and is posted, whichever language file brings the text
+        $dhl_delete_error = sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$oID.'&tID='.(int)$tracking_id.'&action=deletetracking'));
+        if (strpos($dhl_delete_error, 'postLink(') === false) {
+          $dhl_delete_error = preg_replace('/<a\s/i', '<a onclick="return postLink(this, event);" ', $dhl_delete_error, 1);
+        }
+        $messageStack->add_session($dhl_delete_error, 'warning');
       } else {
         xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
         $messageStack->add_session(TEXT_DHL_BUSINESS_DELETE_SUCCESS, 'success');

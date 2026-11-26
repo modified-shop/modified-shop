@@ -71,9 +71,28 @@
           break;
       
         case 'content_manager.php':
+          // products, content and e-mail content count their entries on their own, the type keeps them apart from the pages
+          $admin_log_content_types = array(
+            'delete_product' => 'product',
+            'update_products' => 'product',
+            'insert_products' => 'product',
+            'delete_content' => 'content',
+            'update_content_manager' => 'content',
+            'insert_content_manager' => 'content',
+            'delete_email' => 'email',
+            'update_email' => 'email',
+            'insert_email' => 'email',
+          );
+          $admin_log_content_type = '';
+          foreach (array('special', 'id') as $key) {
+            if (isset($_GET[$key]) && is_string($_GET[$key]) && isset($admin_log_content_types[$_GET[$key]])) {
+              $admin_log_content_type = $admin_log_content_types[$_GET[$key]];
+            }
+          }
           $sql_data_array = array(
             'customers_id' => (int)$_SESSION['customer_id'],
             'content_group' => (int)$_GET['coID'],
+            'type' => $admin_log_content_type,
           );
           break;
 
