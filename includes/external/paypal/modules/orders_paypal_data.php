@@ -585,7 +585,7 @@ if (isset($order) && is_object($order)) {
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_REFERENCE; ?></dt>
-                <dd><?php echo $instructions['reference']; ?></dd>
+                <dd><?php echo $paypal_api_text($instructions['reference']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_PAYDATE; ?></dt>
@@ -593,19 +593,19 @@ if (isset($order) && is_object($order)) {
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT; ?></dt>
-                <dd><?php echo $instructions['name']; ?></dd>
+                <dd><?php echo $paypal_api_text($instructions['name']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_HOLDER; ?></dt>
-                <dd><?php echo $instructions['holder']; ?></dd>
+                <dd><?php echo $paypal_api_text($instructions['holder']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_IBAN; ?></dt>
-                <dd><?php echo $instructions['iban']; ?></dd>
+                <dd><?php echo $paypal_api_text($instructions['iban']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_BIC; ?></dt>
-                <dd><?php echo $instructions['bic']; ?></dd>
+                <dd><?php echo $paypal_api_text($instructions['bic']); ?></dd>
               </dl>
             </div>
             <?php
@@ -675,7 +675,7 @@ if (isset($order) && is_object($order)) {
                         <?php if (isset($tracker['status'])) { ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_STATE; ?></dt>
-                          <dd><?php echo $tracker['status']; ?></dd>
+                          <dd><?php echo $paypal_api_text($tracker['status']); ?></dd>
                         </dl>
                         <?php } ?>
                         <dl class="pp_txstatus_data_list">
@@ -684,7 +684,7 @@ if (isset($order) && is_object($order)) {
                         </dl>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_ID; ?></dt>
-                          <dd><?php echo (($tracker['trackers_id'] != '') ? $tracker['trackers_id'] : $tracker['transaction_id']); ?></dd>
+                          <dd><?php echo $paypal_api_text((($tracker['trackers_id'] != '') ? $tracker['trackers_id'] : $tracker['transaction_id'])); ?></dd>
                         </dl>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRACKING_ACTION; ?></dt>

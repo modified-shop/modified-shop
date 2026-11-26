@@ -110,7 +110,7 @@ if (isset($order) && is_object($order)) {
                 ?>
                 <div class="pp_txstatus">
                   <div class="pp_txstatus_received pp_received_icon">
-                    <?php echo xtc_datetime_short($transaction['date']).' - '.$klarna_api_text($transaction['type']); ?>
+                    <?php echo xtc_datetime_short($transaction['date']).' - '.$transaction['type']; ?>
                   </div>
                   <div class="pp_txstatus_data">
                     <dl class="pp_txstatus_data_list">
