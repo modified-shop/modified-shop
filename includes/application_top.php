@@ -173,6 +173,11 @@ require_once (DIR_FS_INC.'xtc_get_category_data.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
+// redirects and links built from the request take the category path, so it is checked once, before the first of them
+if (isset($_GET['cPath'])) {
+  $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath');
+}
+
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
 

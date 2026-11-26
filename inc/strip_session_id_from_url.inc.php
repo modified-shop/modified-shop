@@ -10,8 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // removes every parameter PHP reads as the session id, also encoded ones like %4DODsid or +MODsid
-  function strip_session_id_from_url($url) {
+  // removes every parameter PHP reads as the session id, also encoded ones like %4DODsid or +MODsid, and those named in $params
+  function strip_session_id_from_url($url, $params = array()) {
     if (($pos = strpos($url, '?')) === false) {
       return $url;
     }
@@ -22,6 +22,9 @@
     }
     $parts = preg_split('/(['.preg_quote($separators, '/').'])/', substr($url, $pos + 1), -1, PREG_SPLIT_DELIM_CAPTURE);
 
+    // ajax.php?speed loads no session functions, the shop names its session MODsid
+    $strip = (array)$params;
+    $strip[] = (function_exists('xtc_session_name') ? xtc_session_name() : 'MODsid');
     $query = '';
     $kept = 0;
     foreach ($parts as $i => $part) {
@@ -31,7 +34,7 @@
       // parse_str() decodes the name exactly like the request does
       $param = array();
       parse_str($part, $param);
-      if (array_key_exists(xtc_session_name(), $param)) {
+      if (count(array_intersect(array_keys($param), $strip)) > 0) {
         continue;
       }
       $query .= (($kept > 0) ? $parts[$i - 1] : '').$part;
