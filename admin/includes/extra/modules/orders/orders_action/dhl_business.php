@@ -126,7 +126,8 @@
             $post = 'var posted = false,'
                    .' post = function (link, e) { posted = true; return postLink(link, e); },'
                    .' confirmPost = function (message, title, link) { posted = true; return confirmPostLink(message, title, link); };'
-                   .' if ((function (event, postLink, confirmPostLink, confirmLink) { '.$onclick.' }).call(this, event, post, confirmPost, confirmPost) === false'
+                   // the line break ends a line comment at the end of the handler
+                   .' if ((function (event, postLink, confirmPostLink, confirmLink) { '.$onclick."\n".' }).call(this, event, post, confirmPost, confirmPost) === false'
                    .' || posted || event.defaultPrevented) { return false; } '
                    .$post;
           }
