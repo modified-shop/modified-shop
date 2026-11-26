@@ -49,6 +49,7 @@
     'TEXT_EASYCREDIT_AUTHORIZATION_CONFLICT' => 'The authorisation is confirmed. The order status was set manually in the meantime and is left untouched.',
     'TEXT_EASYCREDIT_AUTHORIZATION_CONFLICT_FAILED' => 'The authorisation is no longer expected. The order status was set manually in the meantime and is left untouched.',
     'TEXT_EASYCREDIT_AUTHORIZATION_UNKNOWN' => 'The transaction can no longer be retrieved from the payment service. Please check its status there.',
+    'TEXT_EASYCREDIT_CHECKOUT_ABORTED' => 'The checkout ended during the authorisation, the order has no items. Please check the status of the transaction with the payment service and cancel a granted authorisation there.',
     'TEXT_EASYCREDIT_RATING_PLAN' => 'Financing from %s in %s installments with easyCredit-Ratenkauf',
     'TEXT_EASYCREDIT_RATING_PLAN_SHORT' => 'Financing from %s per month',
     'TEXT_EASYCREDIT_RATING_PLAN_CALC' => 'more information about installment purchase',

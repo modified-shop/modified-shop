@@ -46,9 +46,13 @@
     
     var $ecCheckout;
     var $ecMerchant;
+    var $ecTransactionApi;
+    var $ecLogger;
     var $WebshopDetails;
     var $total_amount;
     var $authorized;
+    var $preauthorized;
+    var $settled;
     protected static $task_support_ready = false;
     
     function __construct() {}
@@ -92,6 +96,7 @@
         new \Teambank\EasyCreditApiV3\Client($LoggingManager),
         $config
       );
+      $this->ecTransactionApi = $transactionApiInstance;
       
       $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_teambank_webshop_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', $class, strtolower($this->loglevel));
       $webshopApiInstance = new \Teambank\EasyCreditApiV3\Service\WebshopApi(
@@ -106,6 +111,7 @@
       );
 
       $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_teambank_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', $class, strtolower($this->loglevel));
+      $this->ecLogger = $LoggingManager;
       $this->ecCheckout = new \Teambank\EasyCreditApiV3\Integration\Checkout(
         $webshopApiInstance,
         $transactionApiInstance,
@@ -200,66 +206,267 @@
     }
   
     function before_process() {
-      if ($this->use_real_order_id !== true) {
+      // a repeated run works with the transaction of its order, the session may hold a newer one;
+      // only the module that started it can read it, easyCredit and easyInvoice have their own access
+      $binding = (isset($_SESSION['tmp_oID'])
+                  && isset($_SESSION['easycredit_order']['orders_id'])
+                  && $_SESSION['easycredit_order']['orders_id'] == (int)$_SESSION['tmp_oID']
+                  );
+      $bound = ($binding === true
+                && isset($_SESSION['easycredit_order']['code'])
+                && $_SESSION['easycredit_order']['code'] == $this->code
+                );
+      $session_storage = ((isset($_SESSION['easycredit']['storage'])) ? $_SESSION['easycredit']['storage'] : array());
+      if ($bound === true) {
+        // the session keeps the active transaction until a status read selects the one of the order
+        $_SESSION['easycredit']['storage'] = $_SESSION['easycredit_order']['storage'];
         $this->ecCheckout->restore();
-        $this->ecCheckout->loadTransaction();
-        $result = $this->ecCheckout->authorize($_SESSION['easycredit']['oID']);
-        
-        if ($result !== true) {
-          $this->payment_error_redirect();
-        }
+        $_SESSION['easycredit']['storage'] = $session_storage;
+      } else {
+        // the order does not exist yet, its id goes to easyCredit with the authorization
+        $this->ecCheckout->restore();
       }
+
+      // a run that ended in the authorization left a bare order row, a repeated run cannot complete it;
+      // a bound row was written by easyCredit or easyInvoice, whichever of them runs now
+      $bare_order = false;
+      if (isset($_SESSION['tmp_oID'])) {
+        $bare_order = $this->find_bare_order($_SESSION['tmp_oID'], '', $binding);
+      }
+      // without the transaction of the row no status can end it
+      if ($bare_order !== false && $bound !== true) {
+        $this->keep_bare_order($bare_order);
+      }
+
+      try {
+        $TransactionInformation = $this->read_transaction();
+      } catch (Exception $e) {
+        if ($bare_order !== false && $e instanceof \Teambank\EasyCreditApiV3\Integration\InitializationException) {
+          // OPEN, DECLINED or EXPIRED end the attempt and the bare row with it, a missing token says nothing
+          if (isset($_SESSION['easycredit_order']['storage']['token']) && $_SESSION['easycredit_order']['storage']['token'] != '') {
+            $this->remove_bare_order($_SESSION['tmp_oID']);
+          } else {
+            $this->keep_bare_order($bare_order);
+          }
+        }
+        // the transaction of a booked order has ended, a newer one in the session may still complete it, as on main
+        if ($bound === true
+            && $bare_order === false
+            && $e instanceof \Teambank\EasyCreditApiV3\Integration\InitializationException
+            && isset($session_storage['token'])
+            && $session_storage['token'] != ''
+            && (!isset($_SESSION['easycredit_order']['storage']['token']) || $session_storage['token'] != $_SESSION['easycredit_order']['storage']['token'])
+            )
+        {
+          unset($_SESSION['easycredit_order']);
+
+          return $this->before_process();
+        }
+        // without an answer a repeated run keeps its order for the next attempt, as main does
+        if (isset($_SESSION['tmp_oID'])) {
+          throw $e;
+        }
+        $this->payment_error_redirect();
+      }
+      if ($bare_order !== false) {
+        $this->keep_bare_order($bare_order);
+      }
+      if ($bound === true) {
+        $_SESSION['easycredit']['storage'] = $_SESSION['easycredit_order']['storage'];
+      }
+      // a repeated run may find the transaction authorized already
+      $this->preauthorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_PREAUTHORIZED);
+      $this->authorized = ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED);
       
       return false;
+    }
+
+    function authorize_order($orders_id, $ident_key = '') {
+      // checkout_process_order_insert: the outcome is settled before anything is booked for the order
+      $this->settled = true;
+      // no authorization for an order this attempt did not write
+      if ($this->find_bare_order($orders_id, $ident_key) === false) {
+        $this->abandon_attempt();
+      }
+      // a repeated run of this order needs its transaction, the payment page clears $_SESSION['easycredit']
+      $_SESSION['easycredit_order'] = array(
+        'orders_id' => (int)$orders_id,
+        'code' => $this->code,
+        'storage' => ((isset($_SESSION['easycredit']['storage'])) ? $_SESSION['easycredit']['storage'] : array()),
+      );
+      if ($this->authorized === true) {
+        return;
+      }
+
+      $answer = $this->send_authorization($orders_id);
+      $result = (($answer == 'refused') ? 'failed' : $this->poll_authorization($orders_id, ($answer == 'unclear')));
+      if ($result == 'failed') {
+        $this->remove_bare_order($orders_id);
+        $this->payment_error_redirect();
+      }
+      // still open after the window, the order stays pending and the task decides
+      $this->authorized = ($result == 'authorized');
+    }
+
+    function keep_bare_order($bare_order) {
+      // the row keeps the number easyCredit may know, a new order would also skip the stock check
+      $text = 'TEXT_'.strtoupper($this->code).'_CHECKOUT_ABORTED';
+      $sql_data_array = array(
+        'orders_id' => (int)$bare_order['orders_id'],
+        'orders_status_id' => (int)$bare_order['orders_status'],
+        'date_added' => 'now()',
+        'customer_notified' => 0,
+        'comments' => ((defined($text)) ? constant($text) : ''),
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      $this->abandon_attempt();
+    }
+
+    function abandon_attempt() {
+      // the old key still finds the row of this attempt, the next attempt needs its own
+      unset($_SESSION['tmp_oID'], $_SESSION['easycredit_order']);
+      $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+
+      $this->payment_error_redirect();
+    }
+
+    function find_bare_order($orders_id, $ident_key = '', $any_module = false) {
+      // a row of this customer and module without totals, nothing is booked for it yet
+      if ((int)$orders_id < 1) {
+        return false;
+      }
+      $check_query = xtc_db_query("SELECT o.orders_id,
+                                          o.orders_status
+                                     FROM ".TABLE_ORDERS." o
+                                LEFT JOIN ".TABLE_ORDERS_TOTAL." ot
+                                          ON ot.orders_id = o.orders_id
+                                    WHERE o.orders_id = '".(int)$orders_id."'
+                                      AND o.customers_id = '".(int)$_SESSION['customer_id']."'
+                                      ".(($any_module !== true) ? "AND o.payment_method = '".xtc_db_input($this->code)."'" : "")."
+                                      ".(($ident_key != '') ? "AND o.orders_ident_key = '".xtc_db_input($ident_key)."'" : "")."
+                                      AND ot.orders_id IS NULL");
+      return ((xtc_db_num_rows($check_query) > 0) ? xtc_db_fetch_array($check_query) : false);
+    }
+
+    function remove_bare_order($orders_id) {
+      // nothing is booked for it yet, and the session must not lead a repeated run back to it
+      require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+      xtc_remove_order((int)$orders_id);
+      unset($_SESSION['tmp_oID'], $_SESSION['easycredit_order']);
+    }
+
+    function send_authorization($orders_id) {
+      // easyCredit shows the order id of the authorization as the order number
+      try {
+        $this->ecTransactionApi->apiPaymentV3TransactionTechnicalTransactionIdAuthorizationPostWithHttpInfo(
+          $_SESSION['easycredit']['storage']['token'],
+          new \Teambank\EasyCreditApiV3\Model\AuthorizationRequest(array('orderId' => (string)$orders_id))
+        );
+        return 'accepted';
+      } catch (\Throwable $e) {
+        try {
+          $this->ecLogger->warning($e);
+        } catch (\Throwable $log_error) {
+          // an unwritable log must not stop the checkout between the order row and its bookings
+        }
+        // a 409 may mean the transaction is authorized or being authorized already
+        $code = (($e instanceof \Teambank\EasyCreditApiV3\ApiException) ? (int)$e->getCode() : 0);
+        return (($code >= 400 && $code < 500 && $code != 409) ? 'refused' : 'unclear');
+      } finally {
+        $this->keep_db_alive();
+      }
+    }
+
+    function read_transaction() {
+      // an answer may take the whole client timeout, the queries after it need a live link
+      try {
+        return $this->ecCheckout->loadTransaction();
+      } finally {
+        $this->keep_db_alive();
+      }
+    }
+
+    function pause($microseconds) {
+      // the database and the checkout lock get a query at least every 5 s
+      while ($microseconds > 0) {
+        $step = min($microseconds, 5000000);
+        usleep($step);
+        $microseconds -= $step;
+        $this->keep_db_alive();
+      }
+    }
+
+    function poll_authorization($orders_id, $retry) {
+      // microseconds, the back-off grows by half a second per attempt
+      $wait = 0;
+      for ($i = 0; $i <= 10; $i ++) {
+        $wait += $i * 500000;
+        $this->pause($wait);
+
+        try {
+          $TransactionInformation = $this->read_transaction();
+        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
+          // the SDK throws for DECLINED and EXPIRED instead of returning the status
+          return 'failed';
+        } catch (\Throwable $e) {
+          // no answer is not a negative one, a still pending order goes to the task
+          continue;
+        }
+        if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
+          return 'authorized';
+        }
+        // after a lost answer the first request may never have arrived, the second answer cannot remove anything
+        if ($retry === true && $i >= 3) {
+          $retry = false;
+          $this->send_authorization($orders_id);
+        }
+      }
+      return 'pending';
+    }
+    
+    function keep_db_alive() {
+      // the polling may outlast wait_timeout, the bookings follow it and the checkout lock must hold
+      static $reconnected = false;
+
+      foreach (array('db_link', 'checkout_lock_link') as $link) {
+        if (!isset($GLOBALS[$link]) || !is_object($GLOBALS[$link])) {
+          continue;
+        }
+        try {
+          $alive = (@mysqli_query($GLOBALS[$link], 'SELECT 1') !== false);
+        } catch (\Throwable $e) {
+          $alive = false;
+        }
+        // one attempt per request, a database that is really down must not hold the checkout
+        if ($alive !== true && $link == 'db_link' && $reconnected !== true) {
+          $reconnected = true;
+          try {
+            xtc_db_connect();
+          } catch (\Throwable $e) {
+            // the queries after the polling fail as they would on main
+          }
+        }
+      }
     }
     
     function before_send_order() {
       global $insert_id;
       
-      if ($this->use_real_order_id === true) {
-        $this->ecCheckout->restore();
-        
-        $TransactionInformation = $this->ecCheckout->loadTransaction();
-        $Transaction = $TransactionInformation->getTransaction();
-        $orderDetails = $Transaction->getOrderDetails();
-        $orderDetails->setOrderId($insert_id);
-        
-        $this->ecCheckout->update($Transaction);
-
-        $this->ecCheckout->loadTransaction();
-        $result = $this->ecCheckout->authorize($insert_id);
-        
-        if ($result !== true) {
+      // a repeated run skips the insert, its order is booked and a failure is left to the polling
+      if ($this->settled !== true && $this->authorized !== true) {
+        if ($this->preauthorized === true) {
+          $this->send_authorization($insert_id);
+        }
+        $result = $this->poll_authorization($insert_id, false);
+        if ($result == 'failed') {
           require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
           xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+          unset($_SESSION['tmp_oID'], $_SESSION['easycredit_order']);
 
           $this->payment_error_redirect();
         }
-      }
-
-      $this->authorized = false;
-      // microseconds, the back-off grows by half a second per attempt
-      $wait = 0;
-      for ($i = 0; $i <= 10; $i ++) {
-        $wait += $i * 500000;
-        usleep($wait);
-  
-        try {
-          $TransactionInformation = $this->ecCheckout->loadTransaction();
-        } catch (\Teambank\EasyCreditApiV3\Integration\InitializationException $e) {
-          // the SDK throws for DECLINED and EXPIRED instead of returning the status
-          require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-          xtc_remove_order((int)$insert_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
-          
-          $this->payment_error_redirect();
-        } catch (Exception $e) {
-          // no answer is not a negative one, a still pending order goes to the task
-          continue;
-        }
-        if ($TransactionInformation->getStatus() == \Teambank\EasyCreditApiV3\Model\TransactionInformation::STATUS_AUTHORIZED) {
-          $this->authorized = true;
-          break;
-        }
+        $this->authorized = ($result == 'authorized');
       }
 
       // the transaction can still be authorized after the polling window, so keep
@@ -322,7 +529,7 @@
       
       $this->ecCheckout->clear();
       $this->ecCheckout->save();
-      unset($_SESSION['easycredit']);
+      unset($_SESSION['easycredit'], $_SESSION['easycredit_order']);
     }
 
     function get_error() {

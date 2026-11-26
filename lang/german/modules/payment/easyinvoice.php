@@ -49,6 +49,7 @@
     'TEXT_EASYINVOICE_AUTHORIZATION_CONFLICT' => 'Die Autorisierung liegt vor. Der Bestellstatus wurde inzwischen manuell gesetzt und bleibt daher unangetastet.',
     'TEXT_EASYINVOICE_AUTHORIZATION_CONFLICT_FAILED' => 'Die Autorisierung ist nicht mehr zu erwarten. Der Bestellstatus wurde inzwischen manuell gesetzt und bleibt daher unangetastet.',
     'TEXT_EASYINVOICE_AUTHORIZATION_UNKNOWN' => 'Der Vorgang ist beim Zahlungsdienst nicht mehr abrufbar. Bitte den Status dort kontrollieren.',
+    'TEXT_EASYINVOICE_CHECKOUT_ABORTED' => 'Der Checkout wurde bei der Autorisierung abgebrochen, zur Bestellung gibt es keine Artikel. Bitte den Status des Vorgangs beim Zahlungsdienst kontrollieren und eine erteilte Autorisierung dort stornieren.',
     'TEXT_EASYINVOICE_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit easyCredit-Rechnungskauf',
     'TEXT_EASYINVOICE_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat',
     'TEXT_EASYINVOICE_RATING_PLAN_CALC' => 'mehr Infos zum Rechnungskauf',
