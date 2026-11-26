@@ -358,9 +358,13 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     // the order keeps its row and totals with a note, a provider may know its number already and a debit
     // that could not be undone needs it to be found, nothing else is booked for it yet
     $credit_note = (($credit_booked === false) ? TEXT_GV_CHECKOUT_STOPPED_BALANCE : (($credit_booked === 'lost') ? TEXT_GV_CHECKOUT_STOPPED_LOST : TEXT_GV_CHECKOUT_STOPPED_FAILED));
+    // status 0 keeps the stopped order out of the customer account and marks it in the administration
+    xtc_db_query("UPDATE ".TABLE_ORDERS."
+                     SET orders_status = '0'
+                   WHERE orders_id = '".(int)$insert_id."'");
     $sql_data_array = array(
       'orders_id' => $insert_id,
-      'orders_status_id' => (($tmp == true) ? $orders_status_id : $order->info['order_status']),
+      'orders_status_id' => 0,
       'date_added' => 'now()',
       'customer_notified' => 0,
       'comments' => $credit_note,
@@ -370,6 +374,12 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     // the old key still finds this order, the next attempt needs its own
     unset($_SESSION['tmp_oID']);
     $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+
+    // the balance may cover less now, so the next confirmation decides on the payment again
+    unset($_SESSION['credit_covers']);
+    if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'no_payment') {
+      unset($_SESSION['payment']);
+    }
 
     if ($checkout_lock != '') {
       xtc_db_close('checkout_lock_link');

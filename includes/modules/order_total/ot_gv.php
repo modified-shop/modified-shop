@@ -182,54 +182,67 @@ class ot_gv {
   function apply_credit() {
     global $insert_id;
 
-    if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
-      // book_credit() debits before the payment, only an order written before that still needs it
-      $gv_query = xtc_db_query("SELECT ot.value,
-                                       o.currency,
-                                       o.currency_value
-                                  FROM ".TABLE_ORDERS_TOTAL." ot
-                                  JOIN ".TABLE_ORDERS." o
-                                       ON o.orders_id = ot.orders_id
-                             LEFT JOIN ".TABLE_ORDERS_BOOKINGS." ob
-                                       ON ob.orders_id = ot.orders_id
-                                          AND ob.class = '".$this->code."'
-                                 WHERE ot.orders_id = '".(int)$insert_id."'
-                                   AND ot.class = '".$this->code."'
-                                   AND o.customers_id = '".(int)$_SESSION['customer_id']."'
-                                   AND ob.orders_id IS NULL");
-      if (xtc_db_num_rows($gv_query) > 0) {
-        $gv_order = xtc_db_fetch_array($gv_query);
-        // the deduction the order carries, at the rate of the order
-        $gv_deduction = (float)$gv_order['value'] * (-1);
-        if ($gv_order['currency'] != DEFAULT_CURRENCY && $gv_order['currency_value'] > 0) {
-          $gv_deduction = $gv_deduction / (float)$gv_order['currency_value'];
-        }
-        $gv_deduction = number_format($gv_deduction, 4, '.', '');
-        if ((float)$gv_deduction > 0) {
-          // the provider has the reduced total already, so the debit is taken as before this change
-          xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
-                           SET amount = amount - ".$gv_deduction."
-                         WHERE customer_id = '".(int)$_SESSION['customer_id']."'", 'db_link', $gv_query_info);
-          if (is_array($gv_query_info) && $gv_query_info['affected_rows'] > 0) {
-            $this->insert_booking($gv_deduction);
-          }
+    // book_credit() debits before the payment, only an order written before that still needs it here;
+    // the stored order decides, not the session
+    $gv_query = xtc_db_query("SELECT ot.value,
+                                     o.currency_value,
+                                     o.orders_status
+                                FROM ".TABLE_ORDERS_TOTAL." ot
+                                JOIN ".TABLE_ORDERS." o
+                                     ON o.orders_id = ot.orders_id
+                           LEFT JOIN ".TABLE_ORDERS_BOOKINGS." ob
+                                     ON ob.orders_id = ot.orders_id
+                                        AND ob.class = '".$this->code."'
+                               WHERE ot.orders_id = '".(int)$insert_id."'
+                                 AND ot.class = '".$this->code."'
+                                 AND o.customers_id = '".(int)$_SESSION['customer_id']."'
+                                 AND ob.orders_id IS NULL");
+    if (xtc_db_num_rows($gv_query) > 0) {
+      $gv_order = xtc_db_fetch_array($gv_query);
+      // the deduction the order carries, at the rate of the order
+      $gv_deduction = number_format($this->to_default_currency((float)$gv_order['value'] * (-1), $gv_order['currency_value']), 4, '.', '');
+      if ((float)$gv_deduction > 0) {
+        // the provider has the reduced total already, so the debit is taken as before this change
+        xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER."
+                         SET amount = amount - ".$gv_deduction."
+                       WHERE customer_id = '".(int)$_SESSION['customer_id']."'", 'db_link', $gv_query_info);
+        $gv_settled = (is_array($gv_query_info) && $gv_query_info['affected_rows'] == 1 && $this->insert_booking($gv_deduction) !== false);
+        if ($gv_settled !== true) {
+          // the order is paid and stays, the shop gets a note to check the balance
+          $sql_data_array = array(
+            'orders_id' => (int)$insert_id,
+            'orders_status_id' => (int)$gv_order['orders_status'],
+            'date_added' => 'now()',
+            'customer_notified' => 0,
+            'comments' => sprintf(TEXT_GV_SETTLEMENT_FAILED, $gv_deduction),
+          );
+          xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
       }
-      unset($_SESSION['cot_gv']);
     }
+    unset($_SESSION['cot_gv']);
   }
 
   function book_credit() {
-    global $xtPrice;
+    global $insert_id;
 
     if (!isset($_SESSION['cot_gv']) || $_SESSION['cot_gv'] != true) {
       return true;
     }
 
     // one decimal string for the debit and its booking
-    $gv_deduction = number_format((float)$xtPrice->xtcRemoveCurr($this->deduction * (-1)), 4, '.', '');
+    $gv_deduction = number_format($this->to_default_currency($this->deduction * (-1)), 4, '.', '');
     if ((float)$gv_deduction <= 0) {
       return true;
+    }
+
+    // the order carries its deduction before anything is debited, the totals computed later are taken from it
+    $gv_query = xtc_db_query("SELECT value
+                                FROM ".TABLE_ORDERS_TOTAL."
+                               WHERE orders_id = '".(int)$insert_id."'
+                                 AND class = '".$this->code."'");
+    if ($gv_query === false || xtc_db_num_rows($gv_query) < 1) {
+      return 'error';
     }
 
     // one statement that only takes a balance still covering it, so no other checkout spends it twice
@@ -237,7 +250,11 @@ class ot_gv {
                      SET amount = amount - ".$gv_deduction."
                    WHERE customer_id = '".(int)$_SESSION['customer_id']."'
                      AND amount >= ".$gv_deduction, 'db_link', $gv_query_info);
-    if (!is_array($gv_query_info) || $gv_query_info['affected_rows'] != 1) {
+    // a failed statement debited nothing, no affected row means the balance does not cover it
+    if (!is_array($gv_query_info) || $gv_query_info['success'] !== true) {
+      return 'error';
+    }
+    if ($gv_query_info['affected_rows'] != 1) {
       return false;
     }
 
@@ -251,6 +268,17 @@ class ot_gv {
     }
 
     return true;
+  }
+
+  function to_default_currency($amount, $rate = null) {
+    global $xtPrice;
+
+    // the counterpart of xtcCalculateCurr(), which applies the rate of the default currency as well
+    if ($rate === null) {
+      $rate = $xtPrice->currencies[$xtPrice->actualCurr]['value'];
+    }
+
+    return (((float)$rate > 0) ? (float)$amount / (float)$rate : (float)$amount);
   }
 
   function insert_booking($gv_deduction) {
@@ -298,12 +326,8 @@ class ot_gv {
                                 FROM ".TABLE_COUPON_GV_CUSTOMER." 
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
-    $gv_payment_amount = (isset($gv_result['amount']) ? $gv_result['amount'] : 0);
-    // the balance is in the default currency, the order total in the currency of the customer;
-    // like xtcRemoveCurr() the default currency keeps the amount as it is
-    if (DEFAULT_CURRENCY != $xtPrice->actualCurr) {
-      $gv_payment_amount = $xtPrice->xtcCalculateCurr($gv_payment_amount);
-    }
+    // the balance is in the default currency, the order total in the currency of the customer
+    $gv_payment_amount = (isset($gv_result['amount']) ? $xtPrice->xtcCalculateCurr($gv_result['amount']) : 0);
     
     if (($amount - $gv_payment_amount) <= 0) {
       $gv_payment_amount = $amount;
