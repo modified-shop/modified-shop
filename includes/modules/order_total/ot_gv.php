@@ -359,8 +359,9 @@ class ot_gv {
       return max($credit, (float)$total);
     }
 
-    // without a conversion a balance that may pay the whole order is deducted as it is, as before this change
-    if ($total !== null && (float)$xtPrice->currencies[$xtPrice->actualCurr]['value'] == 1) {
+    // without a conversion the balance is taken as it is, as before this change;
+    // where it is more than the voucher may cover, calculate_credit() caps it at whole cents
+    if ((float)$xtPrice->currencies[$xtPrice->actualCurr]['value'] == 1) {
       return $credit;
     }
 
