@@ -171,7 +171,8 @@ if (ACTIVATE_GIFT_SYSTEM == 'true'
 {
   $credit_selection = $order_total_modules->credit_selection();
   for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
-    $credit_amount =  $xtPrice->xtcCalculateCurr($credit_selection[$i]['credit_amount']);
+    // the voucher module values its balance as the checkout deducts it
+    $credit_amount = ((isset($GLOBALS[$credit_selection[$i]['id']]) && method_exists($GLOBALS[$credit_selection[$i]['id']], 'credit_in_order_currency')) ? $GLOBALS[$credit_selection[$i]['id']]->credit_in_order_currency($credit_selection[$i]['credit_amount']) : $xtPrice->xtcCalculateCurr($credit_selection[$i]['credit_amount']));
     $credit_order_total = $xtPrice->xtcFormat($credit_selection[$i]['credit_order_total'], false);
     $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $xtPrice->xtcFormat($credit_amount, false), true, 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$total.'">';
