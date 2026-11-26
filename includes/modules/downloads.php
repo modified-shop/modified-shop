@@ -41,11 +41,12 @@ if (isset($send_order)) {
     $order_status = $orders['orders_status'];
   }
 } elseif (basename($PHP_SELF) != FILENAME_ACCOUNT_HISTORY_INFO) {
-  // Get last order id for checkout_success
+  // Get last order id for checkout_success, a checkout stopped at its voucher debit is none
   $orders_query = xtc_db_query("SELECT orders_id, 
                                        orders_status 
                                   FROM ".TABLE_ORDERS." 
                                  WHERE customers_id = '".(int)$customer_id."' 
+                                   AND NOT (orders_status = '0' AND orders_date_finished IS NULL)
                               ORDER BY orders_id desc limit 1");
   $orders = xtc_db_fetch_array($orders_query);
   $last_order = $orders['orders_id'];

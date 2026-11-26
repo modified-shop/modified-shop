@@ -170,9 +170,10 @@ switch ($current_page) {
 	case FILENAME_CHECKOUT_SUCCESS:
 		$emos->addOrderProcess("6_Erfolg");
 		// billing daten
+		// a checkout stopped at its voucher debit is no order to report
 		$last_orders_query = xtc_db_query("select orders_id, customers_city, customers_postcode, customers_country from "
 					. TABLE_ORDERS . " where customers_id = '" . (int)$_SESSION['customer_id']
-					. "' order by date_purchased desc limit 1");
+					. "' and not (orders_status = '0' and orders_date_finished is null) order by date_purchased desc limit 1");
 		$last_orders = xtc_db_fetch_array($last_orders_query);
 		// basket daten
 		$last_orders_products_query = xtc_db_query("select products_id, products_quantity, products_price, products_tax from "
