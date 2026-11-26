@@ -354,6 +354,13 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   // so the provider never gets a deduction the balance does not cover
   $credit_booked = $order_total_modules->book_credit();
   if ($credit_booked !== true) {
+    // a language pack without these texts gets the English ones
+    defined('TEXT_GV_CHECKOUT_STOPPED_BALANCE') OR define('TEXT_GV_CHECKOUT_STOPPED_BALANCE', 'The checkout was stopped because the credit balance no longer covered the deduction. No balance was debited, the order has no items. Please cancel an authorization at the payment service.');
+    defined('TEXT_GV_CHECKOUT_STOPPED_FAILED') OR define('TEXT_GV_CHECKOUT_STOPPED_FAILED', 'The checkout was stopped because the credit deduction could not be recorded. The balance is unchanged, the order has no items. Please cancel an authorization at the payment service.');
+    defined('TEXT_GV_CHECKOUT_STOPPED_LOST') OR define('TEXT_GV_CHECKOUT_STOPPED_LOST', 'The checkout was stopped because the credit deduction could neither be recorded nor booked back. The deduction of this order is debited from the balance of the customer and has to be credited again, the order has no items. Please cancel an authorization at the payment service.');
+    defined('ERROR_GV_BALANCE_CHANGED') OR define('ERROR_GV_BALANCE_CHANGED', 'Your credit balance has changed and no longer covers the deduction of this order. Please check your payment.');
+    defined('ERROR_GV_BOOKING_FAILED') OR define('ERROR_GV_BOOKING_FAILED', 'Your credit balance could not be applied just now and is unchanged. Please try again.');
+    defined('ERROR_GV_BOOKING_LOST') OR define('ERROR_GV_BOOKING_LOST', 'Your credit balance could not be applied just now. Please contact us so that we can check your balance.');
     // another checkout spent the balance after the totals were computed, or the debit could not be recorded;
     // the order keeps its row and totals with a note, a provider may know its number already and a debit
     // that could not be undone needs it to be found, nothing else is booked for it yet

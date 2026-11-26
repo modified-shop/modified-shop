@@ -293,6 +293,8 @@
                                              LIMIT 1");
             $revert_open = (xtc_db_num_rows($bookings_query) > 0);
           }
+          // a language pack without this text gets the English one
+          defined('TEXT_INFO_REVERT_ORDER_BOOKINGS_OPEN') OR define('TEXT_INFO_REVERT_ORDER_BOOKINGS_OPEN', 'The checkout of this order was not completed, it still holds used voucher balance or specials quantity. Check the payment before you decide whether to revert them.');
 
           switch ($action) {
             case 'storno' :

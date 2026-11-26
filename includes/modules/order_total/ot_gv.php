@@ -224,6 +224,8 @@ class ot_gv {
           $gv_settled = false;
         }
         if ($gv_settled !== true) {
+          // a language pack without this text gets the English one
+          defined('TEXT_GV_SETTLEMENT_FAILED') OR define('TEXT_GV_SETTLEMENT_FAILED', 'The credit deduction of %s (default currency) for this order could not be booked completely. Please check the balance of the customer.');
           // the order is paid and stays, the shop gets a note to check the balance
           $sql_data_array = array(
             'orders_id' => (int)$insert_id,
