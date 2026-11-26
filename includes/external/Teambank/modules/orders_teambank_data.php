@@ -16,9 +16,9 @@
     if (!function_exists('xtc_date_short')) {
       require_once(DIR_FS_INC.'xtc_date_short.inc.php');
     }
-    // the texts of the Teambank answer are UTF-8: signs beyond ASCII go as numeric references, which fit any charset of the panel
+    // the texts of the Teambank answer are UTF-8 and printed as text: signs beyond ASCII go as numeric references, which fit any charset of the panel
     $teambank_api_text = function ($text) {
-      return mb_encode_numericentity((string)$text, array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
+      return mb_encode_numericentity(htmlspecialchars((string)$text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), array(0x80, 0x10FFFF, 0, 0x1FFFFF), 'UTF-8');
     };
 
     // include needed classes

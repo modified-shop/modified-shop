@@ -40,6 +40,11 @@ if (isset($order) && is_object($order)) {
     'paypalbancontact',
   );
   
+  // the texts of the PayPal answer are printed as text
+  $paypal_api_text = function ($text) {
+    return encode_htmlspecialchars((string)$text, ENT_QUOTES);
+  };
+
   if (in_array($order->info['payment_method'], $orders_v1_array)
       || in_array($order->info['payment_method'], $orders_v2_array)
       ) 
@@ -84,26 +89,26 @@ if (isset($order) && is_object($order)) {
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_METHOD; ?></dt>
-                <dd><?php echo $admin_info_data['payment_method']; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data['payment_method']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_OWNER; ?></dt>
-                <dd><?php echo $paypal->decode_utf8($admin_info_data['address']['name']); ?></dd>
+                <dd><?php echo $paypal_api_text($paypal->decode_utf8($admin_info_data['address']['name'])); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_EMAIL; ?></dt>
-                <dd><?php echo $admin_info_data['email_address']; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data['email_address']); ?></dd>
               </dl>
               <?php if ($admin_info_data['account_status'] != '') { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_STATE; ?></dt>
-                <dd><?php echo $admin_info_data['account_status']; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data['account_status']); ?></dd>
               </dl>
               <?php } ?>
               <?php if ($admin_info_data['intent'] != '') { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_INTENT; ?></dt>
-                <dd><?php echo $admin_info_data['intent']; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data['intent']); ?></dd>
               </dl>
               <?php } ?>
               <?php if ($admin_info_data['total'] > 0) { ?>
@@ -114,11 +119,11 @@ if (isset($order) && is_object($order)) {
               <?php } ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
-                <dd><?php echo $admin_info_data['state']; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data['state']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
-                <dd><?php echo $admin_info_data['state']; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data['state']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACTION; ?></dt>
@@ -150,15 +155,15 @@ if (isset($order) && is_object($order)) {
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_BILLING_CYCLES_COMPLETED; ?></dt>
-                  <dd><?php echo $admin_info_data['billing']['cycle_executions']['cycles_completed']; ?></dd>
+                  <dd><?php echo $paypal_api_text($admin_info_data['billing']['cycle_executions']['cycles_completed']); ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_BILLING_CYCLES_REMAINING; ?></dt>
-                  <dd><?php echo $admin_info_data['billing']['cycle_executions']['cycles_remaining']; ?></dd>
+                  <dd><?php echo $paypal_api_text($admin_info_data['billing']['cycle_executions']['cycles_remaining']); ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_BILLING_CYCLES_TOTAL; ?></dt>
-                  <dd><?php echo $admin_info_data['billing']['cycle_executions']['total_cycles']; ?></dd>
+                  <dd><?php echo $paypal_api_text($admin_info_data['billing']['cycle_executions']['total_cycles']); ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_BILLING_TIME_NEXT; ?></dt>
@@ -170,7 +175,7 @@ if (isset($order) && is_object($order)) {
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_BILLING_FAILED; ?></dt>
-                  <dd><?php echo $admin_info_data['billing']['failed_payments_count']; ?></dd>
+                  <dd><?php echo $paypal_api_text($admin_info_data['billing']['failed_payments_count']); ?></dd>
                 </dl>
               </div>
               <div style="clear:both;"></div>
@@ -201,7 +206,7 @@ if (isset($order) && is_object($order)) {
                   ?>
                   <div class="pp_txstatus">
                     <div class="pp_txstatus_received pp_received_icon">
-                      <?php echo xtc_datetime_short($admin_info_data['transactions'][$t]['relatedResource'][$i]['date']) . ' ' . $admin_info_data['transactions'][$t]['relatedResource'][$i]['type']; ?>
+                      <?php echo xtc_datetime_short($admin_info_data['transactions'][$t]['relatedResource'][$i]['date']) . ' ' . $paypal_api_text($admin_info_data['transactions'][$t]['relatedResource'][$i]['type']); ?>
                     </div>
                     <div class="pp_txstatus_data">
                       <?php
@@ -209,7 +214,7 @@ if (isset($order) && is_object($order)) {
                       ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_PAYMENT; ?></dt>
-                          <dd><?php echo $admin_info_data['transactions'][$t]['relatedResource'][$i]['payment']; ?></dd>
+                          <dd><?php echo $paypal_api_text($admin_info_data['transactions'][$t]['relatedResource'][$i]['payment']); ?></dd>
                         </dl>
                       <?php
                       }
@@ -217,14 +222,14 @@ if (isset($order) && is_object($order)) {
                       ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_REASON; ?></dt>
-                          <dd><?php echo $admin_info_data['transactions'][$t]['relatedResource'][$i]['reason']; ?></dd>
+                          <dd><?php echo $paypal_api_text($admin_info_data['transactions'][$t]['relatedResource'][$i]['reason']); ?></dd>
                         </dl>
                       <?php
                       }
                       ?>
                       <dl class="pp_txstatus_data_list">
                         <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_STATE; ?></dt>
-                        <dd><?php echo $admin_info_data['transactions'][$t]['relatedResource'][$i]['state']; ?></dd>
+                        <dd><?php echo $paypal_api_text($admin_info_data['transactions'][$t]['relatedResource'][$i]['state']); ?></dd>
                       </dl>
                       <dl class="pp_txstatus_data_list">
                         <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_TOTAL; ?></dt>
@@ -242,7 +247,7 @@ if (isset($order) && is_object($order)) {
                       ?>
                       <dl class="pp_txstatus_data_list">
                         <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_ID; ?></dt>
-                        <dd><?php echo $admin_info_data['transactions'][$t]['relatedResource'][$i]['id']; ?></dd>
+                        <dd><?php echo $paypal_api_text($admin_info_data['transactions'][$t]['relatedResource'][$i]['id']); ?></dd>
                       </dl>
                     </div>
                   </div>
@@ -356,16 +361,16 @@ if (isset($order) && is_object($order)) {
               <?php if (isset($admin_info_data->payer)) { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_OWNER; ?></dt>
-                <dd><?php echo $paypal->decode_utf8($admin_info_data->payer->name->given_name).' '.$paypal->decode_utf8($admin_info_data->payer->name->surname); ?></dd>
+                <dd><?php echo $paypal_api_text($paypal->decode_utf8($admin_info_data->payer->name->given_name).' '.$paypal->decode_utf8($admin_info_data->payer->name->surname)); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_EMAIL; ?></dt>
-                <dd><?php echo $admin_info_data->payer->email_address; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data->payer->email_address); ?></dd>
               </dl>
               <?php } ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_INTENT; ?></dt>
-                <dd><?php echo $admin_info_data->intent; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data->intent); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_TOTAL; ?></dt>
@@ -373,11 +378,11 @@ if (isset($order) && is_object($order)) {
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
-                <dd><?php echo $admin_info_data->status; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data->status); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ID; ?></dt>
-                <dd><?php echo $admin_info_data->id; ?></dd>
+                <dd><?php echo $paypal_api_text($admin_info_data->id); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACTION; ?></dt>
@@ -430,7 +435,7 @@ if (isset($order) && is_object($order)) {
                     ?>
                     <div class="pp_txstatus">
                       <div class="pp_txstatus_received pp_received_icon">
-                        <?php echo xtc_datetime_short($payment[$p]->create_time) . ' ' . $type; ?>
+                        <?php echo xtc_datetime_short($payment[$p]->create_time) . ' ' . $paypal_api_text($type); ?>
                       </div>
                       <div class="pp_txstatus_data">
                         <?php
@@ -438,14 +443,14 @@ if (isset($order) && is_object($order)) {
                         ?>
                           <dl class="pp_txstatus_data_list">
                             <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_REASON; ?></dt>
-                            <dd><?php echo $payment[$p]->status_details->reason; ?></dd>
+                            <dd><?php echo $paypal_api_text($payment[$p]->status_details->reason); ?></dd>
                           </dl>
                         <?php
                         }
                         ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_STATE; ?></dt>
-                          <dd><?php echo $payment[$p]->status; ?></dd>
+                          <dd><?php echo $paypal_api_text($payment[$p]->status); ?></dd>
                         </dl>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_TOTAL; ?></dt>
@@ -471,7 +476,7 @@ if (isset($order) && is_object($order)) {
                         ?>
                         <dl class="pp_txstatus_data_list">
                           <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_ID; ?></dt>
-                          <dd><?php echo $payment[$p]->id; ?></dd>
+                          <dd><?php echo $paypal_api_text($payment[$p]->id); ?></dd>
                         </dl>
                       </div>
                     </div>
