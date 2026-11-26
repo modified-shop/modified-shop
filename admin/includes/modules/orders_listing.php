@@ -277,8 +277,8 @@
           $heading = array ();
           $contents = array ();
 
-          // a checkout that never completed still holds what it booked, so its removal gives it back by default
-          $revert_checked = false;
+          // a checkout that never completed may still hold what it booked, the payment decides whether it goes back
+          $revert_open = false;
           if (in_array($action, array('storno', 'delete'))
               && isset($oInfo)
               && is_object($oInfo)
@@ -291,7 +291,7 @@
                                              WHERE orders_id = '".(int)$oInfo->orders_id."'
                                                AND value != 0
                                              LIMIT 1");
-            $revert_checked = (xtc_db_num_rows($bookings_query) > 0);
+            $revert_open = (xtc_db_num_rows($bookings_query) > 0);
           }
 
           switch ($action) {
@@ -301,7 +301,7 @@
               $contents[] = array ('text' => TEXT_INFO_REVERSE_INTRO.'<br /><br /><b>'.encode_htmlspecialchars($oInfo->customers_name).'</b><br /><b>'.TABLE_HEADING_ORDERS_ID.'</b>: '.$oInfo->orders_id);
               $contents[] = array ('text' => HEADING_TITLE_STATUS . '<br />' . xtc_draw_pull_down_menu('status_storno', array_merge(array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses), $oInfo->orders_status));
               $contents[] = array ('text' => xtc_draw_checkbox_field('restock').' '.TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-              $contents[] = array ('text' => xtc_draw_checkbox_field('revert', '', $revert_checked).' '.TEXT_INFO_REVERT_ORDER_BOOKINGS);
+              $contents[] = array ('text' => xtc_draw_checkbox_field('revert').' '.TEXT_INFO_REVERT_ORDER_BOOKINGS.(($revert_open === true) ? '<br />'.TEXT_INFO_REVERT_ORDER_BOOKINGS_OPEN : ''));
               $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'. BUTTON_REVERSE .'"><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id).'">' . BUTTON_CANCEL . '</a>');
               break;
             case 'delete' :
@@ -309,7 +309,7 @@
               $contents = array ('form' => xtc_draw_form('orders', FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=deleteconfirm'));
               $contents[] = array ('text' => TEXT_INFO_DELETE_INTRO.'<br /><br /><b>'.encode_htmlspecialchars($oInfo->customers_name).'</b><br /><b>'.TABLE_HEADING_ORDERS_ID.'</b>: '.$oInfo->orders_id);
               $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('restock').' '.TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-              $contents[] = array ('text' => xtc_draw_checkbox_field('revert', '', $revert_checked).' '.TEXT_INFO_REVERT_ORDER_BOOKINGS);
+              $contents[] = array ('text' => xtc_draw_checkbox_field('revert').' '.TEXT_INFO_REVERT_ORDER_BOOKINGS.(($revert_open === true) ? '<br />'.TEXT_INFO_REVERT_ORDER_BOOKINGS_OPEN : ''));
               $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'. BUTTON_DELETE .'"><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id).'">' . BUTTON_CANCEL . '</a>');
               break;
             default :
