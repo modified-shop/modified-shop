@@ -447,9 +447,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       if (xtc_db_num_rows($specials_query)) {
         $specials = xtc_db_fetch_array($specials_query);
         if ($specials['specials_quantity'] != 0) {
-          // read by the zettle hook in checkout_process_products_end
-          $specials_quantity = ($specials['specials_quantity'] - $order->products[$i]['qty']);
-
           // one statement, so two checkouts at the same time both take their units
           // specials_sold_out marks a special the checkout switched off, assigned first to read the old values
           xtc_db_query("UPDATE ".TABLE_SPECIALS." 
@@ -468,6 +465,17 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
               'value' => (int)$order->products[$i]['qty'],
             );
             xtc_db_perform(TABLE_ORDERS_BOOKINGS, $booking_data_array);
+          }
+
+          // read by the zettle hook in checkout_process_products_end, after the update,
+          // so the last of two checkouts at the same time sees the sell-out
+          $specials_quantity = ($specials['specials_quantity'] - $order->products[$i]['qty']);
+          $specials_quantity_query = xtc_db_query("SELECT specials_quantity
+                                                     FROM ".TABLE_SPECIALS."
+                                                    WHERE specials_id = '".(int)$specials['specials_id']."'");
+          $specials_quantity_array = xtc_db_fetch_array($specials_quantity_query);
+          if (is_array($specials_quantity_array)) {
+            $specials_quantity = (int)$specials_quantity_array['specials_quantity'];
           }
         }
       }

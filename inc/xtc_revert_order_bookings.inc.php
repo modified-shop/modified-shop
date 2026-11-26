@@ -25,6 +25,12 @@
                           WHERE order_id = '".(int)$order_id."'");
     }
 
+    $order_query = xtc_db_query("SELECT date_purchased
+                                   FROM ".TABLE_ORDERS."
+                                  WHERE orders_id = '".(int)$order_id."'");
+    $order = xtc_db_fetch_array($order_query);
+    $date_purchased = ((is_array($order) && xtc_not_null($order['date_purchased'])) ? $order['date_purchased'] : '');
+
     $bookings_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_ORDERS_BOOKINGS."
                                      WHERE orders_id = '".(int)$order_id."'
@@ -32,6 +38,11 @@
                                        AND value != 0
                                            ".$bookings_where);
     while ($bookings = xtc_db_fetch_array($bookings_query)) {
+      // without the order date the special cannot be told from one that got its id later
+      if ($bookings['class'] == 'specials' && $date_purchased == '') {
+        continue;
+      }
+
       // a record booked back keeps value 0, so neither a second run nor the order editor gives it twice
       xtc_db_query("UPDATE ".TABLE_ORDERS_BOOKINGS."
                        SET value = 0
@@ -59,7 +70,12 @@
                                            AND (expires_date >= now() OR expires_date IS NULL OR expires_date = 0), '1', status),
                                specials_quantity = specials_quantity + ".(int)$bookings['value']."
                          WHERE specials_id = '".(int)$bookings['reference_id']."'
-                           AND NOT (status = '1' AND specials_quantity = 0)");
+                           AND NOT (status = '1' AND specials_quantity = 0)
+                           AND (specials_date_added IS NULL OR specials_date_added <= '".xtc_db_input($date_purchased)."')", 'db_link', $specials_info);
+          // a special created after the order got a deleted id again and is left alone
+          if (!is_array($specials_info) || $specials_info['affected_rows'] != 1) {
+            break;
+          }
           // the mark only belongs to an inactive special
           xtc_db_query("UPDATE ".TABLE_SPECIALS."
                            SET specials_sold_out = '0'

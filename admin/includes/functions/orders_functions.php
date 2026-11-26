@@ -713,6 +713,18 @@
 
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_functions/product_delete/','php') as $file) require ($file);
 
+    // a position recorded at checkout gives back what it still holds, nothing after a revert;
+    // without an answer the position stays, so its record and stock are not counted the old way
+    $bookings_query = xtc_db_query("SELECT orders_bookings_id
+                                      FROM ".TABLE_ORDERS_BOOKINGS."
+                                     WHERE orders_id = '".(int)$oID."'
+                                       AND orders_products_id = '".(int)$data_array['opID']."'
+                                       AND class = 'specials'");
+    if ($bookings_query === false) {
+      return;
+    }
+    $bookings_exist = (xtc_db_num_rows($bookings_query) > 0);
+
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
       $delete_products_attributes_query = xtc_db_query("SELECT *
@@ -739,13 +751,7 @@
                          products_ordered = products_ordered - ".sprintf('%d', (float)$data_array['del_qty'])."
                    WHERE products_id = ".(int)$data_array['products_id']);
 
-    // a position recorded at checkout gives back what it still holds, nothing after a revert
-    $bookings_query = xtc_db_query("SELECT orders_bookings_id
-                                      FROM ".TABLE_ORDERS_BOOKINGS."
-                                     WHERE orders_id = '".(int)$oID."'
-                                       AND orders_products_id = '".(int)$data_array['opID']."'
-                                       AND class = 'specials'");
-    if (xtc_db_num_rows($bookings_query) > 0) {
+    if ($bookings_exist === true) {
       require_once(DIR_FS_INC.'xtc_revert_order_bookings.inc.php');
       xtc_revert_order_bookings($oID, $data_array['opID']);
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_BOOKINGS."
