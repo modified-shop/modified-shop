@@ -14,6 +14,7 @@
    * admin_action_rule_pages()
    *
    * the admin pages under the rule with the values of action and saction that only read.
+   * A page can name further parameters that start an action in the same way, e.g. special of the content manager.
    * Every other value on these pages needs the posted form, a page that is not named is left as it is.
    * A file in admin/includes/extra/admin_action_rule/ can add, change or remove an entry of $pages
    *
@@ -32,6 +33,7 @@
         'blacklist_logs' => $list,
         'campaigns' => $list,
         'configuration' => $none,
+        'content_manager' => array('action' => array('delete', 'edit', 'edit_content_manager_content', 'edit_email_content', 'edit_products_content', 'list', 'new', 'new_content_manager_content', 'new_email_content', 'new_products_content'), 'saction' => array(), 'special' => array('file_flag'), 'id' => array()),
         'countries' => $list,
         'cross_sell_groups' => $list,
         'csv_backend' => $none,
@@ -46,6 +48,7 @@
         'mail' => $none,
         'manufacturers' => $list,
         'newsletter_recipients' => array('action' => array('delete', 'edit', 'export'), 'saction' => array()),
+        'orders' => array('action' => array('delete', 'edit', 'storno'), 'saction' => array()),
         'orders_status' => $list,
         'parcel_carriers' => $list,
         'products_vpe' => $list,
@@ -78,7 +81,8 @@
    * admin_action_rule()
    *
    * an action that is not read-only came from its form: a POST, with the form token when the
-   * token system is on. Otherwise action and saction are removed before the page handles them
+   * token system is on. Otherwise action, saction and the further parameters of the page are removed
+   * before the page handles them
    *
    * @param string $page  file name of the admin page
    * @return boolean  false when a value was removed
@@ -106,7 +110,7 @@
     }
 
     $allowed = true;
-    foreach (array('action', 'saction') as $key) {
+    foreach (array_unique(array_merge(array('action', 'saction'), array_keys($pages[$page]))) as $key) {
       if (!isset($_GET[$key]) || $_GET[$key] === '') {
         continue;
       }

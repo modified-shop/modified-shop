@@ -154,7 +154,7 @@
         }
         // a posted link carries its change in the address
         if (count($log_data) < 1) {
-          foreach (array('action', 'flag') as $key) {
+          foreach (array('action', 'subaction', 'special', 'flag') as $key) {
             if (isset($_GET[$key]) && is_string($_GET[$key])) {
               $log_data[$key] = $_GET[$key];
             }

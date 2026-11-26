@@ -184,14 +184,26 @@
                 }
               }
               if (MODULE_ADMIN_LOG_SHOW_DETAILS_FULL == 'false') {
-                // only the manufacturers page has a posted status link among the logged pages: its action and value
-                // are shown also when the entry before had no such field. Every other page is compared as before,
-                // a form can hold access data of a module
+                // a posted link is shown also when the entry before had no such field: on the manufacturers page its
+                // action and value, on the other pages, as an event each time, an entry with only values of the address.
+                // Every other entry is compared as before, a form can hold access data of a module
                 $log_manufacturer = (basename($PHP_SELF) == 'manufacturers.php');
-                $log_link = (($log_manufacturer === true) ? array_intersect_key($log['text'], array('action' => 1, 'flag' => 1)) : array());
+                $log_event = false;
+                if ($log_manufacturer === true) {
+                  $log_link = array_intersect_key($log['text'], array('action' => 1, 'flag' => 1));
+                } elseif (is_array($log['text'])
+                          && count($log['text']) > 0
+                          && count(array_diff_key($log['text'], array('action' => 1, 'subaction' => 1, 'special' => 1, 'flag' => 1))) == 0
+                          )
+                {
+                  $log_link = $log['text'];
+                  $log_event = true;
+                } else {
+                  $log_link = array();
+                }
                 if ($lc == 0) {
                   $base = $log['text'];
-                } else {
+                } elseif ($log_event !== true) {
                   $log_link = array_diff_key($log_link, $base);
                   // the first form after a status link: only its status is compared, with the one the link set
                   if ($log_manufacturer === true

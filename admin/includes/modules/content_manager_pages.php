@@ -213,9 +213,9 @@ if (!$action || $action == 'delete') {
               <td  class="dataTableContent txta-c">
                 <?php
                 if ($content_data['content_active'] == '1') {
-                  echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setaflag&flag=0&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                  echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setaflag&flag=0&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                 } else {
-                  echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setaflag&flag=1&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                  echo '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setaflag&flag=1&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                 }
                 ?>
               </td>
@@ -224,9 +224,9 @@ if (!$action || $action == 'delete') {
               <td  class="dataTableContent txta-c">
                 <?php
                 if ($content_data['content_status'] == '1') {
-                  echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setsflag&flag=0&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                  echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setsflag&flag=0&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                 } else {
-                  echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setsflag&flag=1&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                  echo '<a onclick="return postLink(this, event);" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setsflag&flag=1&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                 }
                 ?>
               </td>
