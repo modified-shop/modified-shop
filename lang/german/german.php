@@ -474,6 +474,7 @@ define('GV_FAQ', 'Gutschein FAQ');
 define('ERROR_NO_REDEEM_CODE', 'Sie haben leider keinen Code eingegeben.');
 define('ERROR_NO_INVALID_REDEEM_GV', 'Ung&uuml;ltiger Gutscheincode');
 define('ERROR_GV_BALANCE_CHANGED', 'Ihr Guthaben hat sich ge&auml;ndert und deckt den Abzug dieser Bestellung nicht mehr. Bitte pr&uuml;fen Sie Ihre Zahlungsweise.');
+define('ERROR_GV_BOOKING_FAILED', 'Ihr Guthaben konnte gerade nicht verrechnet werden und ist unver&auml;ndert. Bitte versuchen Sie es erneut.');
 define('TABLE_HEADING_CREDIT', 'Guthaben');
 define('EMAIL_GV_TEXT_SUBJECT', 'Ein Geschenk von %s');
 define('MAIN_MESSAGE', 'Sie haben sich dazu entschieden, einen Gutschein im Wert von %s an %s zu versenden, dessen E-Mail-Adresse %s lautet.<br /><br />Folgender Text erscheint in Ihrer E-Mail:<br /><br />Hallo %s,<br /><br />Ihnen wurde ein Gutschein im Wert von %s durch %s geschickt.');

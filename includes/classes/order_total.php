@@ -221,7 +221,8 @@ class order_total {
   }
 
   // Called in checkout process once the order is written and before the payment starts.
-  // Returns false if a credit class module could not debit what the order deducts.
+  // Returns true, or the answer of the first credit class module that did not debit:
+  // false if the credit no longer covers the deduction, 'error' if the debit could not be recorded.
   //
   function book_credit() {
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
@@ -231,10 +232,12 @@ class order_total {
             && isset($GLOBALS[$class]->credit_class)
             && $GLOBALS[$class]->credit_class
             && method_exists($GLOBALS[$class], 'book_credit')
-            && $GLOBALS[$class]->book_credit() !== true
             )
         {
-          return false;
+          $booked = $GLOBALS[$class]->book_credit();
+          if ($booked !== true) {
+            return $booked;
+          }
         }
       }
     }

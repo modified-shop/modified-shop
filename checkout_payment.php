@@ -142,6 +142,26 @@ $smarty->assign('FORM_END', '</form>');
 $total = $xtPrice->xtcFormat($order->info['total'], false);
 $module_smarty = new Smarty();
 
+// a payment module may remove a cancelled order of this session and give back its voucher debit, so the modules run before the balance is read
+if ($total > 0) {
+  $error = false;
+  if (isset($_GET['payment_error']) 
+      && isset(${$_GET['payment_error']})
+      && is_object(${$_GET['payment_error']}) 
+      && method_exists(${$_GET['payment_error']}, 'get_error')
+      && ($error = ${$_GET['payment_error']}->get_error())
+      ) 
+  {
+    if (isset($error['error'])) $smarty->assign('error_message',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
+    if (isset($error['error_message'])) $smarty->assign('error_message',  $error['error_message']);
+    $_SESSION['payment'] = $_GET['payment_error'];
+    $error = true;
+  }
+  
+  //get payment modules
+  $selection = $payment_modules->selection();
+}
+
 $credit_amount = 0;
 if (ACTIVATE_GIFT_SYSTEM == 'true' 
     && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
@@ -172,23 +192,6 @@ if (ACTIVATE_GIFT_SYSTEM == 'true'
 
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   
-  $error = false;
-  if (isset($_GET['payment_error']) 
-      && isset(${$_GET['payment_error']})
-      && is_object(${$_GET['payment_error']}) 
-      && method_exists(${$_GET['payment_error']}, 'get_error')
-      && ($error = ${$_GET['payment_error']}->get_error())
-      ) 
-  {
-    if (isset($error['error'])) $smarty->assign('error_message',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
-    if (isset($error['error_message'])) $smarty->assign('error_message',  $error['error_message']);
-    $_SESSION['payment'] = $_GET['payment_error'];
-    $error = true;
-  }
-  
-  //get payment modules
-  $selection = $payment_modules->selection();
-
   ## PayPal
   if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
       && defined('MODULE_PAYMENT_PAYPALPLUS_STATUS')
