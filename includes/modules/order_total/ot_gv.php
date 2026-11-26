@@ -345,29 +345,42 @@ class ot_gv {
   function credit_in_order_currency($amount, $total = null) {
     global $xtPrice;
 
-    // a balance that covers the order is not rounded, the deduction is the order total then
+    // a balance that covers the order is not rounded, the deduction is the order total then;
+    // the comparison allows for the float error of the conversion
     $credit = $xtPrice->xtcCalculateCurr($amount);
-    if ($total !== null && $credit >= (float)$total) {
-      return $credit;
+    if ($total !== null && round($credit, 6) >= round((float)$total, 6)) {
+      return max($credit, (float)$total);
     }
 
     // otherwise whole cents of the order currency and never more than the balance, a part of a cent stays on it;
     // a deduction with half a cent would round differently in a total and in its breakdown
+    return $this->whole_cents($credit);
+  }
+
+  function whole_cents($value) {
+    global $xtPrice;
+
     $factor = pow(10, (int)$xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
 
-    return floor(round($credit * $factor, 6)) / $factor;
+    return floor(round($value * $factor, 6)) / $factor;
   }
 
   function calculate_credit($amount) {
+    global $order;
+
     $gv_query = xtc_db_query("SELECT amount 
                                 FROM ".TABLE_COUPON_GV_CUSTOMER." 
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
+    // the voucher pays the whole order only if neither tax nor shipping is left out of $amount
+    $whole_order = (($this->include_tax == 'true' || $order->info['tax'] == 0)
+                    && ($this->include_shipping == 'true' || $order->info['shipping_cost'] == 0));
     // the balance is in the default currency, the order total in the currency of the customer
-    $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount'], $amount) : 0);
+    $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount'], (($whole_order === true) ? $amount : null)) : 0);
     
     if (($amount - $gv_payment_amount) <= 0) {
-      $gv_payment_amount = $amount;
+      // with something left to pay the deduction stays in whole cents
+      $gv_payment_amount = (($whole_order === true) ? $amount : $this->whole_cents($amount));
     }
     
     return $gv_payment_amount;
