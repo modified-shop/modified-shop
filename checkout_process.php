@@ -440,7 +440,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     if ($_SESSION['customers_status']['customers_status_specials'] == '1') {
       $specials_query = xtc_db_query("SELECT specials_id,
                                              products_id,
-                                             specials_quantity
+                                             specials_quantity,
+                                             specials_date_added
                                         FROM ".TABLE_SPECIALS."
                                        WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
                                              ".SPECIALS_CONDITIONS);
@@ -464,6 +465,10 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
               'reference_id' => $specials['specials_id'],
               'value' => (int)$order->products[$i]['qty'],
             );
+            // the creation date tells this special from a later one that got its id again
+            if (xtc_not_null($specials['specials_date_added'])) {
+              $booking_data_array['reference_date'] = $specials['specials_date_added'];
+            }
             xtc_db_perform(TABLE_ORDERS_BOOKINGS, $booking_data_array);
           }
 

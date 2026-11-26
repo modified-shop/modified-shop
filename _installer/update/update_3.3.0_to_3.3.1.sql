@@ -253,6 +253,7 @@ CREATE TABLE IF NOT EXISTS `orders_bookings` (
   `orders_products_id` INT(11) NOT NULL DEFAULT 0,
   `class` VARCHAR(32) NOT NULL,
   `reference_id` INT(11) NOT NULL,
+  `reference_date` DATETIME DEFAULT NULL,
   `value` DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (`orders_bookings_id`),
   KEY `idx_orders_id` (`orders_id`)

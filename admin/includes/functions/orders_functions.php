@@ -711,10 +711,8 @@
 
   function orders_product_delete($oID, $data_array) {
 
-    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_functions/product_delete/','php') as $file) require ($file);
-
     // a position recorded at checkout gives back what it still holds, nothing after a revert;
-    // without an answer the position stays, so its record and stock are not counted the old way
+    // without an answer the position and everything the hooks remove with it stay
     $bookings_query = xtc_db_query("SELECT orders_bookings_id
                                       FROM ".TABLE_ORDERS_BOOKINGS."
                                      WHERE orders_id = '".(int)$oID."'
@@ -724,6 +722,8 @@
       return;
     }
     $bookings_exist = (xtc_db_num_rows($bookings_query) > 0);
+
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_functions/product_delete/','php') as $file) require ($file);
 
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
