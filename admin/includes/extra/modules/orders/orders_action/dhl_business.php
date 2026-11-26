@@ -88,9 +88,30 @@
 
       // keep the entry as long as DHL has not confirmed the cancellation
       if ($response['deleted'] !== true) {
-        // the link with the address of the removal is posted, whichever language file brings the text
+        // the link whose href is the removal is posted, whichever language file brings the text
         $dhl_delete_link = xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$oID.'&tID='.(int)$tracking_id.'&action=deletetracking');
-        $dhl_delete_error = preg_replace('/<a\s(?![^>]*postLink\()(?=[^>]*'.preg_quote($dhl_delete_link, '/').')/i', '<a onclick="return postLink(this, event);" ', sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, $dhl_delete_link), 1);
+        $dhl_delete_posted = false;
+        $dhl_delete_error = preg_replace_callback('/<a((?:\s+[^\s"\'>\/=]+(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>]+))?)*)\s*>/i', function ($tag) use ($dhl_delete_link, &$dhl_delete_posted) {
+          preg_match_all('/([^\s"\'>\/=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s"\'>]+))?/', $tag[1], $attributes, PREG_SET_ORDER);
+          $href = '';
+          $onclick = false;
+          foreach ($attributes as $attribute) {
+            $value = (isset($attribute[2]) ? $attribute[2] : '');
+            if ($value != '' && ($value[0] == '"' || $value[0] == "'")) {
+              $value = substr($value, 1, -1);
+            }
+            if (strtolower($attribute[1]) == 'href') {
+              $href = $value;
+            } elseif (strtolower($attribute[1]) == 'onclick') {
+              $onclick = true;
+            }
+          }
+          if ($dhl_delete_posted === true || $href !== $dhl_delete_link || $onclick === true) {
+            return $tag[0];
+          }
+          $dhl_delete_posted = true;
+          return '<a onclick="return postLink(this, event);"'.$tag[1].'>';
+        }, sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, $dhl_delete_link));
         $messageStack->add_session($dhl_delete_error, 'warning');
       } else {
         xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");

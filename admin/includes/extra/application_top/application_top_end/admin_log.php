@@ -13,16 +13,27 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   if (defined('MODULE_ADMIN_LOG_STATUS') && MODULE_ADMIN_LOG_STATUS == 'true') {
-    // the posted status link of a manufacturer has no fields when the form token is switched off
+    // a posted link has no fields when the form token is switched off: the links named here are logged also then.
+    // With the token switched on the rule has removed the action of a post without it before
+    $admin_log_links = array(
+      'manufacturers.php' => array('action' => array('setflag')),
+      'content_manager.php' => array('special' => array('setaflag', 'setsflag', 'delete', 'delete_product', 'delete_content', 'delete_email')),
+      'orders.php' => array('action' => array('send', 'send_order_mail', 'deletetracking', 'custom')),
+    );
+    $admin_log_link = false;
+    if (isset($_SERVER['REQUEST_METHOD'])
+        && $_SERVER['REQUEST_METHOD'] == 'POST'
+        && isset($admin_log_links[basename($PHP_SELF)])
+        )
+    {
+      foreach ($admin_log_links[basename($PHP_SELF)] as $key => $values) {
+        if (isset($_GET[$key]) && is_string($_GET[$key]) && in_array($_GET[$key], $values, true)) {
+          $admin_log_link = true;
+        }
+      }
+    }
     if (isset($_POST)
-        && (count($_POST) > 0
-            || (isset($_SERVER['REQUEST_METHOD'])
-                && $_SERVER['REQUEST_METHOD'] == 'POST'
-                && basename($PHP_SELF) == 'manufacturers.php'
-                && isset($_GET['action'])
-                && $_GET['action'] === 'setflag'
-                )
-            )
+        && (count($_POST) > 0 || $admin_log_link === true)
         )
     {
       $sql_data_array = array();
