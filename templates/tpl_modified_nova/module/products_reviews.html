@@ -49,7 +49,7 @@
                   <span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
                     <span class="rating_icons"><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></span>
                     <meta itemprop="worstRating" content="1">
-                    <meta itemprop="ratingValue" content="{$module_data.RATING_VOTE|replace:'"':'&quot;'}">
+                    <meta itemprop="ratingValue" content="{$module_data.RATING_VOTE}">
                     <meta itemprop="bestRating" content="5">
                   </span>
                 {else}
@@ -60,7 +60,7 @@
                   <strong>{#text_author#}</strong> <span itemprop="name">{$module_data.AUTHOR}</span>
                 </span>
                 <span class="seperator">|</span> <strong>{#title_date#}:</strong> {$module_data.DATE}
-                <meta itemprop="datePublished" content="{$module_data.DATE|replace:'"':'&quot;'}" />
+                <meta itemprop="datePublished" content="{$module_data.DATE}" />
               </div>
               <div class="reviewrow_full_content">
                 <span itemprop="description">{$module_data.TEXT}</span>

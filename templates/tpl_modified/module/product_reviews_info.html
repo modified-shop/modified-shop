@@ -6,7 +6,7 @@
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 <div class="pri_imagebox">
   <div class="pri_big_image">
-    {if $PRODUCTS_IMAGE != ''}<a class="cbimages" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></a>{/if}
+    {if $PRODUCTS_IMAGE != ''}<a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a>{/if}
   </div>
   <div class="pri_zoomtext">{#zoomtext#}</div>
 </div>

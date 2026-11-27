@@ -7,7 +7,7 @@
       <ul class="dropdown_menu">
         {foreach name=aussen item=module_data from=$box_content}
           <li class="level_manu{if $module_data.SELECTED == 1} Selected{/if}">
-            <a href="{$module_data.LINK}" title="{$module_data.NAME|replace:'"':'&quot;'}">{$module_data.NAME}</a>
+            <a href="{$module_data.LINK}" title="{$module_data.NAME}">{$module_data.NAME}</a>
           </li>
         {/foreach}
       </ul>
@@ -16,7 +16,7 @@
         <ul class="cf">
           {foreach name=aussen item=module_data from=$box_content}
             <li class="level_manu{if $module_data.SELECTED == 1} Selected{/if}">
-              <a href="{$module_data.LINK}" title="{$module_data.NAME|replace:'"':'&quot;'}">{$module_data.NAME}</a>
+              <a href="{$module_data.LINK}" title="{$module_data.NAME}">{$module_data.NAME}</a>
             </li>
           {/foreach}
         </ul>

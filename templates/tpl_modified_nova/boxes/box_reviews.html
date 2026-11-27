@@ -29,9 +29,9 @@
                         {if $box_data.PRODUCTS_IMAGE != ''}
                           <a href="{$box_data.PRODUCTS_LINK}">
                             {if $smarty.const.PICTURESET_ACTIVE === true}
-                              <img class="lazyload" data-src="{$box_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$box_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$box_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
+                              <img class="lazyload" data-src="{$box_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />
                             {else}
-                              <img class="lazyload" data-src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$box_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
+                              <img class="lazyload" data-src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />
                             {/if}
                           </a>
                         {/if}

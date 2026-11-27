@@ -3,7 +3,7 @@
 <html>
   <head>
     <title>{#title#} {$oID}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset={$charset|replace:'"':'&quot;'}">
+    <meta http-equiv="Content-Type" content="text/html; charset={$charset}">
     <style type="text/css">
     {literal}
     body {font-family: Verdana, Arial, Helvetica, sans-serif;}
@@ -41,7 +41,7 @@
                 <p class="large">{#invoice#}</p>
               </td>
               <td width="20%">
-                <img src="{$logo_path}{'logo.gif'|versioning}" alt="{$store_name|replace:'"':'&quot;'}" />
+                <img src="{$logo_path}{'logo.gif'|versioning}" alt="{$store_name}" />
                 <p class="small">
                 {$ADDRESS_LARGE}
                 </p>

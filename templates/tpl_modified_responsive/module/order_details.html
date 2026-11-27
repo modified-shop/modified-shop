@@ -21,11 +21,11 @@
       <span class="ol_image ol_width2">
         {if $module_data.PRODUCTS_IMAGE != ''}        
           {if $smarty.const.PICTURESET_ACTIVE === true}
-            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
+            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
           {else}
-            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" />
+            <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
           {/if}
-          <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+          <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></noscript>
         {else}
           &nbsp;
         {/if}

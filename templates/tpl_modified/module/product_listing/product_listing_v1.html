@@ -7,7 +7,7 @@
      || (isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != '')
      || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')}
 <div class="cat_description cf">
-  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}<img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />{/if}
+  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}<img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
   {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != ''}{$CATEGORIES_SHORT_DESCRIPTION}{else if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}
 </div>
 {/if}
@@ -27,7 +27,7 @@
   <h4>{$MANUFACTURER_NAME}</h4>
 {/if}
 <div class="manu_description cf">
-  {if $MANUFACTURER_IMAGE}<img class="manu_image{if !$MANUFACTURER_DESCRIPTION && !$MANUFACTURER_SHORT_DESCRIPTION} mi_nomargin{/if}" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext|replace:'"':'&quot;'}" />{/if}
+  {if $MANUFACTURER_IMAGE}<img class="manu_image{if !$MANUFACTURER_DESCRIPTION && !$MANUFACTURER_SHORT_DESCRIPTION} mi_nomargin{/if}" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />{/if}
   {if $MANUFACTURER_SHORT_DESCRIPTION}{$MANUFACTURER_SHORT_DESCRIPTION}{else if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}
 </div>  
 {/if}

@@ -31,7 +31,7 @@
   {* ENDE layout_navbar *}
 
   <div id="layout_logo" class="cf">
-    <div id="logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name|replace:'"':'&quot;'}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name|replace:'"':'&quot;'}" /></a></div>
+    <div id="logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></a></div>
     {if isset($box_SEARCH)}<div id="search">{$box_SEARCH}</div>{/if}
   </div>
 
@@ -62,22 +62,22 @@
                   <div class="slider_item">          
                     {if $slider.LINK != ''}
                       {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
-                        <a title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}" href="{$slider.LINK}" {$slider.TARGET}>
+                        <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                           <picture>
                             <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                             <source data-srcset="{$slider.IMAGE_SRC}">
-                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
+                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                           </picture>
                         </a>
                       {else}
-                        <a title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
+                        <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
                       {/if}
                     {elseif $slider.IMAGE_IMG != ''}
                       {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
                         <picture>
                           <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                           <source data-srcset="{$slider.IMAGE_SRC}">
-                          <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
+                          <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                         </picture>
                       {else}
                         {$slider.IMAGE_IMG}

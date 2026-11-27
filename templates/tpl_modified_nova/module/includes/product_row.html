@@ -10,17 +10,17 @@
       <div class="lr_image_inner">
         <div class="prod_image">
           {if $module_data.PRODUCTS_IMAGE != ''}
-            <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">
+            <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">
               {if isset($pictureset_row) && count($pictureset_row) > 0}
                 <picture>
                   {foreach name=inner item=picture_data from=$pictureset_row}
                     <source media="(max-width:{$picture_data.SIZE}px)" data-srcset="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_images":"`$picture_data.IMAGE`"}">
                   {/foreach}
                   <source data-srcset="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_images":"midi_images"}">
-                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">
+                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}">
                 </picture>
               {else}
-                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">
+                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}">
               {/if}
             </a>
           {/if}
@@ -29,7 +29,7 @@
     </div>
     <div class="lr_content">
       <div class="lr_title">
-        <div class="lr_title_inner"><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}">{$module_data.PRODUCTS_NAME}</a></div>
+        <div class="lr_title_inner"><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a></div>
       </div>
 
       {if isset($module_data.PRODUCTS_REVIEWS_COUNT)}
@@ -70,7 +70,7 @@
       <div class="lr_shipping">
         {if $module_data.PRODUCTS_SHIPPING_NAME}
           <i class="fa-solid fa-truck-fast mr_5"></i>{#text_shippingtime#} 
-          {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lr_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext|replace:'"':'&quot;'}" /></span>{/if}
+          {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lr_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}
           {$module_data.PRODUCTS_SHIPPING_NAME_LINK}
         {else}
           &nbsp;

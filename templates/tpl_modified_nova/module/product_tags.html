@@ -14,7 +14,7 @@
                 {$module_data.OPTIONS_NAME}
                 {if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tooltip_content">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}:
               </span>
-              {if $module_data.OPTIONS_CONTENT_LINK != ''}<span class="tags_options_info"><a class="iframe" target="_blank" title="{$module_data.OPTIONS_NAME|onlytext|replace:'"':'&quot;'}" href="{$module_data.OPTIONS_CONTENT_LINK}"><i class="fa-solid fa-circle-info ml_5"></i></a></span>{/if}
+              {if $module_data.OPTIONS_CONTENT_LINK != ''}<span class="tags_options_info"><a class="iframe" target="_blank" title="{$module_data.OPTIONS_NAME|onlytext}" href="{$module_data.OPTIONS_CONTENT_LINK}"><i class="fa-solid fa-circle-info ml_5"></i></a></span>{/if}
             </span>
           </span>
 
@@ -23,8 +23,8 @@
               {if $item_data.VALUES_IMAGE != ''}
                 <span class="tags_values_icon_row">
                   <span class="tags_values_icon_name">
-                    {if $item_data.VALUES_CONTENT_LINK != ''}<a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext|replace:'"':'&quot;'}">{/if}
-                      <img src="{$item_data.VALUES_IMAGE}" alt="{$item_data.VALUES_NAME|onlytext|replace:'"':'&quot;'}" />
+                    {if $item_data.VALUES_CONTENT_LINK != ''}<a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext}">{/if}
+                      <img src="{$item_data.VALUES_IMAGE}" alt="{$item_data.VALUES_NAME|onlytext}" />
                     {if $item_data.VALUES_CONTENT_LINK != ''}</a>{/if}
                     {if $item_data.VALUES_DESCRIPTION != ''}<span class="tooltip_content">{$item_data.VALUES_DESCRIPTION}</span>{/if}
                   </span>
@@ -35,7 +35,7 @@
                     {$item_data.VALUES_NAME}
                     {if $item_data.VALUES_DESCRIPTION != ''}<span class="tooltip_content">{$item_data.VALUES_DESCRIPTION}</span>{/if}
                   </span>
-                  {if $item_data.VALUES_CONTENT_LINK != ''}<span class="tags_values_info"><a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext|replace:'"':'&quot;'}"><i class="fa-solid fa-circle-info ml_5"></i></a></span>{/if}
+                  {if $item_data.VALUES_CONTENT_LINK != ''}<span class="tags_values_info"><a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext}"><i class="fa-solid fa-circle-info ml_5"></i></a></span>{/if}
                 </span>
               {/if}
             {/foreach}
