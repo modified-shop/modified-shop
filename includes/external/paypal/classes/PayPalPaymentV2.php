@@ -289,6 +289,11 @@
 
             $purchase_unit['items'][] = $item;
           }
+
+          // with the voucher tax the summary also stays as before, the last tax group only
+          if ($voucher_tax === true) {
+            $purchase_unit['items'] = array_slice($purchase_unit['items'], -1);
+          }
         }
 
         // PayPal checks both totals against the items as they are sent, in whole cents;
