@@ -360,7 +360,7 @@ class ot_gv {
     }
 
     // without a conversion the balance is taken as it is, as before this change;
-    // where it is more than the voucher may cover, calculate_credit() caps it at whole cents
+    // where it is more than the voucher may cover, calculate_credit() caps it at that amount
     if ((float)$xtPrice->currencies[$xtPrice->actualCurr]['value'] == 1) {
       return $credit;
     }
@@ -393,6 +393,8 @@ class ot_gv {
   }
 
   function calculate_credit($amount) {
+    global $xtPrice;
+
     $gv_query = xtc_db_query("SELECT amount 
                                 FROM ".TABLE_COUPON_GV_CUSTOMER." 
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
@@ -402,8 +404,8 @@ class ot_gv {
     $gv_payment_amount = (isset($gv_result['amount']) ? $this->credit_in_order_currency($gv_result['amount'], $amount) : 0);
     
     if (($amount - $gv_payment_amount) <= 0) {
-      // with something left to pay the deduction stays in whole cents
-      $gv_payment_amount = (($whole_order === true) ? $amount : $this->whole_cents($amount));
+      // with something left to pay a converted deduction stays in whole cents, an unconverted one is the amount as before
+      $gv_payment_amount = (($whole_order === true || (float)$xtPrice->currencies[$xtPrice->actualCurr]['value'] == 1) ? $amount : $this->whole_cents($amount));
     }
     
     return $gv_payment_amount;
