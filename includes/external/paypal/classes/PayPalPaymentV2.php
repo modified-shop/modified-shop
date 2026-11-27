@@ -278,6 +278,9 @@
           'currency_code' => $this->encode_utf8($order->info['currency'])
         );
 
+        // each part is rounded on its own and can miss the rounded amount by a cent, PayPal rejects that
+        $this->reconcile_breakdown($purchase_unit['amount'], count($order->products) * 2 + count($order_total));
+
         if (isset($_SESSION['tmp_oID'])) {
           $purchase_unit['invoice_id'] = $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$_SESSION['tmp_oID'];
         }
@@ -973,6 +976,31 @@
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'refundOrder', array('exception' => $ex));
       }
+    }
+
+
+    private function reconcile_breakdown(&$amount, $roundings) {
+      $parts = 0;
+      foreach ($amount['breakdown'] as $field => $part) {
+        $parts += ((in_array($field, array('discount', 'shipping_discount'))) ? -1 : 1) * (int)round($part['value'] * 100);
+      }
+      $difference = (int)round($amount['value'] * 100) - $parts;
+
+      // only what the rounding can explain, at most half a cent per rounded value
+      if ($difference == 0 || abs($difference) > ceil($roundings / 2)) {
+        return;
+      }
+
+      // the amount stays the order total, the difference goes into handling or discount
+      $field = (($difference > 0) ? 'handling' : 'discount');
+      $cents = abs($difference);
+      if (isset($amount['breakdown'][$field])) {
+        $cents += (int)round($amount['breakdown'][$field]['value'] * 100);
+      }
+      $amount['breakdown'][$field] = array(
+        'value' => sprintf($this->numberFormat, $cents / 100),
+        'currency_code' => $amount['currency_code']
+      );
     }
 
 
