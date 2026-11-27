@@ -143,7 +143,7 @@
               <div class="pd_shipping_icon"><i class="fa-solid fa-truck-fast"></i></div>
               <div class="pd_shipping_content">
                 <strong>{#text_shippingtime#}</strong> 
-                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if}
+                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|encodedtext}" />{/if}
                 {$SHIPPING_NAME_LINK}
               </div>
             </div>
@@ -152,7 +152,7 @@
 
         <div class="pd_offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
           <meta itemprop="url" content="{$PRODUCTS_LINK}" />
-          <meta itemprop="priceCurrency" content="{$smarty.session.currency}" />
+          <meta itemprop="priceCurrency" content="{$smarty.session.currency|encodedtext}" />
           {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C}" />{/if}
           {if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}
           {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}

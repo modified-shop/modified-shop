@@ -3,7 +3,7 @@
 <html>
   <head>
     <title>{#title#} {$oID}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset={$charset}">
+    <meta http-equiv="Content-Type" content="text/html; charset={$charset|encodedtext}">
     <style type="text/css">
     {literal}
     body {font-family: Verdana, Arial, Helvetica, sans-serif;}
@@ -36,7 +36,7 @@
                 <p class="large">{#packingslip#}</p>
               </td>
               <td width="20%">
-                <img src="{$logo_path}{'logo.gif'|versioning}" alt="{$store_name}" />
+                <img src="{$logo_path}{'logo.gif'|versioning}" alt="{$store_name|encodedtext}" />
                 <p class="small">
                 {$ADDRESS_LARGE}
                 </p>

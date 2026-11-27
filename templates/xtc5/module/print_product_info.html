@@ -3,7 +3,7 @@
 <html {$html_params}>
 <head>
   <title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+  <meta http-equiv="Content-Type" content="text/html; charset={$charset|encodedtext}" />
   <meta name="robots" content="noindex, nofollow, noodp" />
   {if $CanonicalLink}<link href="{$CanonicalLink}" rel="canonical" />{/if}
   {if $base_href}<base href="{$base_href}" />{/if}

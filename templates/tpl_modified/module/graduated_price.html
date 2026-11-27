@@ -17,7 +17,7 @@
     {/if}
     {/foreach}
     <div itemprop="PriceSpecification" itemscope itemtype="http://schema.org/PriceSpecification">
-      <meta itemprop="priceCurrency" content="{$smarty.session.currency}">
+      <meta itemprop="priceCurrency" content="{$smarty.session.currency|encodedtext}">
       <meta itemprop="price" content="{$maxPrice}">
       <meta itemprop="minPrice" content="{$minPrice}">
       <meta itemprop="maxPrice" content="{$maxPrice}">

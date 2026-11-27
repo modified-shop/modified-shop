@@ -7,7 +7,7 @@
   <ul id="autocomplete_main">
     {foreach item=products_data from=$module_content}
       <li>
-        <a href="{$products_data.PRODUCTS_LINK}" title="{$products_data.PRODUCTS_NAME}">
+        <a href="{$products_data.PRODUCTS_LINK}" title="{$products_data.PRODUCTS_NAME|encodedtext}">
           <span class="autocomlete_item">
             <span class="ac_image">
               <span class="prod_image">
