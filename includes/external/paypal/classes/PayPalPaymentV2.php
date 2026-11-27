@@ -170,7 +170,17 @@
         $order_total = $this->calculate_total(2);
         // the unrounded parts tell a rounding difference from one in the parts themselves
         $exact_parts = $exact_total = $exact_scale = 0;
+        // a voucher that recalculates the tax also lowers it, which the breakdown cannot show (#3373, #3368)
+        $voucher_tax = false;
         foreach ($order_total as $total) {
+          if ($total['code'] == 'ot_gv'
+              && $total['value'] != 0
+              && defined('MODULE_ORDER_TOTAL_GV_CALC_TAX')
+              && MODULE_ORDER_TOTAL_GV_CALC_TAX == 'Standard'
+              )
+          {
+            $voucher_tax = true;
+          }
           switch ($total['code']) {
             case 'ot_subtotal':
             case 'ot_subtotal_no_tax':
@@ -281,11 +291,17 @@
           }
         }
 
-        // PayPal checks both totals against the items as they are sent, in whole cents
+        // PayPal checks both totals against the items as they are sent, in whole cents;
+        // with the voucher tax the request stays as before, so it is not made to balance with the tax before the voucher
         $item_total = $tax_total = 0;
-        foreach ($purchase_unit['items'] as $item) {
-          $item_total += round($item['unit_amount']['value'] * 100) * $item['quantity'];
-          $tax_total += round($item['tax']['value'] * 100) * $item['quantity'];
+        if ($voucher_tax === true) {
+          $item_total = round(array_sum($sum_net) * 100);
+          $tax_total = round(array_sum($sum_tax) * 100);
+        } else {
+          foreach ($purchase_unit['items'] as $item) {
+            $item_total += round($item['unit_amount']['value'] * 100) * $item['quantity'];
+            $tax_total += round($item['tax']['value'] * 100) * $item['quantity'];
+          }
         }
         $purchase_unit['amount']['breakdown']['item_total'] = array(
           'value' => sprintf($this->numberFormat, $item_total / 100),
@@ -299,7 +315,8 @@
         // each part is rounded on its own and can miss the rounded amount by a cent, PayPal rejects that;
         // a voucher that also lowers the tax leaves a difference in the parts, that one is not a rounding,
         // and even a small one counts once it moves the total to another cent
-        if (abs($exact_parts - $exact_total) < 0.001
+        if ($voucher_tax === false
+            && abs($exact_parts - $exact_total) < 0.001
             && $this->round_sum($exact_parts, $exact_scale) == $this->round_sum($exact_total, $exact_scale)
             )
         {
