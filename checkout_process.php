@@ -350,6 +350,54 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
   }
 
+  // the credit is debited before the payment starts and before anything else is booked for the order,
+  // so the provider never gets a deduction the balance does not cover
+  $credit_booked = $order_total_modules->book_credit();
+  if ($credit_booked !== true) {
+    // a language pack without these texts gets the English ones
+    defined('TEXT_GV_CHECKOUT_STOPPED_BALANCE') OR define('TEXT_GV_CHECKOUT_STOPPED_BALANCE', 'The checkout was stopped because the credit balance no longer covered the deduction. No balance was debited, the order has no items. Please cancel an authorization at the payment service.');
+    defined('TEXT_GV_CHECKOUT_STOPPED_FAILED') OR define('TEXT_GV_CHECKOUT_STOPPED_FAILED', 'The checkout was stopped because the credit deduction could not be recorded. The balance is unchanged, the order has no items. Please cancel an authorization at the payment service.');
+    defined('TEXT_GV_CHECKOUT_STOPPED_LOST') OR define('TEXT_GV_CHECKOUT_STOPPED_LOST', 'The checkout was stopped because the credit deduction could neither be recorded nor booked back. The deduction of this order is debited from the balance of the customer and has to be credited again, the order has no items. Please cancel an authorization at the payment service.');
+    defined('ERROR_GV_BALANCE_CHANGED') OR define('ERROR_GV_BALANCE_CHANGED', 'Your credit balance has changed and no longer covers the deduction of this order. Please check your payment.');
+    defined('ERROR_GV_BOOKING_FAILED') OR define('ERROR_GV_BOOKING_FAILED', 'Your credit balance could not be applied just now and is unchanged. Please try again.');
+    defined('ERROR_GV_BOOKING_LOST') OR define('ERROR_GV_BOOKING_LOST', 'Your credit balance could not be applied just now. Please contact us so that we can check your balance.');
+    // another checkout spent the balance after the totals were computed, or the debit could not be recorded;
+    // the order keeps its row and totals with a note, a provider may know its number already and a debit
+    // that could not be undone needs it to be found, nothing else is booked for it yet
+    $credit_note = (($credit_booked === false) ? TEXT_GV_CHECKOUT_STOPPED_BALANCE : (($credit_booked === 'lost') ? TEXT_GV_CHECKOUT_STOPPED_LOST : TEXT_GV_CHECKOUT_STOPPED_FAILED));
+    // status 0 keeps the stopped order out of the customer account and marks it in the administration
+    xtc_db_query("UPDATE ".TABLE_ORDERS."
+                     SET orders_status = '0'
+                   WHERE orders_id = '".(int)$insert_id."'");
+    $sql_data_array = array(
+      'orders_id' => $insert_id,
+      'orders_status_id' => 0,
+      'date_added' => 'now()',
+      'customer_notified' => 0,
+      'comments' => $credit_note,
+    );
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+    // the old key still finds this order, the next attempt needs its own
+    unset($_SESSION['tmp_oID']);
+    $_SESSION['payment_nonce'] = md5(uniqid((string)rand(), true));
+
+    // the balance may cover less now, so the next confirmation decides on the payment again
+    unset($_SESSION['credit_covers']);
+    if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'no_payment') {
+      unset($_SESSION['payment']);
+    }
+
+    if ($checkout_lock != '') {
+      xtc_db_close('checkout_lock_link');
+      $checkout_lock = '';
+    }
+
+    $credit_error = (($credit_booked === false) ? ERROR_GV_BALANCE_CHANGED : (($credit_booked === 'lost') ? ERROR_GV_BOOKING_LOST : ERROR_GV_BOOKING_FAILED));
+    $messageStack->add_session('checkout_payment', $credit_error);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+  }
+
   $sql_data_array = array(
     'orders_id' => $insert_id,
     'orders_status_id' => $order->info['order_status'],

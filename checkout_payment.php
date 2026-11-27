@@ -142,6 +142,26 @@ $smarty->assign('FORM_END', '</form>');
 $total = $xtPrice->xtcFormat($order->info['total'], false);
 $module_smarty = new Smarty();
 
+// a payment module may remove a cancelled order of this session and give back its voucher debit, so the modules run before the balance is read
+if ($total > 0) {
+  $error = false;
+  if (isset($_GET['payment_error']) 
+      && isset(${$_GET['payment_error']})
+      && is_object(${$_GET['payment_error']}) 
+      && method_exists(${$_GET['payment_error']}, 'get_error')
+      && ($error = ${$_GET['payment_error']}->get_error())
+      ) 
+  {
+    if (isset($error['error'])) $smarty->assign('error_message',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
+    if (isset($error['error_message'])) $smarty->assign('error_message',  $error['error_message']);
+    $_SESSION['payment'] = $_GET['payment_error'];
+    $error = true;
+  }
+  
+  //get payment modules
+  $selection = $payment_modules->selection();
+}
+
 $credit_amount = 0;
 if (ACTIVATE_GIFT_SYSTEM == 'true' 
     && ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') 
@@ -151,7 +171,8 @@ if (ACTIVATE_GIFT_SYSTEM == 'true'
 {
   $credit_selection = $order_total_modules->credit_selection();
   for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
-    $credit_amount =  $xtPrice->xtcCalculateCurr($credit_selection[$i]['credit_amount']);
+    // the voucher module values its balance as the checkout deducts it
+    $credit_amount = ((isset($GLOBALS[$credit_selection[$i]['id']]) && method_exists($GLOBALS[$credit_selection[$i]['id']], 'credit_in_order_currency')) ? $GLOBALS[$credit_selection[$i]['id']]->credit_in_order_currency($credit_selection[$i]['credit_amount'], $total) : $xtPrice->xtcCalculateCurr($credit_selection[$i]['credit_amount']));
     $credit_order_total = $xtPrice->xtcFormat($credit_selection[$i]['credit_order_total'], false);
     $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $xtPrice->xtcFormat($credit_amount, false), true, 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$total.'">';
@@ -172,23 +193,6 @@ if (ACTIVATE_GIFT_SYSTEM == 'true'
 
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   
-  $error = false;
-  if (isset($_GET['payment_error']) 
-      && isset(${$_GET['payment_error']})
-      && is_object(${$_GET['payment_error']}) 
-      && method_exists(${$_GET['payment_error']}, 'get_error')
-      && ($error = ${$_GET['payment_error']}->get_error())
-      ) 
-  {
-    if (isset($error['error'])) $smarty->assign('error_message',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
-    if (isset($error['error_message'])) $smarty->assign('error_message',  $error['error_message']);
-    $_SESSION['payment'] = $_GET['payment_error'];
-    $error = true;
-  }
-  
-  //get payment modules
-  $selection = $payment_modules->selection();
-
   ## PayPal
   if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
       && defined('MODULE_PAYMENT_PAYPALPLUS_STATUS')
