@@ -294,8 +294,12 @@
         );
 
         // each part is rounded on its own and can miss the rounded amount by a cent, PayPal rejects that;
-        // a voucher that also lowers the tax leaves a difference in the parts, that one is not a rounding
-        if (abs($exact_parts - $exact_total) < 0.001) {
+        // a voucher that also lowers the tax leaves a difference in the parts, that one is not a rounding,
+        // and even a small one counts once it moves the total to another cent
+        if (abs($exact_parts - $exact_total) < 0.001
+            && round($exact_parts, 2) == round($exact_total, 2)
+            )
+        {
           $this->reconcile_breakdown($purchase_unit['amount'], $roundings);
         }
 
