@@ -5,7 +5,7 @@
 <!DOCTYPE html{$doctype}>
 <html {$html_params}>
 <head>
-  <meta charset="{$charset}" />
+  <meta charset="{$charset|encodedtext}" />
   <title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
   <meta name="robots" content="noindex, nofollow, noodp" />
   {if $CanonicalLink}<link href="{$CanonicalLink}" rel="canonical" />{/if}
