@@ -169,7 +169,7 @@
         $pm_source = 'pay_upon_invoice';
         $order_total = $this->calculate_total(2);
         // the unrounded parts tell a rounding difference from one in the parts themselves
-        $exact_parts = $exact_total = 0;
+        $exact_parts = $exact_total = $exact_scale = 0;
         foreach ($order_total as $total) {
           switch ($total['code']) {
             case 'ot_subtotal':
@@ -178,6 +178,7 @@
               break;
             case 'ot_shipping':
               $exact_parts += $total['value'];
+              $exact_scale += abs($total['value']);
               $purchase_unit['amount']['breakdown']['shipping'] = array(
                 'value' => sprintf($this->numberFormat, round($total['value'], 2)),
                 'currency_code' => $this->encode_utf8($order->info['currency'])
@@ -189,6 +190,7 @@
               break;
             default:
               $exact_parts += $total['value'];
+              $exact_scale += abs($total['value']);
               if ($total['value'] > 0) {
                 if (!isset($purchase_unit['amount']['breakdown']['handling'])) {
                   $purchase_unit['amount']['breakdown']['handling'] = array(
@@ -217,6 +219,7 @@
         $purchase_unit['items'] = array();
         foreach ($order->products as $product) {
           $exact_parts += $product['final_price'];
+          $exact_scale += abs($product['final_price']);
           // net and tax of each piece are rounded
           $roundings += 2 * $product['qty'];
           $product['price_net'] = $product['final_price'];
@@ -297,7 +300,7 @@
         // a voucher that also lowers the tax leaves a difference in the parts, that one is not a rounding,
         // and even a small one counts once it moves the total to another cent
         if (abs($exact_parts - $exact_total) < 0.001
-            && $this->round_sum($exact_parts) == $this->round_sum($exact_total)
+            && $this->round_sum($exact_parts, $exact_scale) == $this->round_sum($exact_total, $exact_scale)
             )
         {
           $this->reconcile_breakdown($purchase_unit['amount'], $roundings);
@@ -1001,9 +1004,10 @@
     }
 
 
-    private function round_sum($value) {
-      // the float error of a sum sits behind the 15th significant digit and must not decide the cent
-      $decimals = 14 - (int)floor(log10(max(abs($value), 1)));
+    private function round_sum($value, $scale) {
+      // the float error of a sum grows with its largest parts, not with the result;
+      // 13 significant digits of those parts keep it out of the cent
+      $decimals = 12 - (int)floor(log10(max($scale, 1)));
 
       return round(round($value, $decimals), 2);
     }
