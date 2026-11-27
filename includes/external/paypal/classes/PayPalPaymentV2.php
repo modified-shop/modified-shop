@@ -295,10 +295,9 @@
 
         // each part is rounded on its own and can miss the rounded amount by a cent, PayPal rejects that;
         // a voucher that also lowers the tax leaves a difference in the parts, that one is not a rounding,
-        // and even a small one counts once it moves the total to another cent;
-        // both sums first drop the float error of their different order of addition
+        // and even a small one counts once it moves the total to another cent
         if (abs($exact_parts - $exact_total) < 0.001
-            && round(round($exact_parts, 6), 2) == round(round($exact_total, 6), 2)
+            && $this->round_sum($exact_parts) == $this->round_sum($exact_total)
             )
         {
           $this->reconcile_breakdown($purchase_unit['amount'], $roundings);
@@ -999,6 +998,14 @@
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'refundOrder', array('exception' => $ex));
       }
+    }
+
+
+    private function round_sum($value) {
+      // the float error of a sum sits behind the 15th significant digit and must not decide the cent
+      $decimals = 14 - (int)floor(log10(max(abs($value), 1)));
+
+      return round(round($value, $decimals), 2);
     }
 
 
