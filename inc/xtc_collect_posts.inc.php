@@ -64,7 +64,7 @@
           $gv_redeemed = xtc_gv_redeem_code($_SESSION['customer_id'], $gv_result['coupon_id'], (isset($_SESSION['tracking']['ip']) ? xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''));
           if ($gv_redeemed !== true) {
             // a database error booked nothing, the code can be redeemed later
-            $messageStack->add_session('coupon_message', (($gv_redeemed === null) ? ERROR_GV_SEND_BOOKING : ERROR_NO_INVALID_REDEEM_GV));
+            $messageStack->add_session('coupon_message', (($gv_redeemed === null) ? (defined('ERROR_GV_SEND_BOOKING') ? ERROR_GV_SEND_BOOKING : 'The voucher could not be booked. Please try again later.') : ERROR_NO_INVALID_REDEEM_GV));
             xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
           }
           

@@ -80,6 +80,8 @@ class sitemaporg extends sitemap {
       $filename = parse_multi_language_value($config_values['MODULE_SITEMAPORG_FILE'], $language['code'], true);
       if (xtc_not_null($filename)) {
         if (!check_export_filename($filename, array('xml'))) {
+          // a language pack without this text gets the English one
+          defined('MODULE_SITEMAPORG_ERROR_FILENAME_FORMAT') OR define('MODULE_SITEMAPORG_ERROR_FILENAME_FORMAT', 'The filename may only contain letters, digits, dots, hyphens and underscores and must end with .xml.');
           return MODULE_SITEMAPORG_ERROR_FILENAME_FORMAT;
         }
         if (in_array($filename, $filenames)) {

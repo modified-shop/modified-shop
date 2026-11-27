@@ -13,16 +13,27 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   if (defined('MODULE_ADMIN_LOG_STATUS') && MODULE_ADMIN_LOG_STATUS == 'true') {
-    // the posted status link of a manufacturer has no fields when the form token is switched off
+    // a posted link has no fields when the form token is switched off: the links named here are logged also then.
+    // With the token switched on the rule has removed the action of a post without it before
+    $admin_log_links = array(
+      'manufacturers.php' => array('action' => array('setflag')),
+      'content_manager.php' => array('special' => array('setaflag', 'setsflag', 'delete', 'delete_product', 'delete_content', 'delete_email')),
+      'orders.php' => array('action' => array('send', 'send_order_mail', 'deletetracking', 'custom')),
+    );
+    $admin_log_link = false;
+    if (isset($_SERVER['REQUEST_METHOD'])
+        && $_SERVER['REQUEST_METHOD'] == 'POST'
+        && isset($admin_log_links[basename($PHP_SELF)])
+        )
+    {
+      foreach ($admin_log_links[basename($PHP_SELF)] as $key => $values) {
+        if (isset($_GET[$key]) && is_string($_GET[$key]) && in_array($_GET[$key], $values, true)) {
+          $admin_log_link = true;
+        }
+      }
+    }
     if (isset($_POST)
-        && (count($_POST) > 0
-            || (isset($_SERVER['REQUEST_METHOD'])
-                && $_SERVER['REQUEST_METHOD'] == 'POST'
-                && basename($PHP_SELF) == 'manufacturers.php'
-                && isset($_GET['action'])
-                && $_GET['action'] === 'setflag'
-                )
-            )
+        && (count($_POST) > 0 || $admin_log_link === true)
         )
     {
       $sql_data_array = array();
@@ -71,9 +82,35 @@
           break;
       
         case 'content_manager.php':
+          // products, content and e-mail content count their entries on their own, the type keeps them apart from the pages
+          // and from older entries, which have none
+          $admin_log_content_types = array(
+            'delete' => 'pages',
+            'setaflag' => 'pages',
+            'setsflag' => 'pages',
+            'update' => 'pages',
+            'insert' => 'pages',
+            'delete_product' => 'product',
+            'update_products' => 'product',
+            'insert_products' => 'product',
+            'delete_content' => 'content',
+            'update_content_manager' => 'content',
+            'insert_content_manager' => 'content',
+            'delete_email' => 'email',
+            'update_email' => 'email',
+            'insert_email' => 'email',
+          );
+          // another form of a list, e.g. the number per page, belongs to the list of the address
+          $admin_log_content_type = ((isset($_GET['set']) && in_array($_GET['set'], array('product', 'content', 'email'), true)) ? $_GET['set'] : 'pages');
+          foreach (array('special', 'id') as $key) {
+            if (isset($_GET[$key]) && is_string($_GET[$key]) && isset($admin_log_content_types[$_GET[$key]])) {
+              $admin_log_content_type = $admin_log_content_types[$_GET[$key]];
+            }
+          }
           $sql_data_array = array(
             'customers_id' => (int)$_SESSION['customer_id'],
             'content_group' => (int)$_GET['coID'],
+            'type' => $admin_log_content_type,
           );
           break;
 
@@ -154,7 +191,7 @@
         }
         // a posted link carries its change in the address
         if (count($log_data) < 1) {
-          foreach (array('action', 'flag') as $key) {
+          foreach (array('action', 'subaction', 'special', 'flag', 'coIndex') as $key) {
             if (isset($_GET[$key]) && is_string($_GET[$key])) {
               $log_data[$key] = $_GET[$key];
             }

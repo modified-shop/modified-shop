@@ -13,5 +13,6 @@
     if ($aBUY->order_send()) {
       $aBUY->process_order();
     }
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction'))));
   }
 ?>

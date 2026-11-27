@@ -67,13 +67,19 @@
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction')).'action=edit'));
     }
 
+    // shipcloud removes its entries with the same subaction: only a DHL entry of this order is taken here
+    $dhl_tracking = false;
     if (isset($_GET['subaction']) && $_GET['subaction'] == 'deletetracking') {
       $tracking_id = (int)$_GET['tID'];
       $tracking_links_query = xtc_db_query("SELECT * 
                                               FROM ".TABLE_ORDERS_TRACKING."
-                                             WHERE tracking_id = '".(int)$tracking_id."'");
+                                             WHERE tracking_id = '".(int)$tracking_id."'
+                                               AND orders_id = '".(int)$oID."'
+                                               AND external = '2'");
       $tracking_links = xtc_db_fetch_array($tracking_links_query);
-  
+      $dhl_tracking = is_array($tracking_links);
+    }
+    if ($dhl_tracking === true) {
       require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
       $dhl = new DHLBusinessShipment(array());
       $response = $dhl->DeleteLabel($tracking_links['parcel_id']);
@@ -88,7 +94,52 @@
 
       // keep the entry as long as DHL has not confirmed the cancellation
       if ($response['deleted'] !== true) {
-        $messageStack->add_session(sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$oID.'&tID='.(int)$tracking_id.'&action=deletetracking')), 'warning');
+        // the link whose href is the removal is posted, whichever language file brings the text
+        $dhl_delete_link = xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$oID.'&tID='.(int)$tracking_id.'&action=deletetracking');
+        $dhl_delete_posted = false;
+        $dhl_delete_error = preg_replace_callback('/<a((?:\s+[^\s"\'>\/=]+(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s"\'>]+))?)*)\s*>/i', function ($tag) use ($dhl_delete_link, &$dhl_delete_posted) {
+          preg_match_all('/([^\s"\'>\/=]+)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s"\'>]+))?/', $tag[1], $attributes, PREG_SET_ORDER);
+          $href = '';
+          $onclick = null;
+          $others = '';
+          foreach ($attributes as $attribute) {
+            $value = (isset($attribute[2]) ? $attribute[2] : '');
+            $quote = '';
+            if ($value != '' && ($value[0] == '"' || $value[0] == "'")) {
+              $quote = $value[0];
+              $value = substr($value, 1, -1);
+            }
+            if (strtolower($attribute[1]) == 'onclick') {
+              if ($onclick === null) {
+                // the handler goes into double quotes
+                $onclick = (($quote == "'") ? str_replace('"', '&quot;', $value) : $value);
+              }
+              continue;
+            }
+            if (strtolower($attribute[1]) == 'href') {
+              $href = $value;
+            }
+            $others .= ' '.$attribute[0];
+          }
+          if ($dhl_delete_posted === true || $href !== $dhl_delete_link) {
+            return $tag[0];
+          }
+          $dhl_delete_posted = true;
+          $post = 'return postLink(this, event);';
+          if ($onclick !== null && trim($onclick) != '') {
+            // the handler of the translation runs first. It can stop the link (false, preventDefault) or post it itself:
+            // the helpers of the shop are handed in, confirmLink() as confirmPostLink() with its text and title
+            $post = 'var posted = false,'
+                   .' post = function (link, e) { posted = true; return postLink(link, e); },'
+                   .' confirmPost = function (message, title, link) { posted = true; return confirmPostLink(message, title, link); };'
+                   // the line break ends a line comment at the end of the handler
+                   .' if ((function (event, postLink, confirmPostLink, confirmLink) { '.$onclick."\n".' }).call(this, event, post, confirmPost, confirmPost) === false'
+                   .' || posted || event.defaultPrevented) { return false; } '
+                   .$post;
+          }
+          return '<a onclick="'.$post.'"'.$others.'>';
+        }, sprintf(TEXT_DHL_BUSINESS_DELETE_ERROR, $dhl_delete_link));
+        $messageStack->add_session($dhl_delete_error, 'warning');
       } else {
         xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
         $messageStack->add_session(TEXT_DHL_BUSINESS_DELETE_SUCCESS, 'success');

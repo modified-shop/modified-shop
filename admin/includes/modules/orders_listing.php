@@ -293,7 +293,8 @@
                                              LIMIT 1");
             $revert_open = (xtc_db_num_rows($bookings_query) > 0);
           }
-          // a language pack without this text gets the English one
+          // a language pack without these texts gets the English ones
+          defined('TEXT_INFO_REVERT_ORDER_BOOKINGS') OR define('TEXT_INFO_REVERT_ORDER_BOOKINGS', 'Revert used voucher balance, coupon and specials quantity, switch sold out specials back on');
           defined('TEXT_INFO_REVERT_ORDER_BOOKINGS_OPEN') OR define('TEXT_INFO_REVERT_ORDER_BOOKINGS_OPEN', 'The checkout of this order was not completed, it still holds used voucher balance or specials quantity. Check the payment before you decide whether to revert them.');
 
           switch ($action) {
@@ -321,7 +322,7 @@
                                                                      <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=delete').'">'.BUTTON_DELETE.'</a>
                                                                      <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=storno').'">'.BUTTON_REVERSE.'</a>');
                 if (defined('MODULE_AFTERBUY_STATUS') && MODULE_AFTERBUY_STATUS == 'true') {
-                  $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=custom&subaction=afterbuy_send').'">'.BUTTON_AFTERBUY_SEND.'</a>');
+                  $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="return postLink(this, event);" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=custom&subaction=afterbuy_send').'">'.BUTTON_AFTERBUY_SEND.'</a>');
                 }
                 $contents[] = array ('text' => '<br />'.TEXT_DATE_ORDER_CREATED.' '.xtc_date_short($oInfo->date_purchased));
                   if (xtc_not_null($oInfo->last_modified)) {
