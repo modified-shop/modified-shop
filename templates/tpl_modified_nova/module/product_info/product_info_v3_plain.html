@@ -143,7 +143,7 @@
               <div class="pd_shipping_icon"><i class="fa-solid fa-truck-fast"></i></div>
               <div class="pd_shipping_content">
                 <strong>{#text_shippingtime#}</strong> 
-                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if}
+                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|onlytext}" />{/if}
                 {$SHIPPING_NAME_LINK}
               </div>
             </div>

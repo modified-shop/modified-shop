@@ -1,7 +1,7 @@
 {if $banner_data.TEXT != ''}
   {$banner_data.TEXT}
 {elseif $banner_data.LINK != ''}
-  <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+  <a title="{$banner_data.TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
     <img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
   </a>
 {elseif $banner_data.IMAGE_IMG != ''}
