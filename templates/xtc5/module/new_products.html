@@ -13,7 +13,7 @@
       {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
       {if ACTIVATE_SHIPPING_STATUS == 'true'}
         {if $module_data.PRODUCTS_SHIPPING_NAME}<p class="shippingtime">{#text_shippingtime#}&nbsp;
-          {if $module_data.PRODUCTS_SHIPPING_IMAGE}<img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" />{/if}
+          {if $module_data.PRODUCTS_SHIPPING_IMAGE}<img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />{/if}
           {$module_data.PRODUCTS_SHIPPING_NAME_LINK}</p>
         {/if}
       {/if}
