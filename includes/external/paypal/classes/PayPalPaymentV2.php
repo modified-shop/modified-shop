@@ -168,6 +168,8 @@
       if ($this->code == 'paypalpui') {
         $pm_source = 'pay_upon_invoice';
         $order_total = $this->calculate_total(2);
+        // the unrounded parts tell a rounding difference from one in the parts themselves
+        $exact_parts = $exact_total = 0;
         foreach ($order_total as $total) {
           switch ($total['code']) {
             case 'ot_subtotal':
@@ -175,15 +177,18 @@
             case 'ot_tax':
               break;
             case 'ot_shipping':
+              $exact_parts += $total['value'];
               $purchase_unit['amount']['breakdown']['shipping'] = array(
                 'value' => sprintf($this->numberFormat, round($total['value'], 2)),
                 'currency_code' => $this->encode_utf8($order->info['currency'])
               );
               break;
             case 'ot_total':
+              $exact_total = $total['value'];
               $purchase_unit['amount']['value'] = sprintf($this->numberFormat, round($total['value'], 2));
               break;
             default:
+              $exact_parts += $total['value'];
               if ($total['value'] > 0) {
                 if (!isset($purchase_unit['amount']['breakdown']['handling'])) {
                   $purchase_unit['amount']['breakdown']['handling'] = array(
@@ -208,8 +213,12 @@
         }
 
         $sum_net = $sum_tax = array();
+        $roundings = count($order_total);
         $purchase_unit['items'] = array();
         foreach ($order->products as $product) {
+          $exact_parts += $product['final_price'];
+          // net and tax of each piece are rounded
+          $roundings += 2 * $product['qty'];
           $product['price_net'] = $product['final_price'];
           $product['tax_value'] = 0;
           $product['single_price_net'] = $product['price'];
@@ -264,22 +273,31 @@
               'tax_rate' => sprintf($this->numberFormat, $tax),
               'quantity' => 1,
             );
-          }
 
-          $purchase_unit['items'][] = $item;
+            $purchase_unit['items'][] = $item;
+          }
         }
 
+        // PayPal checks both totals against the items as they are sent, in whole cents
+        $item_total = $tax_total = 0;
+        foreach ($purchase_unit['items'] as $item) {
+          $item_total += round($item['unit_amount']['value'] * 100) * $item['quantity'];
+          $tax_total += round($item['tax']['value'] * 100) * $item['quantity'];
+        }
         $purchase_unit['amount']['breakdown']['item_total'] = array(
-          'value' => sprintf($this->numberFormat, array_sum($sum_net)),
+          'value' => sprintf($this->numberFormat, $item_total / 100),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         );
         $purchase_unit['amount']['breakdown']['tax_total'] = array(
-          'value' => sprintf($this->numberFormat, array_sum($sum_tax)),
+          'value' => sprintf($this->numberFormat, $tax_total / 100),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         );
 
-        // each part is rounded on its own and can miss the rounded amount by a cent, PayPal rejects that
-        $this->reconcile_breakdown($purchase_unit['amount'], count($order->products) * 2 + count($order_total));
+        // each part is rounded on its own and can miss the rounded amount by a cent, PayPal rejects that;
+        // a voucher that also lowers the tax leaves a difference in the parts, that one is not a rounding
+        if (abs($exact_parts - $exact_total) < 0.001) {
+          $this->reconcile_breakdown($purchase_unit['amount'], $roundings);
+        }
 
         if (isset($_SESSION['tmp_oID'])) {
           $purchase_unit['invoice_id'] = $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$_SESSION['tmp_oID'];
