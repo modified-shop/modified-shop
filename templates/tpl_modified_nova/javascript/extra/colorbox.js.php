@@ -82,6 +82,13 @@
     // the title attribute holds plain text, so the lightbox shows it as text and not as markup
     title: function() {
       return $('<span>').text(this.title || '').prop('outerHTML');
+    },
+    // the photo takes the alt text of the preview image as text, the json of data-cbox-img-attrs broke on a double quote
+    createImg: function() {
+      var img = new Image();
+      var alt = $(this).find('img').first().attr('alt');
+      img.alt = (typeof alt === 'string') ? alt : (this.title || '');
+      return img;
     }
   });
 </script>
