@@ -4,7 +4,7 @@
 <html {$html_params}>
   <head>
     <title>{#title#} {$oID}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset={$charset|replace:'"':'&quot;'}" />
+    <meta http-equiv="Content-Type" content="text/html; charset={$charset|encodedtext}" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta name="robots" content="noindex, nofollow, noodp" />
     {if $base_href}<base href="{$base_href}" />{/if}
@@ -19,7 +19,7 @@
           <strong>{#order#}</strong> {$oID}<br />
           <strong>{#date#}</strong> {$DATE}
         </td>
-        <td style="vertical-align:top; text-align:right;"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME|replace:'"':'&quot;'}" /></td>
+        <td style="vertical-align:top; text-align:right;"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME|encodedtext}" /></td>
       </tr>
       <tr>
         <td colspan="2"><div class="hr"></div></td>

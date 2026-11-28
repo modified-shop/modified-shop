@@ -5,7 +5,7 @@
 <!DOCTYPE html{$doctype}>
 <html {$html_params}>
 <head>
-  <meta charset="{$charset}" />
+  <meta charset="{$charset|encodedtext}" />
   <title>{#title#} {$oID}</title>
   <meta name="robots" content="noindex, nofollow, noodp" />
   {if $base_href}<base href="{$base_href}" />{/if}
@@ -22,7 +22,7 @@
 </head>
 <body class="popupprint">
   <div class="printwrap">
-    <div class="printlogo"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME|replace:'"':'&quot;'}" /></div>
+    <div class="printlogo"><img src="{$tpl_path}img/{'logo.gif'|versioning}" alt="{$smarty.const.STORE_NAME|encodedtext}" /></div>
 
     <div class="printColumsLeft">
       {$address_label_customer}

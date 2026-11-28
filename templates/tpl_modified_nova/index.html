@@ -10,7 +10,7 @@
       <div class="layout_header_inner">
         <div class="flex_header_row">
 
-          <div class="col_logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name|replace:'"':'&quot;'}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name|replace:'"':'&quot;'}" /></a></div>
+          <div class="col_logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></a></div>
           <div class="col_filler"></div>
     
           {if isset($box_SEARCH)}
@@ -91,12 +91,12 @@
     <div class="layout_header_checkout">
       <div class="layout_header_checkout_inner">
         <div class="flex_header_checkout_row">
-          <div class="col_logo_checkout"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name|replace:'"':'&quot;'}" /></div>
+          <div class="col_logo_checkout"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></div>
           <div class="col_logo_back">
             {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_CHECKOUT_SUCCESS) !== false}
-              <a href="{$index}" title="{#link_index#} &bull; {$store_name|replace:'"':'&quot;'}">{#header_back_to_shop#}</a>
+              <a href="{$index}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_shop#}</a>
             {else}
-              <a href="{$smarty.const.FILENAME_SHOPPING_CART|xtc_href_link}" title="{#link_index#} &bull; {$store_name|replace:'"':'&quot;'}">{#header_back_to_cart#}</a>
+              <a href="{$smarty.const.FILENAME_SHOPPING_CART|xtc_href_link}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_cart#}</a>
             {/if} 
           </div>
         </div>
@@ -121,18 +121,18 @@
                     <div class="splide__slide">          
                       {if $slider.LINK != ''}
                         {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
-                          <a title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}" href="{$slider.LINK}" {$slider.TARGET}>
+                          <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                             <picture>
                               <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                               <source data-srcset="{$slider.IMAGE_SRC}">
-                              <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
+                              <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                             </picture>
                             {if $slider.TITLE != ''}
                               <span class="slider_item_content">{$slider.TITLE}</span>
                             {/if}
                           </a>
                         {else}
-                          <a title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}" href="{$slider.LINK}" {$slider.TARGET}>
+                          <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                             {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
                             {if $slider.TITLE != ''}
                               <span class="slider_item_content">{$slider.TITLE}</span>
@@ -144,7 +144,7 @@
                           <picture>
                             <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                             <source data-srcset="{$slider.IMAGE_SRC}">
-                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext|replace:'"':'&quot;'}" title="{$slider.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}">
+                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                           </picture>
                           {if $slider.TITLE != ''}
                             <span class="slider_item_content">{$slider.TITLE}</span>

@@ -14,12 +14,12 @@
       <picture>
         <source media="(max-width:600px)" data-srcset="{$CATEGORIES_IMAGE_MOBILE}">
         <source data-srcset="{$CATEGORIES_IMAGE}">
-        <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" title="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
-        <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+        <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" title="{$CATEGORIES_NAME|onlytext}" alt="{$CATEGORIES_NAME|onlytext}" />
+        <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
       </picture>
     {else}
-      <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
-      <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+      <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
+      <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
     {/if}
   {/if}
   {if isset($CATEGORIES_SHORT_DESCRIPTION) && $CATEGORIES_SHORT_DESCRIPTION != ''}{$CATEGORIES_SHORT_DESCRIPTION}{else if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}
@@ -42,8 +42,8 @@
 {/if}
 <div class="manu_description cf">
   {if $MANUFACTURER_IMAGE}
-    <img class="lazyload manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext|replace:'"':'&quot;'}" />
-    <noscript><img class="manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+    <img class="lazyload manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />
+    <noscript><img class="manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" /></noscript>
   {/if}
   {if $MANUFACTURER_SHORT_DESCRIPTION}{$MANUFACTURER_SHORT_DESCRIPTION}{else if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}
 </div>  

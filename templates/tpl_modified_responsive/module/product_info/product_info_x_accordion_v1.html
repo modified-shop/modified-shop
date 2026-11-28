@@ -6,9 +6,9 @@
   <div class="product_headline cf">
     {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}
       <div class="pd_manu_image">
-        <a title="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" href="{$MANUFACTURER_LINK}">
-          <img class="lazyload" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" />
-          <noscript><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" /></noscript>
+        <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">
+          <img class="lazyload" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" />
+          <noscript><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></noscript>
         </a>
       </div>
     {/if}
@@ -20,7 +20,7 @@
     {if $PRODUCTS_IMAGE != ''}
     <div class="pd_imagebox">
       <div class="pd_big_image">
-        <a class="cbimages" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" data-cbox-img-attrs='{ldelim}"alt":"{$PRODUCTS_NAME|onlytext}"{rdelim}'><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" title="{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}" /></a>
+        <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" data-cbox-img-attrs='{ldelim}"alt":"{$PRODUCTS_NAME|onlytext}"{rdelim}'><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a>
       </div>
       <div class="zoomtext">{#zoomtext#}</div>
     </div>
@@ -29,11 +29,11 @@
     <div class="pd_content">
       <div class="pd_summarybox" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
         <div class="pd_summarybox_inner cf">
-          <meta itemprop="url" content="{$PRODUCTS_LINK|replace:'"':'&quot;'}" />
-          <meta itemprop="priceCurrency" content="{$smarty.session.currency|replace:'"':'&quot;'}" />
-          {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C|replace:'"':'&quot;'}" />{/if}
+          <meta itemprop="url" content="{$PRODUCTS_LINK}" />
+          <meta itemprop="priceCurrency" content="{$smarty.session.currency|encodedtext}" />
+          {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C}" />{/if}
           {if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}
-          {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL|replace:'"':'&quot;'}" />{/if}
+          {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
           <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
   
           <div class="pd_price{if $PRODUCTS_FSK18 == '1'} pd_fsk_padding{/if}">
@@ -104,7 +104,7 @@
       </div>
       <div class="pd_infobox">
         <div class="pd_inforow_first"></div>
-        {if $SHIPPING_NAME}<div class="pd_inforow"><strong>{#text_shippingtime#}</strong> {if $SHIPPING_IMAGE}<img class="pd_shipping_image" src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|replace:'"':'&quot;'}" />{/if} {$SHIPPING_NAME_LINK}</div>{/if}
+        {if $SHIPPING_NAME}<div class="pd_inforow"><strong>{#text_shippingtime#}</strong> {if $SHIPPING_IMAGE}<img class="pd_shipping_image" src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|encodedtext}" />{/if} {$SHIPPING_NAME_LINK}</div>{/if}
         {if $PRODUCTS_MODEL != ''}<div class="pd_inforow"><strong>{#model#}</strong> <span itemprop="sku">{$PRODUCTS_MODEL}</span></div>{/if}
         {if $PRODUCTS_EAN != ''}<div class="pd_inforow"><strong>{#ean#}</strong> <span itemprop="gtin{$PRODUCTS_EAN|strlen}">{$PRODUCTS_EAN}</span></div>{/if}
         {if isset($PRODUCTS_RATING_COUNT)}
@@ -113,18 +113,18 @@
             <strong>{#info_reviews#}</strong> 
             <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
             ({$PRODUCTS_RATING_COUNT})
-            <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING|replace:'"':'&quot;'}" />
+            <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
             <meta itemprop="bestRating" content="5" />
-            <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT|replace:'"':'&quot;'}" /> 
+            <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
           </div>
           {elseif $PRODUCTS_RATING_COUNT > 0 }
           <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
             <strong>{#info_review#}</strong> 
             <span class="pd_rating_icons"><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fas fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
             ({$PRODUCTS_RATING_COUNT})
-            <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING|replace:'"':'&quot;'}" />
+            <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
             <meta itemprop="bestRating" content="5" />
-            <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT|replace:'"':'&quot;'}" /> 
+            <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
           </div>
           {else}
           <div class="pd_inforow">
@@ -138,7 +138,7 @@
         {if $PRODUCTS_EXPIRES}<div class="pd_inforow red">{#text_expires_date#} {$PRODUCTS_EXPIRES}</div>{/if}
         {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<div class="pd_inforow"><strong>{#products_manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}</div>{/if}
         {if isset($MANUFACTURER) && $MANUFACTURER != ''}<div class="pd_inforow" itemprop="brand" itemscope itemtype="https://schema.org/Brand"><strong>{#manufacturer#}</strong> <span itemprop="name">{$MANUFACTURER}</span></div>{/if}
-        {if isset($MANUFACTURER_LINK) && $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext|replace:'"':'&quot;'}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
+        {if isset($MANUFACTURER_LINK) && $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
         {if $PRODUCTS_URL != ''}<div class="pd_inforow">{$PRODUCTS_URL}</div>{/if}
 
         <ul class="pd_iconlist">
@@ -181,13 +181,13 @@
         <div class="pd_small_image_tab_row cf">
           {foreach item=more_images_data from=$more_images}
             <div class="pd_small_image_tab"><div class="pd_small_image_tab_inner cf">
-              <a class="cbimages" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-cbox-img-attrs='{ldelim}"alt":"{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}"{rdelim}'>
+              <a class="cbimages" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-cbox-img-attrs='{ldelim}"alt":"{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}"{rdelim}'>
                 {if $smarty.const.PICTURESET_ACTIVE === true}
-                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"midi_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" />
+                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"midi_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" />
                 {else}
-                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" />
+                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" />
                 {/if}
-                <noscript><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext|replace:'"':'&quot;'}{else}{$PRODUCTS_NAME|onlytext|replace:'"':'&quot;'}{/if}" /></noscript>
+                <noscript><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" /></noscript>
               </a>
             </div></div>
           {/foreach}

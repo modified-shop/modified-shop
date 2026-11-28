@@ -7,10 +7,10 @@
             <span itemprop="name">{$breadcrumb.title|onlytext}</span>
           </a>
         {else}
-          <meta itemprop="item" content="{$breadcrumb.link|replace:'"':'&quot;'}" />
+          <meta itemprop="item" content="{$breadcrumb.link}" />
           <span class="current" itemprop="name">{$breadcrumb.title|onlytext}</span>
         {/if}
-        <meta itemprop="position" content="{$smarty.foreach.aussen.iteration|replace:'"':'&quot;'}" />
+        <meta itemprop="position" content="{$smarty.foreach.aussen.iteration}" />
       </span>
       {if !$smarty.foreach.aussen.last}
         {$SEPARATOR}

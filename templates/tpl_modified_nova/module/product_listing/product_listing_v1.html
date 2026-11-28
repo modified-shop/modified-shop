@@ -18,12 +18,12 @@
             <picture>
               <source media="(max-width:600px)" data-srcset="{$CATEGORIES_IMAGE_MOBILE}">
               <source data-srcset="{$CATEGORIES_IMAGE}">
-              <img class="lazyload" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
-              <noscript><img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+              <img class="lazyload" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
+              <noscript><img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
             </picture>
           {else}
-            <img class="lazyload" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" />
-            <noscript><img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+            <img class="lazyload" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
+            <noscript><img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
           {/if}
         </div>
       {/if}
@@ -74,8 +74,8 @@
         
       {if $MANUFACTURER_IMAGE}
         <div class="cat_manufacurer_image">
-          <img class="lazyload" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext|replace:'"':'&quot;'}" />
-          <noscript><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext|replace:'"':'&quot;'}" /></noscript>
+          <img class="lazyload" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />
+          <noscript><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" /></noscript>
         </div>
       {/if}
       <div class="cat_description_text cf">{if $MANUFACTURER_SHORT_DESCRIPTION}{$MANUFACTURER_SHORT_DESCRIPTION}{else if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}</div>
