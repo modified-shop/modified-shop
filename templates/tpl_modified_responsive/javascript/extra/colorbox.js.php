@@ -37,6 +37,10 @@
     xhrError: "<?php echo TEXT_COLORBOX_XHRERROR; ?>",
     imgError: "<?php echo TEXT_COLORBOX_IMGERROR; ?>",
     slideshowStart: "<?php echo TEXT_COLORBOX_SLIDESHOWSTART; ?>",
-    slideshowStop: "<?php echo TEXT_COLORBOX_SLIDESHOWSTOP; ?>"
+    slideshowStop: "<?php echo TEXT_COLORBOX_SLIDESHOWSTOP; ?>",
+    // the title attribute holds plain text, so the lightbox shows it as text and not as markup
+    title: function() {
+      return $('<span>').text(this.title || '').prop('outerHTML');
+    }
   });
 </script>
